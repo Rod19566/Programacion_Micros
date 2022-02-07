@@ -2493,12 +2493,38 @@ resVect:
 PSECT code, delta = 2, abs
 ;-----------------------------------------------------------
 ;-----------------------------configuracion------------------
-ORG 100
+ORG 100h
+
+table:
+    clrf PCLATH
+    bsf PCLATH, 0
+    andlw 0x0F
+    addwf PCL ; suma (add) PCL = PCL + PCLATH + w
+    retlw 00111111B ; 0
+    retlw 00000110B ; 1
+    retlw 01011011B ; 2
+    retlw 01001111B ; 3
+    retlw 01100110B ; 4
+    retlw 01101101B ; 5
+    retlw 01111101B ; 6
+    retlw 00000111B ; 7
+    retlw 01111111B ; 8
+    retlw 01101111B ; 9
+    retlw 01110111B ; A
+    retlw 01111100B ; b
+    retlw 00111001B ; C
+    retlw 01011110B ; d
+    retlw 01111001B ; E
+    retlw 01110001B ; F
+
+
 main:
     call config_reloj
     call config_tmr0
     call config_io
-
+    movlw 0
+    call table
+    movwf PORTD
 
 
 loop:
@@ -2507,6 +2533,12 @@ loop:
 
     call reset_tmr0
     INCF PORTB
+
+    btfss PORTA, 0
+    call antirrebotes1
+    btfss PORTA, 1
+    call antirrebotes2
+
     GOTO loop
 
 ;-----------subrutina-----------
@@ -2537,9 +2569,42 @@ config_reloj:
 
 config_io:
     BANKSEL ANSEL
+    CLRF ANSEL
     CLRF ANSELH ;I/O digitales
     BCF STATUS, 6 ; BANCO 01
+    BSF TRISA, 0 ; ((PORTA) and 07Fh), 0 como entrada
+    BSF TRISA, 1 ; ((PORTA) and 07Fh), 1 como entrada
     CLRF TRISB ;PORTB como salida
+    CLRF TRISC ;PORTC como salida
+    CLRF TRISD ;PORTD como salida DISPLAY
     BANKSEL PORTB ;se selecciona el banco 0 (00)
     CLRF PORTB
+    CLRF PORTC
+    CLRF PORTD
+    return
+
+antirrebotes1:
+    call checkbutton1
+    INCF PORTC ; incremento de contador
+    movf PORTC, w
+    call table
+    movwf PORTD
+    return
+
+checkbutton1:
+    BTFSS PORTA, 0
+    GOTO $-1
+    return
+
+antirrebotes2:
+    call checkbutton2
+    DECF PORTC ; incremento de contador
+    movf PORTC, w
+    call table
+    movwf PORTD
+    return
+
+checkbutton2:
+    BTFSS PORTA, 1
+    GOTO $-1
     return
