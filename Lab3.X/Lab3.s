@@ -32,6 +32,11 @@ PROCESSOR 16F887
   CONFIG  BOR4V = BOR40V        ; Brown-out Reset Selection bit (Brown-out Reset set to 4.0V)
   CONFIG  WRT = OFF             ; Flash Program Memory Self Write Enable bits (Write protection off)
 
+PSECT udata_shr ;memoria compartida
+    
+    seg7:	; variable 7 seg
+	DS 1
+  
 // config statements should precede project file includes.
 #include <xc.inc>
 PSECT resVect, class = code, abs, delta = 2
@@ -74,16 +79,13 @@ main:
     call config_tmr0
     call config_io
     movlw 0
-    call table
-    movwf PORTD
+    call tablecall
     
     
 loop:
-    BTFSS T0IF	    ;bandera de interrupcion, verifica TMR0
-    GOTO loop
+    BTFSC T0IF	    ;bandera de interrupcion, verifica TMR0 
     
-    call reset_tmr0
-    INCF PORTB 
+    call reset_tmr0	
     
     btfss PORTA, 0
     call antirrebotes1
@@ -110,7 +112,9 @@ config_reloj:
     BSF PS0		;PS<2:0> -> 111 prescaler 1 : 256
     call reset_tmr0  
  
- reset_tmr0:   
+ reset_tmr0:
+    INCF PORTB
+    call compare
     BANKSEL TMR0
     MOVLW   61		;100ms delay
     // N = 256 - [(T * Fosc) / (4 * PS)]
@@ -125,21 +129,21 @@ config_io:
     BCF STATUS, 6   ; BANCO 01
     BSF TRISA, 0    ; RA0 como entrada
     BSF TRISA, 1    ; RA1 como entrada
-    CLRF TRISB	    ;PORTB como salida
-    CLRF TRISC	    ;PORTC como salida
+    CLRF TRISB	    ;PORTB como salida contador
+    CLRF TRISC	    ;PORTC como salida contador
     CLRF TRISD	    ;PORTD como salida DISPLAY
+    CLRF TRISE	    ;PORTE como salida alarma
     BANKSEL PORTB   ;se selecciona el banco 0 (00)
     CLRF PORTB
     CLRF PORTC
     CLRF PORTD
+    CLRF PORTE
     return 
     
 antirrebotes1:
     call checkbutton1
-    INCF PORTC   ; incremento de contador
-    movf PORTC, w
-    call table
-    movwf PORTD
+    INCF seg7   ; incremento de contador
+    call tablecall
     return 
     
 checkbutton1:
@@ -149,10 +153,8 @@ checkbutton1:
 
 antirrebotes2:
     call checkbutton2
-    DECF PORTC   ; incremento de contador
-    movf PORTC, w
-    call table
-    movwf PORTD
+    DECF seg7   ; incremento de contador
+    call tablecall
     return 
     
 checkbutton2:
@@ -160,6 +162,37 @@ checkbutton2:
     GOTO $-1
     return
 
+tablecall:
+    movf seg7, w
+    call table
+    movwf PORTD
+    return
     
+    
+compare:
+    movlw 0x0A
+    subwf   PORTB, w	; Se resta w a portb
+    btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call    alarma	; cuando la bandera de cero se activa se llama a alarma
+    return
 
-
+alarma:
+    INCF PORTC
+    CLRF PORTB
+    call compare_butt
+    return
+    
+compare_butt:	//compare button
+    movf    seg7 , w
+    subwf   PORTC, w	; Se resta w a sevseg
+    btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call alarm_light
+    return
+    
+alarm_light: //prende la luz
+    INCF PORTE
+    CLRF PORTC  
+         
+    return
+    
+    
