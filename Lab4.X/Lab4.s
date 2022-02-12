@@ -33,6 +33,9 @@ PROCESSOR 16F887
   CONFIG  WRT = OFF             ; Flash Program Memory Self Write Enable bits (Write protection off)
 
 #include <xc.inc>
+  
+UP	EQU 0
+DOWN	EQU 1
 /////////////////////////MACROS///////////////////////  
   RESET_TMR0 MACRO TMR_VAR
     BANKSEL TMR0	    ; Banco del TIMER0
@@ -40,8 +43,19 @@ PROCESSOR 16F887
     MOVWF   TMR0	    ; configuramos tiempo de retardo (w = Timer0)
     BCF	    T0IF	    ; limpiamos bandera de interrupción
     ENDM
+    
+  restart_tmr0 macro 
+    BANKSEL TMR0
+    MOVLW   227		;15ms delay
+    // N = 256 - [(T * Fosc) / (4 * PS)]
+    MOVWF   TMR0
+    BCF	    T0IF
+    ENDM
 ////////////////////////////////////////////////////////
 ////////////////////VARIABLES//////////////////////////
+    PSECT udata_bank0 ;common
+    cont4:
+	DS 2
 PSECT udata_shr ;memoria compartida   
     W_TEMP:	
 	DS 1
@@ -50,13 +64,12 @@ PSECT udata_shr ;memoria compartida
 PSECT resVect, class = code, abs, delta = 2
 ORG 00h	    ;posición para reset
 /////////////////////////////////////////////////////////
-
 ;/////////////////vector reset///////////////////////////
 resVect:
     PAGESEL main	;cambio de banco
     GOTO main 
     
-PSECT code, delta = 2, abs
+PSECT inVect, class = code, abs, delta=2
 ORG 04h	    ;posición para interrupciones
  /////////////////////////////////////////////////////////
  ;/////////////////vector interrupciones///////////////////////////
@@ -66,9 +79,10 @@ PUSH:
     MOVWF   STATUS_TEMP	    ; Guardamos STATUS
     
 ISR:
-    RESET_TMR0 227	    ; Reiniciamos TMR0 para 15ms
-   ; INCF    PORTD	    ; PORTD++  PRUEBA en clase
-    call buttons
+    btfsc   RBIF
+    call    int_ioc
+    btfsc   T0IF
+    call    int_t0
     
     
 POP:
@@ -80,6 +94,29 @@ POP:
   
 /////////////////////////////////////////////////////////
 /////////////////////////configuracion/////////////////////////
+
+int_t0:
+    restart_tmr0		;15 ms
+    INCF    cont4
+    movf    cont4, w
+    sublw   67		    ;1000ms
+    BTFSS   ZERO	   ;status, 2
+    GOTO    return_t0	    ;1000ms
+    CLRF    cont4
+    incf    PORTD
+    
+return_t0:
+    return
+    
+    
+int_ioc:
+    BANKSEL PORTA
+    BTFSS   PORTB, UP
+    INCF    PORTC
+    BTFSS   PORTB, DOWN
+    DECF    PORTC
+    BCF	    RBIF
+    return 
     
 PSECT code, delta=2, abs
 ORG 100h
@@ -111,7 +148,9 @@ main:
     call config_reloj	//oscilador
     call config_tmr0	//TMR0
     call config_io	//I/O
+    call config_ioc
     call config_int	//interrupciones
+    BANKSEL PORTA
         
     
 loop:	    //el código cueanto no hay interrupciones
@@ -128,22 +167,10 @@ config_reloj:
     BSF OSCCON, 4	;IRCF<2:0> -> 101 2MHz
     return
     
-  config_tmr0:
-    BANKSEL OPTION_REG	;banco 1
-    BCF T0CS		;TMR0 como temporizador
-    BCF PSA		;se asigna prescaler to Timer0
-    BSF PS2
-    BSF PS1
-    BSF PS0		;PS<2:0> -> 111 prescaler 1 : 256
-    
-    BANKSEL TMR0
-    MOVLW   227		;15ms delay
-    // N = 256 - [(T * Fosc) / (4 * PS)]
-    MOVWF   TMR0
-    BCF T0IF
-    return
  
- /*
+ 
+ 
+ 
   reset_tmr0:
     INCF PORTB
     call compare
@@ -153,21 +180,29 @@ config_reloj:
     MOVWF   TMR0
     BCF T0IF
     return  
- */
  
+config_ioc:
+    BANKSEL IOCB
+    BSF IOCB, UP	    ;habilita interrupt
+    BSF IOCB, DOWN
+    BANKSEL PORTA
+    movf PORTB, w
+    BCF RBIF
+    return
+    
 config_io:     
     BANKSEL ANSEL
     CLRF ANSEL	
     CLRF ANSELH	    ;I/O digitales 
     BCF STATUS, 6   ; BANCO 01 WPUB & TRIS
-    BCF OPTION_REG, 7	;pull-ups are enabled by individual PORT latch values
-    BSF WPUB, 0	    ;habilita pull-up en RB0
-    BSF WPUB, 1	    ;habilita pull-up en RB1
-    BSF IOCB, 0	    ;habilita interrupt
-    BSF IOCB, 1
     BSF INTCON, 0   ;RBIF PORTB Change Interrupt Flag bit habilitado
-    BSF TRISB, 0    ; RA0 como entrada
-    BSF TRISB, 1    ; RA1 como entrada
+    BSF TRISB, UP    ; RA0 como entrada
+    BSF TRISB, DOWN    ; RA1 como entrada
+    
+    BCF OPTION_REG, 7	;pull-ups are enabled by individual PORT latch values
+    BSF WPUB, UP	    ;habilita pull-up en RB0
+    BSF WPUB, DOWN	    ;habilita pull-up en RB1
+    
     CLRF TRISC	    ;PORTC como salida contador
     CLRF TRISD	    ;PORTD como salida 
     CLRF TRISE	    ;PORTE como salida
@@ -177,9 +212,21 @@ config_io:
     CLRF PORTE
     return 
     
+   config_tmr0:
+    BANKSEL OPTION_REG	;banco 1
+    BCF T0CS		;TMR0 como temporizador
+    BCF PSA		;se asigna prescaler to Timer0
+    BSF PS2
+    BSF PS1
+    BSF PS0		;PS<2:0> -> 111 prescaler 1 : 256
+    restart_tmr0
+    return 
+      
 config_int:
     BANKSEL INTCON
     BSF	    GIE		    ; Habilitamos interrupciones
+    BSF	    RBIE	    ; Habilitamos interrupcion TMR0
+    BCF	    RBIF	    ; Limpiamos bandera de TMR0
     BSF	    T0IE	    ; Habilitamos interrupcion TMR0
     BCF	    T0IF	    ; Limpiamos bandera de TMR0
     RETURN
@@ -209,4 +256,16 @@ checkbutton2:
     call antirrebotes1
     btfss PORTB, 1 
     call antirrebotes2
+    return
+
+        
+compare:
+    call table
+    subwf   W_TEMP, w
+    btfss   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call    alarma	; cuando la bandera de cero se activa se llama a alarma
+    return
+    
+alarma:
+    INCF PORTD
     return
