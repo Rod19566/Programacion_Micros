@@ -19,14 +19,14 @@ PROCESSOR 16F887
 ; CONFIG1
   CONFIG  FOSC = INTRC_NOCLKOUT ; Oscillator Selection bits (INTOSCIO oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
   CONFIG  WDTE = OFF            ; Watchdog Timer Enable bit (WDT disabled and can be enabled by SWDTEN bit of the WDTCON register)
-  CONFIG  PWRTE = ON            ; Power-up Timer Enable bit (PWRT enabled)
+  CONFIG  PWRTE = OFF            ; Power-up Timer Enable bit (PWRT enabled)
   CONFIG  MCLRE = OFF           ; RE3/MCLR pin function select bit (RE3/MCLR pin function is digital input, MCLR internally tied to VDD)
   CONFIG  CP = OFF              ; Code Protection bit (Program memory code protection is disabled)
   CONFIG  CPD = OFF             ; Data Code Protection bit (Data memory code protection is disabled)
   CONFIG  BOREN = OFF           ; Brown Out Reset Selection bits (BOR disabled)
   CONFIG  IESO = OFF            ; Internal External Switchover bit (Internal/External Switchover mode is disabled)
   CONFIG  FCMEN = OFF           ; Fail-Safe Clock Monitor Enabled bit (Fail-Safe Clock Monitor is disabled)
-  CONFIG  LVP = ON              ; Low Voltage Programming Enable bit (RB3/PGM pin has PGM function, low voltage programming enabled)
+  CONFIG  LVP = OFF              ; Low Voltage Programming Enable bit (RB3/PGM pin has PGM function, low voltage programming enabled)
 
 ; CONFIG2
   CONFIG  BOR4V = BOR40V        ; Brown-out Reset Selection bit (Brown-out Reset set to 4.0V)
@@ -43,26 +43,49 @@ DOWN	EQU 1
     MOVWF   TMR0	    ; configuramos tiempo de retardo (w = Timer0)
     BCF	    T0IF	    ; limpiamos bandera de interrupción
     ENDM
+    
+  restart_tmr0 macro 
+    BANKSEL TMR0
+    MOVLW   227		;15ms delay
+    // N = 256 - [(T * Fosc) / (4 * PS)]
+    MOVWF   TMR0
+    BCF	    T0IF
+    ENDM
 ////////////////////////////////////////////////////////
 ////////////////////VARIABLES//////////////////////////
     PSECT udata_bank0 ;common
     cont4:
 	DS 2
+    dec10:
+	DS 2
+    valor:
+	DS 1	; Contiene valor a mostrar en los displays de 7-seg
+    banderas:
+	DS 1	; Indica que display hay que encender
+    nibbles:
+	DS 2	; Contiene los nibbles alto y bajo de valor
+    display:
+	DS 2	; Representación de cada nibble en el display de 7-seg
+    
+	
 PSECT udata_shr ;memoria compartida   
     W_TEMP:	
 	DS 1
     STATUS_TEMP:
 	DS 1
+    seg7:	; variable 7 seg
+	DS 1
+	
 PSECT resVect, class = code, abs, delta = 2
 ORG 00h	    ;posición para reset
 /////////////////////////////////////////////////////////
-
 ;/////////////////vector reset///////////////////////////
 resVect:
     PAGESEL main	;cambio de banco
     GOTO main 
     
-PSECT code, delta = 2, abs
+PSECT inVect, class = code, abs, delta=2
+ 
 ORG 04h	    ;posición para interrupciones
  /////////////////////////////////////////////////////////
  ;/////////////////vector interrupciones///////////////////////////
@@ -74,6 +97,8 @@ PUSH:
 ISR:
     btfsc   RBIF
     call    int_ioc
+    btfsc   T0IF
+    call    int_t0
     
     
 POP:
@@ -85,23 +110,25 @@ POP:
   
 /////////////////////////////////////////////////////////
 /////////////////////////configuracion/////////////////////////
-/*
+
 int_t0:
     restart_tmr0		;15 ms
     INCF    cont4
     movf    cont4, w
-    sublw   67	
+    sublw   67		    ;1000ms
     BTFSS   ZERO	   ;status, 2
     GOTO    return_t0	    ;1000ms
     CLRF    cont4
-    incf    PORTD
+    incf    PORTA
+    CLRF    PORTE
+    call MOSTRAR_VALOR
     
 return_t0:
     return
-    */
+    
     
 int_ioc:
-    BANKSEL PORTA
+    BANKSEL PORTB
     BTFSS   PORTB, UP
     INCF    PORTC
     BTFSS   PORTB, DOWN
@@ -137,7 +164,7 @@ table:
  
 main:   
     call config_reloj	//oscilador
-   // call config_tmr0	//TMR0
+    call config_tmr0	//TMR0
     call config_io	//I/O
     call config_ioc
     call config_int	//interrupciones
@@ -146,6 +173,8 @@ main:
     
 loop:	    //el código cueanto no hay interrupciones
     
+    MOVF    PORTA, W		; Valor del PORTA a W
+    MOVWF   valor		; Movemos W a variable valor
     GOTO loop
     
 //////////////////////////////////////////////////////////
@@ -158,17 +187,8 @@ config_reloj:
     BSF OSCCON, 4	;IRCF<2:0> -> 101 2MHz
     return
     
- 
- restart_tmr0:   
-    BANKSEL TMR0
-    MOVLW   227		;15ms delay
-    // N = 256 - [(T * Fosc) / (4 * PS)]
-    MOVWF   TMR0
-    BCF	    T0IF
-    return
- 
  /*
-  reset_tmr0:
+reset_tmr0:
     INCF PORTB
     call compare
     BANKSEL TMR0
@@ -176,8 +196,8 @@ config_reloj:
     // N = 256 - [(T * Fosc) / (4 * PS)]
     MOVWF   TMR0
     BCF T0IF
-    return  
- */
+    return  */
+ 
 config_ioc:
     BANKSEL IOCB
     BSF IOCB, UP	    ;habilita interrupt
@@ -200,67 +220,100 @@ config_io:
     BSF WPUB, UP	    ;habilita pull-up en RB0
     BSF WPUB, DOWN	    ;habilita pull-up en RB1
     
-    CLRF TRISC	    ;PORTC como salida contador
-    CLRF TRISD	    ;PORTD como salida 
-    CLRF TRISE	    ;PORTE como salida
+    CLRF TRISC	    ;PORTC como salida 10 s
+    CLRF TRISD	    ;PORTD como salida 1 s
+    CLRF TRISA	    ;PORTA como salida  tmr0
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
     CLRF PORTC
+    CLRF PORTA
     CLRF PORTD
-    CLRF PORTE
-    return 
     /*
-   config_tmr0:
+    BCF	TRISE, 0		; Apagamos RD0
+    BCF	TRISE, 1		; Apagamos RD1
+    //CLRF    banderas		; Limpiamos GPR
+    */
+    return 
+    
+ config_tmr0:
     BANKSEL OPTION_REG	;banco 1
     BCF T0CS		;TMR0 como temporizador
     BCF PSA		;se asigna prescaler to Timer0
     BSF PS2
     BSF PS1
     BSF PS0		;PS<2:0> -> 111 prescaler 1 : 256
-    call restart_tmr0
+    restart_tmr0
     return 
-   */   
+      
 config_int:
     BANKSEL INTCON
     BSF	    GIE		    ; Habilitamos interrupciones
     BSF	    RBIE	    ; Habilitamos interrupcion TMR0
     BCF	    RBIF	    ; Limpiamos bandera de TMR0
+    BSF	    T0IE	    ; Habilitamos interrupcion TMR0
+    BCF	    T0IF	    ; Limpiamos bandera de TMR0
     RETURN
     
-antirrebotes1:
-    call checkbutton1
-    INCF PORTC   ; incremento de contador
-    return 
+
+MOSTRAR_VALOR:
+   // CALL    OBTENER_NIBBLE	; Guardamos nibble alto y bajo de valor
+   // CALL    SET_DISPLAY		; Guardamos los valores a enviar en PORTC para mostrar valor en hex
+    GOTO    setDISPLAY		;  
+    ;GOTO    DISPLAY_0
+ /*   
+OBTENER_NIBBLE:			;    Ejemplo:
+				; Obtenemos nibble bajo
+    MOVF    valor, w		;    Valor = 1101 0101
+    ANDLW   0X0F		;	 AND 0000 1111
+    MOVWF   nibbles		;	     0000 0101	
+				; Obtenemos nibble alto
+    SWAPF   valor		;     Valor = 1101 0101
+    ANDLW   0XF0		;	  AND 1111 0000
+    MOVWF   nibbles+1		;	      1101 0000
+    RETURN
+ 
+SET_DISPLAY:
+    MOVF    nibbles, W		; Movemos nibble bajo a W
+    CALL    table		; Buscamos valor a cargar en PORTC
+    MOVWF   display		; Guardamos en display
     
-checkbutton1:
-    BTFSS PORTB, 0
-    GOTO $-1
-    return
+    MOVF    nibbles+1, W	; Movemos nibble alto a W
+    CALL    table		; Buscamos valor a cargar en PORTC
+    MOVWF   display+1		; Guardamos en display+1
+    RETURN
+  */   
+setDISPLAY:
+	movf	dec10, w
+	CALL    table		; Buscamos valor a cargar en PORTD
+	MOVWF   PORTD		; Movemos Valor de tabla a PORTD
+	call	compare				; Obtenemos nibble bajo
+	MOVF    valor, w		;
+	CALL    table		; Buscamos valor a cargar en PORTC
+	MOVWF   PORTC		; Movemos Valor de tabla a PORTC
+	
+//	GOTO	sig_display
+    RETURN
 
-antirrebotes2:
-    call checkbutton2
-    DECF PORTC   ; incremento de contador
-    return 
-    
-checkbutton2:
-    BTFSS PORTB, 1
-    GOTO $-1
-    return
-
-    buttons:
-    btfss PORTB, 0
-    call antirrebotes1
-    btfss PORTB, 1 
-    call antirrebotes2
-    return
-
-        
 compare:
-    call table
-    subwf   W_TEMP, w
-    btfss   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    movlw 0x0A
+    subwf   PORTA, w	; Se resta w a porta
+    btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call    alarma	; cuando la bandera de cero se activa se llama a alarma
     return
     
 alarma:
-    INCF PORTD
+    CLRF    PORTA
+    INCF    dec10
+    call    compare60
+    return
+
+compare60:
+    movlw   0x06
+    subwf   dec10, w	; Se resta w a porta
+    btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call    alarma60	; cuando la bandera de cero se activa se llama a alarma
+    return   
+    
+alarma60:
+    CLRF PORTA
+    CLRF dec10
     return
