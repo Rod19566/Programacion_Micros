@@ -6,7 +6,7 @@
 
   restart_tmr0 macro
     BANKSEL TMR0
-    MOVLW 227 ;15ms delay
+    MOVLW 236 ;10ms delay
 
     MOVWF TMR0
     BCF T0IF

@@ -2456,7 +2456,7 @@ ENDM
 
   restart_tmr0 macro
     BANKSEL TMR0
-    MOVLW 227 ;15ms delay
+    MOVLW 236 ;10ms delay
 
     MOVWF TMR0
     BCF ((INTCON) and 07Fh), 2
@@ -2503,13 +2503,20 @@ DOWN EQU 1
  DS 2
     valor:
  DS 1 ; Contiene valor a mostrar en los displays de 7-seg
-    banderas:
+    ban0:
+ DS 1 ; Indica que display hay que encender
+    ban1:
  DS 1 ; Indica que display hay que encender
     nibbles:
- DS 2 ; Contiene los nibbles alto y bajo de valor
+ DS 3 ; Contiene los nibbles alto y bajo de valor
     display:
- DS 2 ; Representación de cada nibble en el display de 7-seg
-
+ DS 3 ; Representación de cada nibble en el display de 7-seg
+    seg1:
+ DS 2 ; segundos para el display de 7-seg
+    dec1:
+ DS 2 ; decimales para el display de 7-seg
+    cen1:
+ DS 2 ; centenas para el display de 7-seg
 
 PSECT udata_shr ;memoria compartida
     W_TEMP:
@@ -2558,24 +2565,32 @@ POP:
 int_t0:
     restart_tmr0 ;15 ms
     CLRF PORTD
-    btfsc banderas, 0
+    btfsc ban0, 0
     goto display1
 
 display0:
     movf display, w
     movwf PORTC
     bsf PORTD, 0
-    goto next_display
+    incf ban0
+    return
 
 display1:
     movf display+1, w
     movwf PORTC
     bsf PORTD, 1
-
-next_display:
-    movlw 1
-    xorwf banderas, f
+    btfsc ban1, 0
+    goto display2
+    incf ban1
     return
+
+display2:
+    CLRF PORTD
+    movf display+2, w
+    movwf PORTC
+    bsf PORTD, 2
+    incf ban1
+    incf ban0
 
 return_t0:
     return
@@ -2588,6 +2603,7 @@ int_ioc:
     BTFSS PORTB, DOWN
     DECF PORTA
     BCF ((INTCON) and 07Fh), 0
+
     return
 
 PSECT code, delta=2, abs
@@ -2628,33 +2644,40 @@ loop:
 
     MOVF PORTA, W ; Valor del PORTA a W
     MOVWF valor ; Movemos W a variable valor
-    call OBTENER_NIBBLE
+
+
     CALL SET_DISPLAYS
     GOTO loop
 
 
-
-OBTENER_NIBBLE: ; Ejemplo: ; Obtenemos nibble bajo
-    MOVF valor, w ; Valor = 1101 0101
-    ANDLW 0X0F ; AND 0000 1111
-    MOVWF nibbles ; 0000 0101
-    ; Obtenemos nibble alto
-    SWAPF valor, w ; Valor = 1101 0101
-    ANDLW 0X0F ; AND 1111 0000
-    MOVWF nibbles+1 ; 1101 0000
-    RETURN
-
+;
+;OBTENER_NIBBLE: ; Ejemplo: ; Obtenemos nibble bajo
+; MOVF valor, w ; Valor = 1101 0101
+; ANDLW 0X0F ; AND 0000 1111
+; MOVWF nibbles ; 0000 0101
+; ; Obtenemos nibble alto
+; SWAPF valor, w ; Valor = 1101 0101
+; ANDLW 0X0F ; AND 1111 0000
+; MOVWF nibbles+1 ; 1101 0000 ; Obtenemos nibble alto
+;
+; movlw 0x03 ; PRUEBA para 3
+; MOVWF nibbles+2 ; 1101 0000
+; RETURN
+;
 SET_DISPLAYS:
-    MOVF nibbles, W ; Movemos nibble bajo a W
+    call compare
+    MOVF seg1, W ; Movemos nibble bajo a W
     CALL table ; Buscamos valor a cargar en PORTC
     MOVWF display ; Guardamos en display
 
-    MOVF nibbles+1, W ; Movemos nibble alto a W
+    MOVF dec1, W ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTC
     MOVWF display+1 ; Guardamos en display+1
+
+    MOVF cen1, W ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTC
+    MOVWF display+2 ; Guardamos en display+1
     RETURN
-
-
 
 
 
@@ -2665,7 +2688,8 @@ config_reloj:
     BCF OSCCON, 5
     BSF OSCCON, 4 ;IRCF<2:0> -> 101 2MHz
     return
-# 231 "Lab5.s"
+
+
 config_ioc:
     BANKSEL IOCB
     BSF IOCB, UP ;habilita interrupt
@@ -2693,10 +2717,15 @@ config_io:
 
     BCF TRISD, 0 ; Apagamos ((PORTD) and 07Fh), 0
     BCF TRISD, 1 ; Apagamos ((PORTD) and 07Fh), 1
+    BCF TRISD, 2 ; Apagamos ((PORTD) and 07Fh), 2
     BANKSEL PORTC ;se selecciona el banco 0 (00)
     CLRF PORTC
     CLRF PORTA
-    CLRF banderas ; Limpiamos GPR
+    CLRF ban0 ; Limpiamos GPR
+    CLRF ban1 ; Limpiamos GPR
+    CLRF seg1 ; Limpiamos GPR
+    CLRF cen1 ; Limpiamos GPR
+    CLRF dec1 ; Limpiamos GPR
 
     return
 
@@ -2719,3 +2748,40 @@ config_int:
     BSF ((INTCON) and 07Fh), 5 ; Habilitamos interrupcion TMR0
     BCF ((INTCON) and 07Fh), 2 ; Limpiamos bandera de TMR0
     RETURN
+
+
+
+compare:
+    clrf cen1
+
+    movlw 0x64
+    incf cen1
+    subwf valor, w
+    movwf valor
+    btfsc STATUS, 0
+    GOTO $-5
+    decf cen1
+
+    movlw 0x64
+    addwf valor, w
+    clrf dec1
+
+    movlw 0x0A
+    incf dec1
+    subwf valor, w
+    movwf valor
+    btfsc STATUS, 0
+    GOTO $-5
+    decf dec1
+
+    clrf seg1
+    movlw 0x0A
+    addwf valor, w
+    movwf seg1
+
+    incf seg1
+    incf seg1
+    incf seg1
+    incf seg1
+
+    return

@@ -54,13 +54,20 @@ DOWN	EQU 1
 	DS 2
     valor:
 	DS 1	; Contiene valor a mostrar en los displays de 7-seg
-    banderas:
+    ban0:
+	DS 1	; Indica que display hay que encender
+    ban1:
 	DS 1	; Indica que display hay que encender
     nibbles:
-	DS 2	; Contiene los nibbles alto y bajo de valor
+	DS 3	; Contiene los nibbles alto y bajo de valor
     display:
-	DS 2	; Representación de cada nibble en el display de 7-seg
-    
+	DS 3	; Representación de cada nibble en el display de 7-seg
+    seg1:
+	DS 2	; segundos para el display de 7-seg
+    dec1:
+	DS 2	; decimales para el display de 7-seg
+    cen1:
+	DS 2	; centenas para el display de 7-seg
 	
 PSECT udata_shr ;memoria compartida   
     W_TEMP:	
@@ -109,24 +116,32 @@ POP:
 int_t0:
     restart_tmr0		;15 ms
     CLRF    PORTD
-    btfsc   banderas, 0
-    goto    display1
+    btfsc   ban0, 0
+    goto    display1   //01
     
-display0:
+display0:	//00
     movf    display, w
     movwf   PORTC
     bsf	    PORTD, 0
-    goto    next_display
+    incf    ban0
+    return
     
-display1:
+display1:	//01
     movf    display+1, w
     movwf   PORTC
-    bsf	    PORTD, 1    
-    
-next_display:
-    movlw   1
-    xorwf   banderas, f
+    bsf	    PORTD, 1  
+    btfsc   ban1, 0
+    goto    display2
+    incf    ban1
     return
+    
+display2:	//11 
+    CLRF    PORTD
+    movf    display+2, w
+    movwf   PORTC
+    bsf	    PORTD, 2  
+    incf    ban1
+    incf    ban0
     
 return_t0:
     return
@@ -139,6 +154,7 @@ int_ioc:
     BTFSS   PORTB, DOWN
     DECF    PORTA
     BCF	    RBIF
+    
     return 
     
 PSECT code, delta=2, abs
@@ -179,34 +195,41 @@ loop:	    //el código cueanto no hay interrupciones
     
     MOVF    PORTA, W		; Valor del PORTA a W
     MOVWF   valor		; Movemos W a variable valor
-    call    OBTENER_NIBBLE
+    //call    OBTENER_NIBBLE
+    //call    compare
     CALL    SET_DISPLAYS
-    GOTO loop
+    GOTO    loop
     
 //////////////////////////////////////////////////////////
-    
-OBTENER_NIBBLE:			;    Ejemplo:				; Obtenemos nibble bajo
-    MOVF    valor, w		;    Valor = 1101 0101
-    ANDLW   0X0F		;	 AND 0000 1111
-    MOVWF   nibbles		;	     0000 0101	
-				; Obtenemos nibble alto
-    SWAPF   valor, w		;     Valor = 1101 0101
-    ANDLW   0X0F		;	  AND 1111 0000
-    MOVWF   nibbles+1		;	      1101 0000
-    RETURN
-    
+;    
+;OBTENER_NIBBLE:			;    Ejemplo:				; Obtenemos nibble bajo
+;    MOVF    valor, w		;    Valor = 1101 0101
+;    ANDLW   0X0F		;	 AND 0000 1111
+;    MOVWF   nibbles		;	     0000 0101	
+;			; Obtenemos nibble alto
+;    SWAPF   valor, w		;     Valor = 1101 0101
+;    ANDLW   0X0F		;	  AND 1111 0000
+;    MOVWF   nibbles+1		;	      1101 0000	; Obtenemos nibble alto
+;    
+;    movlw   0x03		;      PRUEBA para 3
+;    MOVWF   nibbles+2		;	      1101 0000
+;    RETURN
+;    
 SET_DISPLAYS:
-    MOVF    nibbles, W		; Movemos nibble bajo a W
+    call    compare		//se resta
+    MOVF    seg1, W		; Movemos nibble bajo a W
     CALL    table		; Buscamos valor a cargar en PORTC
     MOVWF   display		; Guardamos en display
     
-    MOVF    nibbles+1, W	; Movemos nibble alto a W
+    MOVF    dec1, W	    ; Movemos nibble alto a W
     CALL    table		; Buscamos valor a cargar en PORTC
     MOVWF   display+1		; Guardamos en display+1
+  
+    MOVF    cen1, W	; Movemos nibble alto a W
+    CALL    table		; Buscamos valor a cargar en PORTC
+    MOVWF   display+2		; Guardamos en display+1
     RETURN
-//	GOTO	sig_display
-    
-    
+   
     
 ///////////////////////configuraciones///////////////////////
 config_reloj:
@@ -217,17 +240,7 @@ config_reloj:
     BSF OSCCON, 4	;IRCF<2:0> -> 101 2MHz
     return
     
- /*
-reset_tmr0:
-    INCF PORTB
-    call compare
-    BANKSEL TMR0
-    MOVLW   227		;15ms delay
-    // N = 256 - [(T * Fosc) / (4 * PS)]
-    MOVWF   TMR0
-    BCF T0IF
-    return  */
- 
+    
 config_ioc:
     BANKSEL IOCB
     BSF IOCB, UP	    ;habilita interrupt
@@ -255,10 +268,15 @@ config_io:
    
     BCF	TRISD, 0		; Apagamos RD0
     BCF	TRISD, 1		; Apagamos RD1
+    BCF	TRISD, 2		; Apagamos RD2
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
     CLRF PORTC
     CLRF PORTA
-    CLRF    banderas		; Limpiamos GPR
+    CLRF    ban0		; Limpiamos GPR
+    CLRF    ban1		; Limpiamos GPR
+    CLRF    seg1		; Limpiamos GPR
+    CLRF    cen1		; Limpiamos GPR
+    CLRF    dec1		; Limpiamos GPR
     
     return 
     
@@ -281,4 +299,41 @@ config_int:
     BSF	    T0IE	    ; Habilitamos interrupcion TMR0
     BCF	    T0IF	    ; Limpiamos bandera de TMR0
     RETURN
+ /*
+  division  
+    */
+compare:
+    clrf    cen1
+
+    movlw   0x64	     //se le asigna 100 a w
+    incf    cen1	    //incrementa cen1
+    subwf   valor, w	     //w = valor - 100
+    movwf   valor	     //valor = w
+    btfsc   STATUS, 0	    //if status,0 = 0, skip
+    GOTO    $-5		    //regresa a  "movlw   0x64"
+    decf    cen1	    //le resta 1 a las centenas
     
+    movlw   0x64	    //se le asigna 100 a w
+    addwf   valor, w	    //se le suma 100 a valor porque está negativo
+    clrf    dec1	    //limpia dec1
+    
+    movlw   0x0A	    //se le asigna 10 a w
+    incf    dec1	    //incrementa dec1
+    subwf   valor, w	    //w = valor - 10
+    movwf   valor	     //valor = w
+    btfsc   STATUS, 0	    //if status,0 = 0, skip
+    GOTO    $-5		    //regresa a  "movlw   0x0A"
+    decf    dec1 	    //le resta 1 a las decenas
+    
+    clrf    seg1
+    movlw   0x0A
+    addwf   valor, w	    //w = valor + w
+    movwf   seg1   
+    
+    incf    seg1 	    //le resta 1 a las decenas
+    incf    seg1 	    //le resta 1 a las decenas
+    incf    seg1 	    //le resta 1 a las decenas
+    incf    seg1 	    //le resta 1 a las decenas
+    
+    return
+  
