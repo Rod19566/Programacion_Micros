@@ -2498,11 +2498,11 @@ DOWN EQU 1
 
 
 
-    PSECT udata_bank0 ;common
+    PSECT udata_bank0 ;common 0000
     cont4:
  DS 2
     valor:
- DS 1 ; Contiene valor a mostrar en los displays de 7-seg
+ DS 2 ; Contiene valor a mostrar en los displays de 7-seg
     ban0:
  DS 1 ; Indica que display hay que encender
     ban1:
@@ -2512,11 +2512,11 @@ DOWN EQU 1
     display:
  DS 3 ; Representación de cada nibble en el display de 7-seg
     seg1:
- DS 2 ; segundos para el display de 7-seg
+ DS 1 ; segundos para el display de 7-seg
     dec1:
- DS 2 ; decimales para el display de 7-seg
+ DS 1 ; decimales para el display de 7-seg
     cen1:
- DS 2 ; centenas para el display de 7-seg
+ DS 1 ; centenas para el display de 7-seg
 
 PSECT udata_shr ;memoria compartida
     W_TEMP:
@@ -2641,8 +2641,8 @@ main:
 
 
 loop:
-
-    MOVF PORTA, W ; Valor del PORTA a W
+    clrf valor
+    MOVF PORTA, w ; Valor del PORTA a W
     MOVWF valor ; Movemos W a variable valor
 
 
@@ -2666,17 +2666,18 @@ loop:
 ;
 SET_DISPLAYS:
     call compare
-    MOVF seg1, W ; Movemos nibble bajo a W
+
+    MOVF cen1, W ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTC
-    MOVWF display ; Guardamos en display
+    MOVWF display+2 ; Guardamos en display+1
 
     MOVF dec1, W ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTC
     MOVWF display+1 ; Guardamos en display+1
 
-    MOVF cen1, W ; Movemos nibble alto a W
+    MOVF seg1, w ; Movemos nibble bajo a W
     CALL table ; Buscamos valor a cargar en PORTC
-    MOVWF display+2 ; Guardamos en display+1
+    MOVWF display ; Guardamos en display
     RETURN
 
 
@@ -2723,9 +2724,10 @@ config_io:
     CLRF PORTA
     CLRF ban0 ; Limpiamos GPR
     CLRF ban1 ; Limpiamos GPR
-    CLRF seg1 ; Limpiamos GPR
-    CLRF cen1 ; Limpiamos GPR
-    CLRF dec1 ; Limpiamos GPR
+    CLRF seg1 ; Limpiamos seg1
+    CLRF cen1 ; Limpiamos cen1
+    CLRF dec1 ; Limpiamos dec1
+
 
     return
 
@@ -2752,36 +2754,34 @@ config_int:
 
 
 compare:
-    clrf cen1
 
-    movlw 0x64
+    clrf cen1
+    decf cen1
+
+    movlw 100
     incf cen1
     subwf valor, w
     movwf valor
     btfsc STATUS, 0
     GOTO $-5
-    decf cen1
 
-    movlw 0x64
+    movlw 100
     addwf valor, w
+    movwf valor
     clrf dec1
 
-    movlw 0x0A
+    movlw 10
     incf dec1
     subwf valor, w
     movwf valor
     btfsc STATUS, 0
     GOTO $-5
-    decf dec1
 
+    decf dec1
     clrf seg1
-    movlw 0x0A
+
+    movlw 10
     addwf valor, w
     movwf seg1
-
-    incf seg1
-    incf seg1
-    incf seg1
-    incf seg1
 
     return
