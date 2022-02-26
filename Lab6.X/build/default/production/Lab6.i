@@ -2479,9 +2479,9 @@ ENDM
 
 
   RESET_TMR1 MACRO
-    movlw 0xB
+    movlw 58500
     movwf TMR1H
-    movlw 0x47
+    movlw 65474
     movwf TMR1L
     bcf ((PIR1) and 07Fh), 0
     ENDM
@@ -2619,8 +2619,8 @@ config_reloj:
     BANKSEL OSCCON ;banco 1
     BSF OSCCON, 0 ; ((OSCCON) and 07Fh), 0 -> 1, se usa reloj interno
     BSF OSCCON, 6
-    BSF OSCCON, 5
-    BCF OSCCON, 4 ;IRCF<2:0> -> 101 2MHz
+    BCF OSCCON, 5
+    BCF OSCCON, 4 ;IRCF<2:0> -> 2 MHz
 
     return
 
