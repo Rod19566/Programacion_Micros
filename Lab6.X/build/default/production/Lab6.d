@@ -1,1 +1,1 @@
-build/default/production\Lab6.i: Lab6.s
+build/default/production\Lab6.i: Lab6.s macros.s

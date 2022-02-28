@@ -12,6 +12,7 @@
  */   
 PROCESSOR 16F887
 #include <xc.inc>
+#include "macros.s"
     
  // Td = Pre * TMR1*Ti
  // N = 65536-(Td/Pre*Ti)
@@ -38,24 +39,8 @@ PROCESSOR 16F887
 ; CONFIG2
   CONFIG  BOR4V = BOR40V        ; Brown-out Reset Selection bit (Brown-out Reset set to 4.0V)
   CONFIG  WRT = OFF             ; Flash Program Memory Self Write Enable bits (Write protection off)
+  
 
-/////////////////////////MACROS///////////////////////  
-  RESET_TMR1 MACRO  //1 segundo
-    movlw   194		//64911	// N = 65536-(Td/Pre*Ti)
-    movwf   TMR1H
-    movlw   98	 //PR2 = Ttmr2if/Prescaler * Postscaler * (1/(Fosc/4))
-    movwf   TMR1L
-    bcf	    TMR1IF
-    ENDM  
-    
-    RESET_TMR2 MACRO  //1 segundo
-    banksel TRISB
-    movlw   255
-    movwf   PR2
-    CLRF    TMR2
-    BCF	    TMR2IF
-    ENDM
-////////////////////////////////////////////////////////
     ////////////////////VARIABLES//////////////////////////
     PSECT udata_bank0 ;common	    0000 
     cont4:
@@ -103,10 +88,13 @@ PUSH:
     MOVWF   STATUS_TEMP	    ; Guardamos STATUS
     
 ISR:    
+    btfsc   T0IF
+    call    int_t0
     btfsc   TMR1IF
     call    int_t1
     btfsc   TMR2IF
-    call    int_t2
+    call    int_t2 
+    
     
     
 POP:
@@ -134,35 +122,38 @@ int_t2:
 return_t2:
     return
     
-    /*
-    CLRF    PORTD
+int_t0:
+    RESET_TMR0	    	;15 ms
+    CLRF    PORTE
     btfsc   ban0, 0
     goto    display1   //01
     
 display0:	//00
     movf    display, w	    //w = display
-    movwf   PORTC	    //PORTC = w
-    bsf	    PORTD, 0	    //se prende el display 1
+    movwf   PORTD	    //PORTC = w
+    bsf	    PORTE, 0	    //se prende el display 1
     incf    ban0	    //se levanta la bandera 1
     return
     
 display1:	//01
     movf    display+1, w    //w = display+1
-    movwf   PORTC	    //PORTC = w
-    bsf	    PORTD, 1 	    //se prende el display 2 
+    movwf   PORTD	    //PORTC = w
+    bsf	    PORTE, 1 	    //se prende el display 2 
     btfsc   ban1, 0	    //se revisa la bandera 2
     goto    display2	
     incf    ban1	    //se levanta la bandera 2
     return
     
 display2:	//11 
-    CLRF    PORTD	    //le limpia el PORTD
+    CLRF    PORTE	    //le limpia el PORTE
     movf    display+2, w    //w = display+2
-    movwf   PORTC	    //PORTC = w
-    bsf	    PORTD, 2 	    //se prende el display 3  
+    movwf   PORTD	    //PORTC = w
+    bsf	    PORTE, 2 	    //se prende el display 3  
     incf    ban1	    //se levanta la bandera 2
     incf    ban0	    //se levanta la bandera 1
-   */ 
+    
+return_t0:
+    return   
 
      
     
@@ -193,6 +184,7 @@ table:
 main:   
     call config_reloj	//oscilador
     call config_io	//I/O
+    call config_tmr0	//TMR0
     call config_tmr1
     call config_tmr2
     call config_int	//interrupciones
@@ -200,16 +192,16 @@ main:
         
     
 loop:	    //el código cueanto no hay interrupciones
-  /*  clrf    valor
+    clrf    valor
     MOVF    PORTA, w		; Valor del PORTA a W
     MOVWF   valor		; Movemos W a variable valor
-   // CALL    SET_DISPLAYS*/
+    CALL    SET_DISPLAYS
     GOTO    loop
     
 //////////////////////////////////////////////////////////
   
 SET_DISPLAYS:
-    //call    compare		//se resta
+    call    compare		//se resta
   
     MOVF    cen1, W		; Movemos nibble alto a W
     CALL    table		; Buscamos valor a cargar en PORTC
@@ -239,14 +231,14 @@ config_io:
     BANKSEL ANSEL
     CLRF ANSEL	
     CLRF ANSELH	    ;I/O digitales 
-    BANKSEL TRISC
-    CLRF TRISC	    ;PORTC como salida display
+    BANKSEL TRISD
+    CLRF TRISD	    ;PORTC como salida display
     CLRF TRISA	    ;PORTA como salida contador A
     BCF	TRISB, 0		; RB0	
-    BCF	TRISD, 0		; Apagamos RD0
-    BCF	TRISD, 1		; Apagamos RD1
+    BCF	TRISE, 0		; Apagamos RD0
+    BCF	TRISE, 1		; Apagamos RD1
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
-    CLRF PORTC
+    CLRF PORTD
     CLRF PORTA
     CLRF    ban0		; Limpiamos GPR
     CLRF    ban1		; Limpiamos GPR
@@ -254,6 +246,17 @@ config_io:
     CLRF    cen1		; Limpiamos cen1
     CLRF    dec1		; Limpiamos dec1
         
+    return 
+    
+  config_tmr0:
+    BANKSEL OPTION_REG	;banco 1
+    BCF T0CS		;TMR0 como temporizador
+    BCF PSA		;se asigna prescaler to Timer0
+    BSF PS2
+    BSF PS1
+    BSF PS0		;PS<2:0> -> 111 prescaler 1 : 256
+    BANKSEL PORTA
+    RESET_TMR0
     return 
     
  config_tmr1:		;PS<2:0> -> 111 prescaler 1 : 256
@@ -286,6 +289,8 @@ config_int:
     bsf	    TMR1IE	    //tmr1 interrupt
     bsf	    TMR2IE	    //tmr2 interrupt
     BANKSEL INTCON
+    BSF	    T0IE	    ; Habilitamos interrupcion TMR0
+    BCF	    T0IF	    ; Limpiamos bandera de TMR0
     bcf	    TMR1IF	    //bandera tmr2
     bcf	    TMR2IF
     bsf	    PEIE

@@ -2450,6 +2450,33 @@ auto_size SET 0
 ENDM
 # 7 "C:\\Program Files\\Microchip\\xc8\\v2.35\\pic\\include\\xc.inc" 2 3
 # 15 "Lab6.s" 2
+# 1 "./macros.s" 1
+
+
+  RESET_TMR0 macro
+    BANKSEL TMR0
+    MOVLW 255 ;2ms delay
+
+    MOVWF TMR0
+    BCF ((INTCON) and 07Fh), 2
+    ENDM
+
+  RESET_TMR1 MACRO
+    movlw 194
+    movwf TMR1H
+    movlw 98
+    movwf TMR1L
+    bcf ((PIR1) and 07Fh), 0
+    ENDM
+
+   RESET_TMR2 MACRO
+    banksel TRISB
+    movlw 245
+    movwf PR2
+    CLRF TMR2
+    BCF ((PIR1) and 07Fh), 1
+    ENDM
+# 16 "Lab6.s" 2
 
 
 
@@ -2477,22 +2504,6 @@ ENDM
   CONFIG BOR4V = BOR40V ; Brown-out Reset Selection bit (Brown-out Reset set to 4.0V)
   CONFIG WRT = OFF ; Flash Program Memory Self Write Enable bits (Write protection off)
 
-
-  RESET_TMR1 MACRO
-    movlw 194
-    movwf TMR1H
-    movlw 98
-    movwf TMR1L
-    bcf ((PIR1) and 07Fh), 0
-    ENDM
-
-    RESET_TMR2 MACRO
-    banksel TRISB
-    movlw 255
-    movwf PR2
-    CLRF TMR2
-    BCF ((PIR1) and 07Fh), 1
-    ENDM
 
 
     PSECT udata_bank0 ;common 0000
@@ -2541,10 +2552,13 @@ PUSH:
     MOVWF STATUS_TEMP ; Guardamos STATUS
 
 ISR:
+    btfsc ((INTCON) and 07Fh), 2
+    call int_t0
     btfsc ((PIR1) and 07Fh), 0
     call int_t1
     btfsc ((PIR1) and 07Fh), 1
     call int_t2
+
 
 
 POP:
@@ -2571,7 +2585,42 @@ int_t2:
 
 return_t2:
     return
-# 169 "Lab6.s"
+
+int_t0:
+    RESET_TMR0 ;15 ms
+    CLRF PORTE
+    btfsc ban0, 0
+    goto display1
+
+display0:
+    movf display, w
+    movwf PORTD
+    bsf PORTE, 0
+    incf ban0
+    return
+
+display1:
+    movf display+1, w
+    movwf PORTD
+    bsf PORTE, 1
+    btfsc ban1, 0
+    goto display2
+    incf ban1
+    return
+
+display2:
+    CLRF PORTE
+    movf display+2, w
+    movwf PORTD
+    bsf PORTE, 2
+    incf ban1
+    incf ban0
+
+return_t0:
+    return
+
+
+
 PSECT code, delta=2, abs
 ORG 100h
 table:
@@ -2599,6 +2648,7 @@ table:
 main:
     call config_reloj
     call config_io
+    call config_tmr0
     call config_tmr1
     call config_tmr2
     call config_int
@@ -2606,16 +2656,16 @@ main:
 
 
 loop:
-
-
-
-
+    clrf valor
+    MOVF PORTA, w ; Valor del PORTA a W
+    MOVWF valor ; Movemos W a variable valor
+    CALL SET_DISPLAYS
     GOTO loop
 
 
 
 SET_DISPLAYS:
-
+    call compare
 
     MOVF cen1, W ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTC
@@ -2645,14 +2695,14 @@ config_io:
     BANKSEL ANSEL
     CLRF ANSEL
     CLRF ANSELH ;I/O digitales
-    BANKSEL TRISC
-    CLRF TRISC ;PORTC como salida display
+    BANKSEL TRISD
+    CLRF TRISD ;PORTC como salida display
     CLRF TRISA ;PORTA como salida contador A
     BCF TRISB, 0 ; ((PORTB) and 07Fh), 0
-    BCF TRISD, 0 ; Apagamos ((PORTD) and 07Fh), 0
-    BCF TRISD, 1 ; Apagamos ((PORTD) and 07Fh), 1
+    BCF TRISE, 0 ; Apagamos ((PORTD) and 07Fh), 0
+    BCF TRISE, 1 ; Apagamos ((PORTD) and 07Fh), 1
     BANKSEL PORTC ;se selecciona el banco 0 (00)
-    CLRF PORTC
+    CLRF PORTD
     CLRF PORTA
     CLRF ban0 ; Limpiamos GPR
     CLRF ban1 ; Limpiamos GPR
@@ -2660,6 +2710,17 @@ config_io:
     CLRF cen1 ; Limpiamos cen1
     CLRF dec1 ; Limpiamos dec1
 
+    return
+
+  config_tmr0:
+    BANKSEL OPTION_REG ;banco 1
+    BCF ((OPTION_REG) and 07Fh), 5 ;TMR0 como temporizador
+    BCF ((OPTION_REG) and 07Fh), 3 ;se asigna prescaler to Timer0
+    BSF ((OPTION_REG) and 07Fh), 2
+    BSF ((OPTION_REG) and 07Fh), 1
+    BSF ((OPTION_REG) and 07Fh), 0 ;PS<2:0> -> 111 prescaler 1 : 256
+    BANKSEL PORTA
+    RESET_TMR0
     return
 
  config_tmr1: ;PS<2:0> -> 111 prescaler 1 : 256
@@ -2692,6 +2753,8 @@ config_int:
     bsf ((PIE1) and 07Fh), 0
     bsf ((PIE1) and 07Fh), 1
     BANKSEL INTCON
+    BSF ((INTCON) and 07Fh), 5 ; Habilitamos interrupcion TMR0
+    BCF ((INTCON) and 07Fh), 2 ; Limpiamos bandera de TMR0
     bcf ((PIR1) and 07Fh), 0
     bcf ((PIR1) and 07Fh), 1
     bsf ((INTCON) and 07Fh), 6
