@@ -2479,11 +2479,19 @@ ENDM
 
 
   RESET_TMR1 MACRO
-    movlw 58500
+    movlw 194
     movwf TMR1H
-    movlw 65474
+    movlw 98
     movwf TMR1L
     bcf ((PIR1) and 07Fh), 0
+    ENDM
+
+    RESET_TMR2 MACRO
+    banksel TRISB
+    movlw 255
+    movwf PR2
+    CLRF TMR2
+    BCF ((PIR1) and 07Fh), 1
     ENDM
 
 
@@ -2535,6 +2543,8 @@ PUSH:
 ISR:
     btfsc ((PIR1) and 07Fh), 0
     call int_t1
+    btfsc ((PIR1) and 07Fh), 1
+    call int_t2
 
 
 POP:
@@ -2548,14 +2558,20 @@ POP:
 
 
 
- int_t1:
+int_t1:
     RESET_TMR1
     incf PORTA
-# 145 "Lab6.s"
+
 return_t1:
     return
 
+int_t2:
+    bcf ((PIR1) and 07Fh), 1
+    incf PORTB
 
+return_t2:
+    return
+# 169 "Lab6.s"
 PSECT code, delta=2, abs
 ORG 100h
 table:
@@ -2584,14 +2600,15 @@ main:
     call config_reloj
     call config_io
     call config_tmr1
+    call config_tmr2
     call config_int
     BANKSEL PORTA
 
 
 loop:
-    clrf valor
-    MOVF PORTA, w ; Valor del PORTA a W
-    MOVWF valor ; Movemos W a variable valor
+
+
+
 
     GOTO loop
 
@@ -2618,9 +2635,9 @@ SET_DISPLAYS:
 config_reloj:
     BANKSEL OSCCON ;banco 1
     BSF OSCCON, 0 ; ((OSCCON) and 07Fh), 0 -> 1, se usa reloj interno
-    BSF OSCCON, 6
-    BCF OSCCON, 5
-    BCF OSCCON, 4 ;IRCF<2:0> -> 2 MHz
+    BCF OSCCON, 6
+    BSF OSCCON, 5
+    BSF OSCCON, 4 ;IRCF<2:0> -> 2 MHz
 
     return
 
@@ -2631,6 +2648,7 @@ config_io:
     BANKSEL TRISC
     CLRF TRISC ;PORTC como salida display
     CLRF TRISA ;PORTA como salida contador A
+    BCF TRISB, 0 ; ((PORTB) and 07Fh), 0
     BCF TRISD, 0 ; Apagamos ((PORTD) and 07Fh), 0
     BCF TRISD, 1 ; Apagamos ((PORTD) and 07Fh), 1
     BANKSEL PORTC ;se selecciona el banco 0 (00)
@@ -2646,23 +2664,40 @@ config_io:
 
  config_tmr1: ;PS<2:0> -> 111 prescaler 1 : 256
     BANKSEL PORTA
-    bcf ((T1CON) and 07Fh), 6
-    bsf ((T1CON) and 07Fh), 5
-    bsf ((T1CON) and 07Fh), 4
-    bcf ((T1CON) and 07Fh), 3
+
+    bsf ((T1CON) and 07Fh), 3
     bcf ((T1CON) and 07Fh), 1
     bsf ((T1CON) and 07Fh), 0
+    bsf ((T1CON) and 07Fh), 5
+    bsf ((T1CON) and 07Fh), 4
     RESET_TMR1
+    return
+
+config_tmr2:
+    BANKSEL PORTA
+    bsf ((T2CON) and 07Fh), 6
+    bsf ((T2CON) and 07Fh), 5
+    bsf ((T2CON) and 07Fh), 4
+    bsf ((T2CON) and 07Fh), 3
+
+    bsf ((T2CON) and 07Fh), 1
+    bcf ((T2CON) and 07Fh), 0
+    bsf ((T2CON) and 07Fh), 2
+
+    RESET_TMR2
     return
 
 config_int:
     BANKSEL TRISA
     bsf ((PIE1) and 07Fh), 0
+    bsf ((PIE1) and 07Fh), 1
     BANKSEL INTCON
     bcf ((PIR1) and 07Fh), 0
+    bcf ((PIR1) and 07Fh), 1
     bsf ((INTCON) and 07Fh), 6
     BSF ((INTCON) and 07Fh), 7 ; Habilitamos interrupciones
     RETURN
+
 
 
 

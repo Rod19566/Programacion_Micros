@@ -41,11 +41,19 @@ PROCESSOR 16F887
 
 /////////////////////////MACROS///////////////////////  
   RESET_TMR1 MACRO  //1 segundo
-    movlw   58500//64911
+    movlw   194		//64911	// N = 65536-(Td/Pre*Ti)
     movwf   TMR1H
-    movlw   65474
+    movlw   98	 //PR2 = Ttmr2if/Prescaler * Postscaler * (1/(Fosc/4))
     movwf   TMR1L
     bcf	    TMR1IF
+    ENDM  
+    
+    RESET_TMR2 MACRO  //1 segundo
+    banksel TRISB
+    movlw   255
+    movwf   PR2
+    CLRF    TMR2
+    BCF	    TMR2IF
     ENDM
 ////////////////////////////////////////////////////////
     ////////////////////VARIABLES//////////////////////////
@@ -97,6 +105,8 @@ PUSH:
 ISR:    
     btfsc   TMR1IF
     call    int_t1
+    btfsc   TMR2IF
+    call    int_t2
     
     
 POP:
@@ -110,9 +120,20 @@ POP:
 /////////////////////////configuracion/////////////////////////
 //RESET_TMR1 
 
- int_t1:
+int_t1:
     RESET_TMR1 
     incf    PORTA
+    
+return_t1:
+    return
+   
+int_t2:
+    bcf	    TMR2IF
+    incf    PORTB 
+     
+return_t2:
+    return
+    
     /*
     CLRF    PORTD
     btfsc   ban0, 0
@@ -142,9 +163,8 @@ display2:	//11
     incf    ban1	    //se levanta la bandera 2
     incf    ban0	    //se levanta la bandera 1
    */ 
-return_t1:
-    return
-    
+
+     
     
 PSECT code, delta=2, abs
 ORG 100h
@@ -174,15 +194,16 @@ main:
     call config_reloj	//oscilador
     call config_io	//I/O
     call config_tmr1
+    call config_tmr2
     call config_int	//interrupciones
     BANKSEL PORTA
         
     
 loop:	    //el código cueanto no hay interrupciones
-    clrf    valor
+  /*  clrf    valor
     MOVF    PORTA, w		; Valor del PORTA a W
     MOVWF   valor		; Movemos W a variable valor
-   // CALL    SET_DISPLAYS
+   // CALL    SET_DISPLAYS*/
     GOTO    loop
     
 //////////////////////////////////////////////////////////
@@ -208,9 +229,9 @@ SET_DISPLAYS:
 config_reloj:
     BANKSEL OSCCON	;banco 1
     BSF OSCCON, 0	; SCS -> 1, se usa reloj interno
-    BSF OSCCON, 6
-    BCF OSCCON, 5
-    BCF OSCCON, 4	;IRCF<2:0> -> 2 MHz
+    BCF OSCCON, 6
+    BSF OSCCON, 5
+    BSF OSCCON, 4	;IRCF<2:0> -> 2 MHz
     
     return
        
@@ -221,6 +242,7 @@ config_io:
     BANKSEL TRISC
     CLRF TRISC	    ;PORTC como salida display
     CLRF TRISA	    ;PORTA como salida contador A
+    BCF	TRISB, 0		; RB0	
     BCF	TRISD, 0		; Apagamos RD0
     BCF	TRISD, 1		; Apagamos RD1
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
@@ -236,23 +258,40 @@ config_io:
     
  config_tmr1:		;PS<2:0> -> 111 prescaler 1 : 256
     BANKSEL PORTA
-    bcf	    TMR1GE
-    bsf	    T1CKPS1	//prescale 8:1
-    bsf	    T1CKPS0
-    bcf	    T1OSCEN	//internal clock
+   // bcf	    TMR1GE
+    bsf	    T1OSCEN	//internal clock
     bcf	    TMR1CS
     bsf	    TMR1ON	//TIMER1  ON
+    bsf	    T1CKPS1	//prescaler 8:1
+    bsf	    T1CKPS0
     RESET_TMR1 
     return 
-      
+    
+config_tmr2:
+    BANKSEL PORTA	//prescaler 1:16
+    bsf	    TOUTPS3	//TOUTPS<3:0>: 1111
+    bsf	    TOUTPS2
+    bsf	    TOUTPS1
+    bsf	    TOUTPS0
+    
+    bsf	    T2CKPS1	//prescaler 1:16
+    bcf	    T2CKPS0
+    bsf	    TMR2ON
+    
+    RESET_TMR2 
+    return
+    
 config_int:
     BANKSEL TRISA
     bsf	    TMR1IE	    //tmr1 interrupt
+    bsf	    TMR2IE	    //tmr2 interrupt
     BANKSEL INTCON
-    bcf	    TMR1IF
+    bcf	    TMR1IF	    //bandera tmr2
+    bcf	    TMR2IF
     bsf	    PEIE
     BSF	    GIE		    ; Habilitamos interrupciones
     RETURN
+    
  /*
   division  
     */

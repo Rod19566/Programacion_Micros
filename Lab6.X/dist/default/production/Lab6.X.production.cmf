@@ -12,9 +12,9 @@
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
 $build/default/production/Lab6.o
-inVect code 0 0 0 15 2 1
+inVect code 0 0 0 1A 2 1
 resVect code 0 0 0 3 2 1
-code CODE 0 0 0 172 2 1
+code CODE 0 0 0 182 2 1
 udata_bank0 BANK0 1 20 20 F 1 1
 udata_shr COMMON 1 70 70 3 1 1
 config CONFIG 4 2007 2007 2 2 1
@@ -32,14 +32,14 @@ BANK0 2F-6F 1
 BANK1 A0-EF 1
 BANK2 110-16F 1
 BANK3 190-1EF 1
-CONST 172-1FFF 2
-ENTRY 172-1FFF 2
+CONST 182-1FFF 2
+ENTRY 182-1FFF 2
 IDLOC 2000-2003 2
-CODE 172-1FFF 2
+CODE 182-1FFF 2
 COMMON 73-7F 1
 EEDATA 2100-21FF 2
-STRCODE 172-1FFF 2
-STRING 172-1FFF 2
+STRCODE 182-1FFF 2
+STRING 182-1FFF 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -54,134 +54,153 @@ STRING 172-1FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $build/default/production/Lab6.o
-0 inVect code >89:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-4 inVect code >93:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-5 inVect code >94:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-6 inVect code >95:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-7 inVect code >98:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-8 inVect code >99:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-9 inVect code >103:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-A inVect code >104:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-B inVect code >105:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-C inVect code >106:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-D inVect code >107:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-E inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-F inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10 inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11 inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12 inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13 inVect code >115:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14 inVect code >146:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-0 resVect code >81:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-0 resVect code >85:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-2 resVect code >86:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-0 code CODE >150:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-100 code CODE >152:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-101 code CODE >153:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-102 code CODE >154:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-103 code CODE >155:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-104 code CODE >156:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-105 code CODE >157:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-106 code CODE >158:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-107 code CODE >159:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-108 code CODE >160:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-109 code CODE >161:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10A code CODE >162:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10B code CODE >163:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10C code CODE >164:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10D code CODE >165:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10E code CODE >166:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-10F code CODE >167:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-110 code CODE >168:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-111 code CODE >169:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-112 code CODE >170:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-113 code CODE >171:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-114 code CODE >174:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-115 code CODE >175:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-116 code CODE >176:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-117 code CODE >177:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-118 code CODE >178:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11A code CODE >182:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11B code CODE >183:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11C code CODE >184:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11D code CODE >186:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11E code CODE >193:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-11F code CODE >194:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-120 code CODE >195:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-121 code CODE >197:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-122 code CODE >198:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-123 code CODE >199:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-124 code CODE >201:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-125 code CODE >202:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-126 code CODE >203:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-127 code CODE >204:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-128 code CODE >209:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12A code CODE >210:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12B code CODE >211:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12C code CODE >212:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12D code CODE >213:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12E code CODE >215:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-12F code CODE >218:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-131 code CODE >219:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-132 code CODE >220:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-133 code CODE >221:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-135 code CODE >222:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-136 code CODE >223:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-137 code CODE >224:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-138 code CODE >225:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-139 code CODE >226:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13B code CODE >227:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13C code CODE >228:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13D code CODE >229:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13E code CODE >230:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-13F code CODE >231:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-140 code CODE >232:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-141 code CODE >233:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-142 code CODE >235:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-143 code CODE >238:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-145 code CODE >239:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-146 code CODE >240:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-147 code CODE >241:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-148 code CODE >242:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-149 code CODE >243:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14A code CODE >244:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14B code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14C code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14D code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14E code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-14F code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-150 code CODE >246:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-151 code CODE >249:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-153 code CODE >250:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-154 code CODE >251:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-156 code CODE >252:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-157 code CODE >253:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-158 code CODE >254:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-159 code CODE >255:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15A code CODE >261:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15B code CODE >262:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15C code CODE >264:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15D code CODE >265:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15E code CODE >266:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-15F code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-160 code CODE >268:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-161 code CODE >269:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-162 code CODE >271:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-163 code CODE >272:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-164 code CODE >273:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-165 code CODE >274:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-166 code CODE >276:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-167 code CODE >277:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-168 code CODE >278:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-169 code CODE >279:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16A code CODE >280:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16B code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16C code CODE >283:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16D code CODE >284:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16E code CODE >286:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-16F code CODE >287:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-170 code CODE >288:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
-171 code CODE >290:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+0 inVect code >97:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+4 inVect code >101:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+5 inVect code >102:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+6 inVect code >103:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+7 inVect code >106:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+8 inVect code >107:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+9 inVect code >108:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+A inVect code >109:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+B inVect code >113:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+C inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+D inVect code >115:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+E inVect code >116:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+F inVect code >117:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10 inVect code >124:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11 inVect code >124:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12 inVect code >124:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13 inVect code >124:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14 inVect code >124:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15 inVect code >125:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16 inVect code >128:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17 inVect code >131:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+18 inVect code >132:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+19 inVect code >135:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+0 resVect code >89:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+0 resVect code >93:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+2 resVect code >94:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+0 code CODE >170:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+100 code CODE >172:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+101 code CODE >173:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+102 code CODE >174:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+103 code CODE >175:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+104 code CODE >176:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+105 code CODE >177:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+106 code CODE >178:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+107 code CODE >179:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+108 code CODE >180:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+109 code CODE >181:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10A code CODE >182:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10B code CODE >183:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10C code CODE >184:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10D code CODE >185:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10E code CODE >186:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+10F code CODE >187:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+110 code CODE >188:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+111 code CODE >189:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+112 code CODE >190:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+113 code CODE >191:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+114 code CODE >194:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+115 code CODE >195:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+116 code CODE >196:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+117 code CODE >197:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+118 code CODE >198:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+119 code CODE >199:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11B code CODE >207:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11C code CODE >214:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11D code CODE >215:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11E code CODE >216:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+11F code CODE >218:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+120 code CODE >219:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+121 code CODE >220:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+122 code CODE >222:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+123 code CODE >223:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+124 code CODE >224:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+125 code CODE >225:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+126 code CODE >230:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+128 code CODE >231:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+129 code CODE >232:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12A code CODE >233:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12B code CODE >234:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12C code CODE >236:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12D code CODE >239:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+12F code CODE >240:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+130 code CODE >241:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+131 code CODE >242:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+133 code CODE >243:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+134 code CODE >244:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+135 code CODE >245:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+136 code CODE >246:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+137 code CODE >247:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+138 code CODE >248:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13A code CODE >249:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13B code CODE >250:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13C code CODE >251:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13D code CODE >252:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13E code CODE >253:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+13F code CODE >254:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+140 code CODE >255:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+141 code CODE >257:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+142 code CODE >260:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+144 code CODE >262:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+145 code CODE >263:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+146 code CODE >264:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+147 code CODE >265:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+148 code CODE >266:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+149 code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14A code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14B code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14C code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14D code CODE >267:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14E code CODE >268:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+14F code CODE >271:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+151 code CODE >272:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+152 code CODE >273:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+153 code CODE >274:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+154 code CODE >275:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+155 code CODE >277:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+156 code CODE >278:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+157 code CODE >279:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+158 code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15A code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15B code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15C code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15D code CODE >281:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15E code CODE >282:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+15F code CODE >285:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+161 code CODE >286:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+162 code CODE >287:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+163 code CODE >288:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+165 code CODE >289:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+166 code CODE >290:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+167 code CODE >291:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+168 code CODE >292:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+169 code CODE >293:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16A code CODE >300:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16B code CODE >301:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16C code CODE >303:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16D code CODE >304:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16E code CODE >305:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+16F code CODE >306:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+170 code CODE >307:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+171 code CODE >308:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+172 code CODE >310:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+173 code CODE >311:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+174 code CODE >312:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+175 code CODE >313:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+176 code CODE >315:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+177 code CODE >316:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+178 code CODE >317:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+179 code CODE >318:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17A code CODE >319:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17B code CODE >320:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17C code CODE >322:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17D code CODE >323:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17E code CODE >325:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+17F code CODE >326:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+180 code CODE >327:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
+181 code CODE >329:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -194,7 +213,7 @@ F inVect code >114:C:\Users\Dina\Documents\ProgramacionMicros\Labs\Lab6.X\Lab6.s
 # was defined in a psect then <psect> will be "-". File-name
 # is the name of the object file in which the symbol was defined.
 %SYMTAB
-__Hspace_0 172 0 ABS 0 - -
+__Hspace_0 182 0 ABS 0 - -
 __Hspace_1 73 0 ABS 0 - -
 __Hspace_3 0 0 ABS 0 - -
 __Hspace_4 4010 0 ABS 0 - -
@@ -212,7 +231,7 @@ __Hcode 0 0 ABS 0 code -
 __Hdata 0 0 ABS 0 data -
 __Lcode 0 0 ABS 0 code -
 __Ldata 0 0 ABS 0 data -
-__HinVect 2A 0 code 0 inVect -
+__HinVect 34 0 code 0 inVect -
 __S0 0 0 ABS 0 - -
 __S1 73 0 ABS 0 - -
 __S3 0 0 ABS 0 - -
