@@ -125,6 +125,7 @@ return_t2:
 int_t0:
     RESET_TMR0	    	;15 ms
     CLRF    PORTE
+    CLRF    PORTD
     btfsc   ban0, 0
     goto    display1   //01
     
@@ -146,6 +147,7 @@ display1:	//01
     
 display2:	//11 
     CLRF    PORTE	    //le limpia el PORTE
+    CLRF    PORTD
     movf    display+2, w    //w = display+2
     movwf   PORTD	    //PORTC = w
     bsf	    PORTE, 2 	    //se prende el display 3  
@@ -192,6 +194,7 @@ main:
         
     
 loop:	    //el código cueanto no hay interrupciones
+    CLRF PORTD
     clrf    valor
     MOVF    PORTA, w		; Valor del PORTA a W
     MOVWF   valor		; Movemos W a variable valor

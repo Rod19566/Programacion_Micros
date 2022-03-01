@@ -2589,6 +2589,7 @@ return_t2:
 int_t0:
     RESET_TMR0 ;15 ms
     CLRF PORTE
+    CLRF PORTD
     btfsc ban0, 0
     goto display1
 
@@ -2610,6 +2611,7 @@ display1:
 
 display2:
     CLRF PORTE
+    CLRF PORTD
     movf display+2, w
     movwf PORTD
     bsf PORTE, 2
@@ -2656,6 +2658,7 @@ main:
 
 
 loop:
+    CLRF PORTD
     clrf valor
     MOVF PORTA, w ; Valor del PORTA a W
     MOVWF valor ; Movemos W a variable valor
