@@ -1,6 +1,6 @@
 
 /////////////////////////MACROS///////////////////////  
-  RESET_TMR0 macro 
+  RESET_TMR0 MACRO 
     BANKSEL TMR0
     MOVLW   255		;2ms delay
     // N = 256 - [(T * Fosc) / (4 * PS)]

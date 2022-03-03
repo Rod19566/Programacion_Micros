@@ -1,4 +1,4 @@
-/* Archivo:	    Proyecto1_Reloj_digital
+    /* Archivo:	    Proyecto1_Reloj_digital
     ; Dispositivo:  PIC16F887
     ; Autor:	    Dina Rodríguez
     ; Compilador:   pic-as (v2.30), MPLABX V6.00
@@ -13,6 +13,13 @@
 PROCESSOR 16F887
 #include <xc.inc>
 #include "macros.s"
+
+    //NOMBRE DE LOS BOTONES
+UP	EQU 0
+DOWN	EQU 1
+MODE	EQU 2
+ENTER	EQU 3
+PAUSE	EQU 4
     
  // Td = Pre * TMR1*Ti
  // N = 65536-(Td/Pre*Ti)
@@ -185,9 +192,10 @@ table:
 main:   
     call config_reloj	//oscilador
     call config_io	//I/O
+    call config_ioc	//PORTB PULLUP INTERRUPT
     call config_tmr0	//TMR0
-    call config_tmr1
-    call config_tmr2
+    call config_tmr1	//TMR1
+    call config_tmr2	//TMR2
     call config_int	//interrupciones
     BANKSEL PORTA
         
@@ -228,17 +236,47 @@ config_reloj:
     BSF OSCCON, 4	;IRCF<2:0> -> 2 MHz
     
     return
-       
+    
+config_ioc:	//CONFIGURACION DEL PORTB INTERRUPCIONES
+    BANKSEL IOCB
+    BSF IOCB, UP	    ;habilita interrupt
+    BSF IOCB, DOWN
+    BSF IOCB, MODE	    ;habilita interrupt
+    BSF IOCB, ENTER
+    BSF IOCB, PAUSE	    ;habilita interrupt
+    BANKSEL PORTA
+    movf PORTB, w
+    BCF RBIF
+    return
+           
 config_io:     
     BANKSEL ANSEL
     CLRF ANSEL	
     CLRF ANSELH	    ;I/O digitales 
+    
+    BCF STATUS, 6   ; BANCO 01 WPUB & TRIS
+    BSF INTCON, 0   ;RBIF PORTB Change Interrupt Flag bit habilitado
+    BSF TRISB, UP    ; RB0 como entrada
+    BSF TRISB, DOWN    ;RB1 como entrada
+    BSF TRISB, MODE    ; RB2 como entrada
+    BSF TRISB, ENTER    ;RB3 como entrada
+    BSF TRISB, PAUSE    ; RB4 como entrada
+    
+    BCF OPTION_REG, 7	;pull-ups are enabled by individual PORT latch values
+    BSF WPUB, UP	    ;habilita pull-up en RB0
+    BSF WPUB, DOWN	    ;habilita pull-up en RB1
+    BSF WPUB, MODE	    ;habilita pull-up en RB2
+    BSF WPUB, ENTER	    ;habilita pull-up en RB3
+    BSF WPUB, PAUSE	    ;habilita pull-up en RB4
+    
     BANKSEL TRISD
-    CLRF TRISD	    ;PORTC como salida display
-    CLRF TRISA	    ;PORTA como salida contador A
-    BCF	TRISB, 0		; RB0	
-    BCF	TRISE, 0		; Apagamos RD0
-    BCF	TRISE, 1		; Apagamos RD1
+    CLRF TRISD			;PORTD como salida display
+    CLRF TRISA			;PORTA como salida MUESTRA EL MODO
+    BCF	TRISE, 0		; SELECTOR DISPLAY0
+    BCF	TRISE, 1		; SELECTOR DISPLAY1
+    BCF	TRISE, 2		; SELECTOR DISPLAY2
+    BCF	TRISE, 3		; SELECTOR DISPLAY3
+    
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
     CLRF PORTD
     CLRF PORTA
@@ -293,9 +331,11 @@ config_int:
     BANKSEL INTCON
     BSF	    T0IE	    ; Habilitamos interrupcion TMR0
     BCF	    T0IF	    ; Limpiamos bandera de TMR0
-    bcf	    TMR1IF	    //bandera tmr2
-    bcf	    TMR2IF
+    bcf	    TMR1IF	    //bandera tmr
+    bcf	    TMR2IF	    //bandera tmr2
     bsf	    PEIE
+    BSF	    RBIE	    ; Habilitamos interrupcion PORTB
+    BCF	    RBIF	    ; Limpiamos bandera de PORTB
     BSF	    GIE		    ; Habilitamos interrupciones
     RETURN
     

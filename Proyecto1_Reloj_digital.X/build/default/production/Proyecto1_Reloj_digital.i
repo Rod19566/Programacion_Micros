@@ -2453,7 +2453,7 @@ ENDM
 # 1 "./macros.s" 1
 
 
-  RESET_TMR0 macro
+  RESET_TMR0 MACRO
     BANKSEL TMR0
     MOVLW 255 ;2ms delay
 
@@ -2477,6 +2477,13 @@ ENDM
     BCF ((PIR1) and 07Fh), 1
     ENDM
 # 16 "Proyecto1_Reloj_digital.s" 2
+
+
+UP EQU 0
+DOWN EQU 1
+MODE EQU 2
+ENTER EQU 3
+PAUSE EQU 4
 
 
 
@@ -2649,6 +2656,7 @@ table:
 main:
     call config_reloj
     call config_io
+    call config_ioc
     call config_tmr0
     call config_tmr1
     call config_tmr2
@@ -2693,16 +2701,46 @@ config_reloj:
 
     return
 
+config_ioc:
+    BANKSEL IOCB
+    BSF IOCB, UP ;habilita interrupt
+    BSF IOCB, DOWN
+    BSF IOCB, MODE ;habilita interrupt
+    BSF IOCB, ENTER
+    BSF IOCB, PAUSE ;habilita interrupt
+    BANKSEL PORTA
+    movf PORTB, w
+    BCF ((INTCON) and 07Fh), 0
+    return
+
 config_io:
     BANKSEL ANSEL
     CLRF ANSEL
     CLRF ANSELH ;I/O digitales
+
+    BCF STATUS, 6 ; BANCO 01 WPUB & TRIS
+    BSF INTCON, 0 ;((INTCON) and 07Fh), 0 PORTB Change Interrupt Flag bit habilitado
+    BSF TRISB, UP ; ((PORTB) and 07Fh), 0 como entrada
+    BSF TRISB, DOWN ;((PORTB) and 07Fh), 1 como entrada
+    BSF TRISB, MODE ; ((PORTB) and 07Fh), 2 como entrada
+    BSF TRISB, ENTER ;((PORTB) and 07Fh), 3 como entrada
+    BSF TRISB, PAUSE ; ((PORTB) and 07Fh), 4 como entrada
+
+    BCF OPTION_REG, 7 ;pull-ups are enabled by individual PORT latch values
+    BSF WPUB, UP ;habilita pull-up en ((PORTB) and 07Fh), 0
+    BSF WPUB, DOWN ;habilita pull-up en ((PORTB) and 07Fh), 1
+    BSF WPUB, MODE ;habilita pull-up en ((PORTB) and 07Fh), 2
+    BSF WPUB, ENTER ;habilita pull-up en ((PORTB) and 07Fh), 3
+    BSF WPUB, PAUSE ;habilita pull-up en ((PORTB) and 07Fh), 4
+
     BANKSEL TRISD
-    CLRF TRISD ;PORTC como salida display
-    CLRF TRISA ;PORTA como salida contador A
-    BCF TRISB, 0 ; ((PORTB) and 07Fh), 0
-    BCF TRISE, 0 ; Apagamos ((PORTD) and 07Fh), 0
-    BCF TRISE, 1 ; Apagamos ((PORTD) and 07Fh), 1
+    CLRF TRISD ;PORTD como salida display
+    CLRF TRISA ;PORTA como salida MUESTRA EL MODO
+    BCF TRISE, 0 ; SELECTOR DISPLAY0
+    BCF TRISE, 1 ; SELECTOR DISPLAY1
+    BCF TRISE, 2 ; SELECTOR DISPLAY2
+    BCF TRISE, 3 ; SELECTOR DISPLAY3
+
     BANKSEL PORTC ;se selecciona el banco 0 (00)
     CLRF PORTD
     CLRF PORTA
@@ -2760,6 +2798,8 @@ config_int:
     bcf ((PIR1) and 07Fh), 0
     bcf ((PIR1) and 07Fh), 1
     bsf ((INTCON) and 07Fh), 6
+    BSF ((INTCON) and 07Fh), 3 ; Habilitamos interrupcion PORTB
+    BCF ((INTCON) and 07Fh), 0 ; Limpiamos bandera de PORTB
     BSF ((INTCON) and 07Fh), 7 ; Habilitamos interrupciones
     RETURN
 
