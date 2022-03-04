@@ -2,7 +2,7 @@
 /////////////////////////MACROS///////////////////////  
   RESET_TMR0 MACRO 
     BANKSEL TMR0
-    MOVLW   255		;2ms delay
+    MOVLW   255		;2 ms delay
     // N = 256 - [(T * Fosc) / (4 * PS)]
     MOVWF   TMR0
     BCF	    T0IF
@@ -16,13 +16,19 @@
     bcf	    TMR1IF
     ENDM  
     
-   RESET_TMR2 MACRO  //1 segundo
+   RESET_TMR2 MACRO  //500 ms
     banksel TRISB
-    movlw   245
+    movlw   244
     movwf   PR2
     CLRF    TMR2
     BCF	    TMR2IF
     ENDM
+    
+
+    
+ 
+    
+
 ////////////////////////////////////////////////////////
 
 

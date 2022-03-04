@@ -2455,7 +2455,7 @@ ENDM
 
   RESET_TMR0 MACRO
     BANKSEL TMR0
-    MOVLW 255 ;2ms delay
+    MOVLW 255 ;2 ms delay
 
     MOVWF TMR0
     BCF ((INTCON) and 07Fh), 2
@@ -2471,7 +2471,7 @@ ENDM
 
    RESET_TMR2 MACRO
     banksel TRISB
-    movlw 245
+    movlw 244
     movwf PR2
     CLRF TMR2
     BCF ((PIR1) and 07Fh), 1
@@ -2522,16 +2522,42 @@ PAUSE EQU 4
  DS 1 ; Indica que display hay que encender
     ban1:
  DS 1 ; Indica que display hay que encender
-    nibbles:
- DS 3 ; Contiene los nibbles alto y bajo de valor
+    ban2:
+ DS 1 ; Indica que display hay que encender
     display:
- DS 3 ; Representación de cada nibble en el display de 7-seg
-    seg1:
- DS 1 ; segundos para el display de 7-seg
-    dec1:
- DS 1 ; decimales para el display de 7-seg
-    cen1:
- DS 1 ; centenas para el display de 7-seg
+ DS 4 ; Representación de cada nibble en el display de 7-segV
+    HOUR:
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LA HORA
+    MINUTE:
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+    SECOND:
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
+    HOURD:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA
+    MINUTED:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+    SECONDD:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
+    HOURU:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA
+    MINUTEU:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+    SECONDU:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
+    MODO:
+ DS 1 ;LOS ESTADOS
+    MES:
+ DS 2 ;VARIABLE QUE TENDRA EL MES
+    DIA:
+ DS 1 ;VARIABLE DIAS
+    DIAMAX:
+ DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+    temp:
+ DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+    EDIT:
+ DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+    PAUSA:
+ DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
 
 PSECT udata_shr ;memoria compartida
     W_TEMP:
@@ -2565,7 +2591,8 @@ ISR:
     call int_t1
     btfsc ((PIR1) and 07Fh), 1
     call int_t2
-
+    btfsc ((INTCON) and 07Fh), 0
+    call int_ioc
 
 
 POP:
@@ -2578,24 +2605,44 @@ POP:
 
 
 
+int_ioc:
+    BANKSEL PORTB
+    BTFSS PORTB, UP
+    INCF MINUTE+1
+    BTFSS PORTB, DOWN
+    DECF MINUTE+1
+    BTFSS PORTB, MODE
+    INCF MODO
+    BTFSS PORTB, ENTER
+    INCF EDIT
+    BTFSS PORTB, PAUSE
+    INCF PAUSA
+
+    BCF ((INTCON) and 07Fh), 0
+
+    return
+
 int_t1:
     RESET_TMR1
-
 
 return_t1:
     return
 
 int_t2:
     bcf ((PIR1) and 07Fh), 1
-
+    incf SECOND
+    call check60m
+    call check60s
+    call check99h
 
 return_t2:
     return
 
 int_t0:
     RESET_TMR0 ;15 ms
+    bcf PORTC, 7
     CLRF PORTE
-    CLRF PORTD
+    CLRF PORTC
     btfsc ban0, 0
     goto display1
 
@@ -2623,10 +2670,22 @@ display2:
     bsf PORTE, 2
     incf ban1
     incf ban0
+    btfsc ban2, 0
+    goto display3
+    incf ban2
+    RETURN
+
+display3:
+    CLRF PORTE
+    bcf PORTC, 7
+    CLRF PORTD
+    movf display+3, w
+    movwf PORTD
+    bsf PORTC, 7
+    incf ban2
 
 return_t0:
     return
-
 
 
 PSECT code, delta=2, abs
@@ -2653,6 +2712,47 @@ table:
     retlw 01111001B ; E
     retlw 01110001B ; F
 
+table2:
+    clrf PCLATH
+    bsf PCLATH, 0
+    andlw 0x0F
+    addwf PCL ; suma (add) PCL = PCL + PCLATH + w
+    retlw 00111111B ; 0
+    retlw 011000B ; 1
+    retlw 01011011B ; 2
+    retlw 01001111B ; 3
+    retlw 01100110B ; 4
+    retlw 01101101B ; 5
+    retlw 01111101B ; 6
+    retlw 00000111B ; 7
+    retlw 01111111B ; 8
+    retlw 01101111B ; 9
+    retlw 01110111B ; A
+    retlw 01111100B ; b
+    retlw 00111001B ; C
+    retlw 01011110B ; d
+    retlw 01111001B ; E
+    retlw 01110001B ; F
+
+tablemonths:
+    clrf PCLATH
+    bsf PCLATH, 0
+    andlw 0x0B
+    INCF PCL
+    addwf PCL ; suma (add) PCL = PCL + PCLATH + w
+    retlw 31 ; 0 ENERO
+    retlw 28 ; 1 FEBRERO
+    retlw 31 ; 2 MARZO
+    retlw 30 ; 3 ABRIL
+    retlw 31 ; 4 MAYO
+    retlw 30 ; 5 JUNIO
+    retlw 31 ; 6 JULIO
+    retlw 31 ; 7 AGOSTO
+    retlw 30 ; 8 SEPTIEMBRE
+    retlw 31 ; 9 OCTUBRE
+    retlw 30 ; A NOVIEMBRE
+    retlw 31 ; B DICIEMBRE
+
 main:
     call config_reloj
     call config_io
@@ -2666,29 +2766,136 @@ main:
 
 loop:
     CLRF PORTD
-    clrf valor
-    MOVF PORTA, w ; Valor del PORTA a W
-    MOVWF valor ; Movemos W a variable valor
     CALL SET_DISPLAYS
     GOTO loop
 
 
 
+
+ COMPAREh:
+
+    movf HOUR+1, w
+    movwf HOUR
+    CLRF HOURD
+
+    movlw 10
+    incf HOURD
+    subwf HOUR, w
+    movwf HOUR
+    btfsc STATUS, 0
+    GOTO $-5
+
+    decf HOURD
+    CLRF HOURU
+
+    movlw 10
+    addwf HOUR, w
+    movwf HOURU
+
+    RETURN
+
+ COMPAREm:
+
+    movf MINUTE+1, w
+    movwf MINUTE
+    clrf MINUTED
+
+    movlw 10
+    incf MINUTED
+    subwf MINUTE, w
+    movwf MINUTE
+    btfsc STATUS, 0
+    GOTO $-5
+
+    decf MINUTED
+    CLRF MINUTEU
+
+    movlw 10
+    addwf MINUTE, w
+    movwf MINUTEU
+
+    RETURN
+
 SET_DISPLAYS:
-    call compare
+    CALL COMPAREh
+    CALL COMPAREm
 
-    MOVF cen1, W ; Movemos nibble alto a W
-    CALL table ; Buscamos valor a cargar en PORTC
-    MOVWF display+2 ; Guardamos en display+1
+    MOVF HOURD , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+3 ; Guardamos en display+3
 
-    MOVF dec1, W ; Movemos nibble alto a W
-    CALL table ; Buscamos valor a cargar en PORTC
+    MOVF HOURU , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+2 ; Guardamos en display+2
+
+    MOVF MINUTED , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+1 ; Guardamos en display+1
 
-    MOVF seg1, w ; Movemos nibble bajo a W
-    CALL table ; Buscamos valor a cargar en PORTC
+    MOVF MINUTEU , w ; Movemos nibble bajo a W
+    CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display ; Guardamos en display
     RETURN
+
+check60s:
+    movlw 60
+    subwf SECOND, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call alarma60s
+    return
+
+alarma60s:
+    CLRF SECOND
+    incf MINUTE+1
+    return
+
+check60m:
+    movlw 60
+    subwf MINUTE+1, w ; Se resta w a MINUTE
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call alarma60m
+
+    movlw 60
+    subwf MINUTE+1, w ; Se resta w a MINUTE
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call underflowm
+
+    return
+
+alarma60m:
+    CLRF MINUTE+1
+    incf HOUR+1
+    return
+
+underflowm:
+    movlw 59
+    movwf MINUTE+1
+    decf HOUR+1
+    return
+
+
+
+check99h:
+    movlw 99
+    subwf MINUTE+1, w ; Se resta w a MINUTE
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call alarma99h
+
+    movlw 99
+    subwf MINUTE+1, w ; Se resta w a MINUTE
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call underflowh
+
+    return
+
+alarma99h:
+    CLRF HOUR+1
+    return
+
+underflowh:
+    movlw 99
+    movwf HOUR+1
+    return
 
 
 
@@ -2697,7 +2904,7 @@ config_reloj:
     BSF OSCCON, 0 ; ((OSCCON) and 07Fh), 0 -> 1, se usa reloj interno
     BCF OSCCON, 6
     BSF OSCCON, 5
-    BSF OSCCON, 4 ;IRCF<2:0> -> 2 MHz
+    BSF OSCCON, 4 ;IRCF<2:0> -> 5 kHz
 
     return
 
@@ -2740,15 +2947,24 @@ config_io:
     BCF TRISE, 1 ; SELECTOR DISPLAY1
     BCF TRISE, 2 ; SELECTOR DISPLAY2
     BCF TRISE, 3 ; SELECTOR DISPLAY3
+    BCF TRISC, 7 ; SELECTOR DISPLAY3
 
     BANKSEL PORTC ;se selecciona el banco 0 (00)
     CLRF PORTD
     CLRF PORTA
     CLRF ban0 ; Limpiamos GPR
     CLRF ban1 ; Limpiamos GPR
-    CLRF seg1 ; Limpiamos seg1
-    CLRF cen1 ; Limpiamos cen1
-    CLRF dec1 ; Limpiamos dec1
+    CLRF ban2 ; Limpiamos GPR
+
+    CLRF SECOND ; Limpiamos second
+    CLRF MINUTE ; Limpiamos miunte
+    CLRF HOUR ; Limpiamos hour
+    CLRF SECONDD ; Limpiamos second
+    CLRF MINUTED ; Limpiamos miunte
+    CLRF HOURD ; Limpiamos hour
+    CLRF SECONDU ; Limpiamos second
+    CLRF MINUTEU ; Limpiamos miunte
+    CLRF HOURU ; Limpiamos hour
 
     return
 
@@ -2802,39 +3018,3 @@ config_int:
     BCF ((INTCON) and 07Fh), 0 ; Limpiamos bandera de PORTB
     BSF ((INTCON) and 07Fh), 7 ; Habilitamos interrupciones
     RETURN
-
-
-
-
-compare:
-
-    clrf cen1
-    decf cen1
-
-    movlw 100
-    incf cen1
-    subwf valor, w
-    movwf valor
-    btfsc STATUS, 0
-    GOTO $-5
-
-    movlw 100
-    addwf valor, w
-    movwf valor
-    clrf dec1
-
-    movlw 10
-    incf dec1
-    subwf valor, w
-    movwf valor
-    btfsc STATUS, 0
-    GOTO $-5
-
-    decf dec1
-    clrf seg1
-
-    movlw 10
-    addwf valor, w
-    movwf seg1
-
-    return

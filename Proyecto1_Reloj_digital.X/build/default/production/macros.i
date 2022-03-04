@@ -5,7 +5,7 @@
 
   RESET_TMR0 MACRO
     BANKSEL TMR0
-    MOVLW 255 ;2ms delay
+    MOVLW 255 ;2 ms delay
 
     MOVWF TMR0
     BCF T0IF
@@ -21,7 +21,7 @@
 
    RESET_TMR2 MACRO
     banksel TRISB
-    movlw 245
+    movlw 244
     movwf PR2
     CLRF TMR2
     BCF TMR2IF
