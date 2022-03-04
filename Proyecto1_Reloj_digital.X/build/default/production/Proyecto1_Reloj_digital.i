@@ -2476,6 +2476,27 @@ ENDM
     CLRF TMR2
     BCF ((PIR1) and 07Fh), 1
     ENDM
+# 38 "./macros.s"
+ DIVISION MACRO VAR1, VAR2, VAR3
+
+    movf VAR1+0, w
+    movwf VAR1+1
+    CLRF VAR2
+
+    movlw 10
+    incf VAR2
+    subwf VAR1+1, w
+    movwf VAR1+1
+    btfsc STATUS, 0
+    GOTO $-5
+
+    decf VAR2
+    CLRF VAR3
+
+    movlw 10
+    addwf VAR1+1, w
+    movwf VAR3
+    ENDM
 # 16 "Proyecto1_Reloj_digital.s" 2
 
 
@@ -2522,27 +2543,17 @@ PAUSE EQU 4
  DS 1 ; Indica que display hay que encender
     ban1:
  DS 1 ; Indica que display hay que encender
-    ban2:
- DS 1 ; Indica que display hay que encender
     display:
  DS 4 ; Representación de cada nibble en el display de 7-segV
     HOUR:
+ DS 3 ;VARIABLE QUE TENDRA VALOR DE LA HORA
+    HOURS:
  DS 2 ;VARIABLE QUE TENDRA VALOR DE LA HORA
     MINUTE:
- DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+ DS 3 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+    MINUTES:
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
     SECOND:
- DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
-    HOURD:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA
-    MINUTED:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
-    SECONDD:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
-    HOURU:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA
-    MINUTEU:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
-    SECONDU:
  DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
     MODO:
  DS 1 ;LOS ESTADOS
@@ -2608,9 +2619,9 @@ POP:
 int_ioc:
     BANKSEL PORTB
     BTFSS PORTB, UP
-    INCF MINUTE+1
+    INCF MINUTES+0
     BTFSS PORTB, DOWN
-    DECF MINUTE+1
+    DECF MINUTES+0
     BTFSS PORTB, MODE
     INCF MODO
     BTFSS PORTB, ENTER
@@ -2631,18 +2642,17 @@ return_t1:
 int_t2:
     bcf ((PIR1) and 07Fh), 1
     incf SECOND
-    call check60m
-    call check60s
-    call check99h
 
 return_t2:
     return
 
 int_t0:
     RESET_TMR0 ;15 ms
+    call check60m
+    call check60s
+    call check99h
     bcf PORTC, 7
     CLRF PORTE
-    CLRF PORTC
     btfsc ban0, 0
     goto display1
 
@@ -2657,7 +2667,8 @@ display1:
     movf display+1, w
     movwf PORTD
     bsf PORTE, 1
-    btfsc ban1, 0
+    incf ban0
+    btfss ban0, 0
     goto display2
     incf ban1
     return
@@ -2668,11 +2679,10 @@ display2:
     movf display+2, w
     movwf PORTD
     bsf PORTE, 2
-    incf ban1
-    incf ban0
-    btfsc ban2, 0
+    btfsc ban1, 0
     goto display3
-    incf ban2
+
+    incf ban1
     RETURN
 
 display3:
@@ -2682,7 +2692,11 @@ display3:
     movf display+3, w
     movwf PORTD
     bsf PORTC, 7
-    incf ban2
+    btfss ban0, 0
+    goto display1
+    incf ban1
+
+
 
 return_t0:
     return
@@ -2772,67 +2786,23 @@ loop:
 
 
 
- COMPAREh:
-
-    movf HOUR+1, w
-    movwf HOUR
-    CLRF HOURD
-
-    movlw 10
-    incf HOURD
-    subwf HOUR, w
-    movwf HOUR
-    btfsc STATUS, 0
-    GOTO $-5
-
-    decf HOURD
-    CLRF HOURU
-
-    movlw 10
-    addwf HOUR, w
-    movwf HOURU
-
-    RETURN
-
- COMPAREm:
-
-    movf MINUTE+1, w
-    movwf MINUTE
-    clrf MINUTED
-
-    movlw 10
-    incf MINUTED
-    subwf MINUTE, w
-    movwf MINUTE
-    btfsc STATUS, 0
-    GOTO $-5
-
-    decf MINUTED
-    CLRF MINUTEU
-
-    movlw 10
-    addwf MINUTE, w
-    movwf MINUTEU
-
-    RETURN
-
 SET_DISPLAYS:
-    CALL COMPAREh
-    CALL COMPAREm
+    DIVISION MINUTES, MINUTE+1, MINUTE+2
+    DIVISION HOURS, HOUR+1, HOUR+2
 
-    MOVF HOURD , w ; Movemos nibble alto a W
+    MOVF HOUR+1 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+3 ; Guardamos en display+3
 
-    MOVF HOURU , w ; Movemos nibble alto a W
+    MOVF HOUR+2 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+2 ; Guardamos en display+2
 
-    MOVF MINUTED , w ; Movemos nibble alto a W
+    MOVF MINUTE+1 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+1 ; Guardamos en display+1
 
-    MOVF MINUTEU , w ; Movemos nibble bajo a W
+    MOVF MINUTE+2 , w ; Movemos nibble bajo a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display ; Guardamos en display
     RETURN
@@ -2846,55 +2816,55 @@ check60s:
 
 alarma60s:
     CLRF SECOND
-    incf MINUTE+1
+    incf MINUTES+0
     return
 
 check60m:
     movlw 60
-    subwf MINUTE+1, w ; Se resta w a MINUTE
+    subwf MINUTES, w ; Se resta w a MINUTE
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarma60m
 
     movlw 60
-    subwf MINUTE+1, w ; Se resta w a MINUTE
+    subwf MINUTES, w ; Se resta w a MINUTE
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowm
 
     return
 
 alarma60m:
-    CLRF MINUTE+1
-    incf HOUR+1
+    CLRF MINUTES
+    incf HOURS
     return
 
 underflowm:
     movlw 59
-    movwf MINUTE+1
-    decf HOUR+1
+    movwf MINUTES+0
+    decf HOURS
     return
 
 
 
 check99h:
     movlw 99
-    subwf MINUTE+1, w ; Se resta w a MINUTE
+    subwf MINUTES+0, w ; Se resta w a MINUTE
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarma99h
 
     movlw 99
-    subwf MINUTE+1, w ; Se resta w a MINUTE
+    subwf MINUTES+0, w ; Se resta w a MINUTE
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowh
 
     return
 
 alarma99h:
-    CLRF HOUR+1
+    CLRF HOURS
     return
 
 underflowh:
     movlw 99
-    movwf HOUR+1
+    movwf HOURS
     return
 
 
@@ -2954,17 +2924,12 @@ config_io:
     CLRF PORTA
     CLRF ban0 ; Limpiamos GPR
     CLRF ban1 ; Limpiamos GPR
-    CLRF ban2 ; Limpiamos GPR
 
     CLRF SECOND ; Limpiamos second
     CLRF MINUTE ; Limpiamos miunte
     CLRF HOUR ; Limpiamos hour
-    CLRF SECONDD ; Limpiamos second
-    CLRF MINUTED ; Limpiamos miunte
-    CLRF HOURD ; Limpiamos hour
-    CLRF SECONDU ; Limpiamos second
-    CLRF MINUTEU ; Limpiamos miunte
-    CLRF HOURU ; Limpiamos hour
+    CLRF HOURS
+    CLRF MINUTES ; Limpiamos hour
 
     return
 

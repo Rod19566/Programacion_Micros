@@ -10,12 +10,12 @@
  Intel Hex-file ranges:
   0h - 5h		(dist/default/production\Proyecto1_Reloj_digital.X.production.hex)
   8h - ADh		(dist/default/production\Proyecto1_Reloj_digital.X.production.hex)
-  200h - 421h		(dist/default/production\Proyecto1_Reloj_digital.X.production.hex)
+  200h - 40Fh		(dist/default/production\Proyecto1_Reloj_digital.X.production.hex)
   400Eh - 4011h		(dist/default/production\Proyecto1_Reloj_digital.X.production.hex)
  Unused ranges:
   6h - 7h
   AEh - 1FFh
-  422h - 400Dh
+  410h - 400Dh
 
 ### Hex Memory Map ###
  Legend:
@@ -69,8 +69,6 @@
 000003E0 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
 000003F0 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
 00000400 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000410 | H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1 H1
-00000420 | H1 H1 -- -- -- -- -- -- -- -- -- -- -- -- -- --
 ----------------------------------------------------------
 00004000 | -- -- -- -- -- -- -- -- -- -- -- -- -- -- H1 H1
 00004010 | H1 H1 -- -- -- -- -- -- -- -- -- -- -- -- -- --

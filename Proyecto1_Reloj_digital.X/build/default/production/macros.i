@@ -26,3 +26,24 @@
     CLRF TMR2
     BCF TMR2IF
     ENDM
+# 38 "macros.s"
+ DIVISION MACRO VAR1, VAR2, VAR3
+
+    movf VAR1+0, w
+    movwf VAR1+1
+    CLRF VAR2
+
+    movlw 10
+    incf VAR2
+    subwf VAR1+1, w
+    movwf VAR1+1
+    btfsc STATUS, 0
+    GOTO $-5
+
+    decf VAR2
+    CLRF VAR3
+
+    movlw 10
+    addwf VAR1+1, w
+    movwf VAR3
+    ENDM

@@ -14,6 +14,7 @@
                    projectFiles="true">
       <itemPath>Proyecto1_Reloj_digital.s</itemPath>
       <itemPath>macros.s</itemPath>
+      <itemPath>fail.s</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
