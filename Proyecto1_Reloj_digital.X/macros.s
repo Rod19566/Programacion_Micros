@@ -35,26 +35,37 @@
    
 */
      
- DIVISION MACRO	    VAR1, VAR2, VAR3	//LOS PARTE EN 2
+ DIVISION MACRO	 VAR, VAR1, VAR2, TEM	//LOS PARTE EN 2
+ /*
+     VAR1 = valor total
+     VAR2 = valor de las decenas
+     VAR3 = valor de unidades
+     
+     */
     /////////////HORA //////////////
-    movf    VAR1+0, w
-    movwf   VAR1+1	//VAR1+3 VARIABLE TEMP
-    CLRF    VAR2        //limpia decimales de la hora
+    movf    VAR, w
+    movwf   TEM		    //asigna un valor temporal para no modificar el
+			    //valor original
     
+    clrf    VAR1      
+    decf    VAR1 	    //le resta 1 a la cuenta de las decenas
+      //
     movlw   10		     //se le asigna 10 a w
-    incf    VAR2	    //incrementa dec1
-    subwf   VAR1+1, w	    //w = valor - 10
-    movwf   VAR1+1		    //valor = w
+    incf    VAR1	    //incrementa dec1
+    subwf   TEM, w	    //w = valor - 10
+    movwf   TEM		    //TEM = w
     btfsc   STATUS, 0	    //if status,0 = 0, skip
-    GOTO    $-5		    //regresa a  "movlw  10"
+    GOTO    $-5		    //regresa a  "movlw   0x0A"
     
-    decf    VAR2
-    CLRF    VAR3	    //limpia unidades de la hora
+    clrf    VAR2	    //limpia VAR2
     
     movlw   10		    //w = 10
-    addwf   VAR1+1, w	    //se le suma 10 a valor porque está negativo (w = valor + 10)
-    movwf   VAR3	    //seg1 = w
+    addwf   TEM, w	    //se le suma 10 a valor porque está negativo (w = valor + 10)
+    movwf   VAR2	    //VAR2 = w
+    
     ENDM
+    
+    
    /* 
      
  SET_DISPLAYS MACRO	    VAR0, VAR1, VAR2, VAR3

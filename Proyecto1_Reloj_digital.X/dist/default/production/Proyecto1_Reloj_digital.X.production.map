@@ -5,7 +5,7 @@ Linker command line:
 -W-3 --edf=C:\Program Files\Microchip\xc8\v2.35\pic\dat\en_msgs.txt -cs \
   -h+dist/default/production\Proyecto1_Reloj_digital.X.production.sym \
   --cmf=dist/default/production\Proyecto1_Reloj_digital.X.production.cmf -z \
-  -Q16F887 -oC:\Users\Dina\AppData\Local\Temp\xcAsi8s.4 \
+  -Q16F887 -oC:\Users\Dina\AppData\Local\Temp\xcAsb9o.4 \
   -ver=XC8 PIC(R) Assembler \
   -Mdist/default/production/Proyecto1_Reloj_digital.X.production.map -E1 \
   --acfsm=1493 -ACODE=00h-07FFhx4 -ASTRCODE=00h-01FFFh -ASTRING=00h-0FFhx32 \
@@ -17,7 +17,8 @@ Linker command line:
   -ACONFIG=02007h-02008h -DCONFIG=2 -AIDLOC=02000h-02003h -DIDLOC=2 \
   -AEEDATA=00h-0FFh/02100h -DEEDATA=2 -DCODE=2 -DSTRCODE=2 -DSTRING=2 \
   -DCONST=2 -DENTRY=2 build/default/production/Proyecto1_Reloj_digital.o \
-  build/default/production/macros.o build/default/production/fail.o 
+  build/default/production/macros.o build/default/production/fail.o \
+  build/default/production/trial1.o 
 
 Object code version is 3.11
 
@@ -28,19 +29,21 @@ Machine type is 16F887
                 Name                               Link     Load   Length Selector   Space Scale
 build/default/production/Proyecto1_Reloj_digital.o
                 config                             2007     2007        2        0       4
-                inVect                                0        0       57        0       0
+                inVect                                0        0       56        0       0
                 resVect                               0        0        3        0       0
-                code                                  0        0      208        0       0
-                udata_bank0                          20       20       1C       20       1
+                code                                  0        0      206        0       0
+                udata_bank0                          20       20       1F       20       1
                 udata_shr                            70       70        3       70       1
 build/default/production/macros.o
                 
 build/default/production/fail.o
                 
+build/default/production/trial1.o
+                
 
 TOTAL           Name                               Link     Load   Length     Space
         CLASS   CODE           
-                code                                  0        0      208         0
+                code                                  0        0      206         0
 
         CLASS   STRCODE        
 
@@ -54,7 +57,7 @@ TOTAL           Name                               Link     Load   Length     Sp
                 udata_shr                            70       70        3         1
 
         CLASS   BANK0          
-                udata_bank0                          20       20       1C         1
+                udata_bank0                          20       20       1F         1
 
         CLASS   BANK1          
 
@@ -82,43 +85,43 @@ TOTAL           Name                               Link     Load   Length     Sp
         CLASS   EEDATA         
 
         CLASS   code           
-                inVect                                0        0       57         0
+                inVect                                0        0       56         0
                 resVect                               0        0        3         0
 
 
 
 SEGMENTS        Name                           Load    Length   Top    Selector   Space  Class     Delta
 
-                udata_bank0                    000020  00001C  00003C        20       1  BANK0       1
+                udata_bank0                    000020  00001F  00003F        20       1  BANK0       1
                 udata_shr                      000070  000003  000073        70       1  COMMON      1
 
 
 UNUSED ADDRESS RANGES
 
         Name                Unused          Largest block    Delta
-        BANK0            003C-006F             34           1
+        BANK0            003F-006F             31           1
         BANK1            00A0-00EF             50           1
         BANK2            0110-016F             60           1
         BANK3            0190-01EF             60           1
-        CODE             0208-1FFF            800           2
+        CODE             0206-1FFF            800           2
         COMMON           0073-007F              D           1
-        CONST            0208-1FFF            100           2
+        CONST            0206-1FFF            100           2
         EEDATA           2100-21FF            100           2
-        ENTRY            0208-1FFF            100           2
+        ENTRY            0206-1FFF            100           2
         IDLOC            2000-2003              4           2
-        RAM              003C-006F             34           1
+        RAM              003F-006F             31           1
                          00A0-00EF             50
                          0110-016F             60
                          0190-01EF             60
-        STRCODE          0208-1FFF           1DF8           2
-        STRING           0208-1FFF            100           2
+        STRCODE          0206-1FFF           1DFA           2
+        STRING           0206-1FFF            100           2
 
                                   Symbol Table
 
 __Hcode        code        0000  __Hconfig      config      2009
 __Hdata        data        0000  __Hedata       edata       0000
-__HinVect      inVect      0057  __HresVect     resVect     0003
-__Hspace_0     (abs)       0208  __Hspace_1     (abs)       0073
+__HinVect      inVect      0056  __HresVect     resVect     0003
+__Hspace_0     (abs)       0206  __Hspace_1     (abs)       0073
 __Hspace_3     (abs)       0000  __Hspace_4     (abs)       4010
 __Hudata       udata       0000  __Hudata_bank0 udata_bank0 0000
 __Hudata_bank1 udata_bank1 0000  __Hudata_bank2 udata_bank2 0000

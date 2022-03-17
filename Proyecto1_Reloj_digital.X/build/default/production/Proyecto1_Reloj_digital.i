@@ -2477,25 +2477,34 @@ ENDM
     BCF ((PIR1) and 07Fh), 1
     ENDM
 # 38 "./macros.s"
- DIVISION MACRO VAR1, VAR2, VAR3
+ DIVISION MACRO VAR, VAR1, VAR2, TEM
 
-    movf VAR1+0, w
-    movwf VAR1+1
-    CLRF VAR2
+
+
+
+
+
+
+    movf VAR, w
+    movwf TEM
+
+
+    clrf VAR1
+    decf VAR1
 
     movlw 10
-    incf VAR2
-    subwf VAR1+1, w
-    movwf VAR1+1
+    incf VAR1
+    subwf TEM, w
+    movwf TEM
     btfsc STATUS, 0
     GOTO $-5
 
-    decf VAR2
-    CLRF VAR3
+    clrf VAR2
 
     movlw 10
-    addwf VAR1+1, w
-    movwf VAR3
+    addwf TEM, w
+    movwf VAR2
+
     ENDM
 # 16 "Proyecto1_Reloj_digital.s" 2
 
@@ -2515,6 +2524,7 @@ PAUSE EQU 4
 ; PIC16F887 Configuration Bit Settings
 
 ; Assembly source line config statements
+
 
 ; CONFIG1
   CONFIG FOSC = INTRC_NOCLKOUT ; Oscillator Selection bits (INTOSCIO oscillator: I/O function on ((PORTA) and 07Fh), 6/OSC2/CLKOUT pin, I/O function on ((PORTA) and 07Fh), 7/OSC1/CLKIN)
@@ -2544,31 +2554,35 @@ PAUSE EQU 4
     ban1:
  DS 1 ; Indica que display hay que encender
     display:
- DS 4 ; Representación de cada nibble en el display de 7-segV
+ DS 4 ; Representación de cada nibble en el display de 7-seg
     HOUR:
- DS 3 ;VARIABLE QUE TENDRA VALOR DE LA HORA
-    HOURS:
- DS 2 ;VARIABLE QUE TENDRA VALOR DE LA HORA
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA actual
+    HOURS1:
+ DS 2 ;VARIABLE de la hora centenas y unidades
+    HOURS2:
+ DS 2 ;VARIABLE de la hora centenas y unidades
     MINUTE:
- DS 3 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
-    MINUTES:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS
+ DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS actual
+    MINUTES1:
+ DS 2 ;VARIABLE MINUTOS centenas y unidades
+    MINUTES2:
+ DS 2 ;VARIABLE MINUTOS centenas y unidades
     SECOND:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
     MODO:
- DS 1 ;LOS ESTADOS
-    MES:
- DS 2 ;VARIABLE QUE TENDRA EL MES
-    DIA:
+ DS 2 ;selección LOS ESTADOS
+    MONTH:
+ DS 1 ;VARIABLE QUE TENDRA EL MES
+    DAY:
  DS 1 ;VARIABLE DIAS
     DIAMAX:
  DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
     temp:
- DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+ DS 2 ;VARIABLE TEMPORAL
     EDIT:
- DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+ DS 1 ;VARIABLE
     PAUSA:
- DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
+ DS 1 ;VARIABLE
 
 PSECT udata_shr ;memoria compartida
     W_TEMP:
@@ -2577,6 +2591,7 @@ PSECT udata_shr ;memoria compartida
  DS 1
     seg7: ; variable 7 seg
  DS 1
+
 
 PSECT resVect, class = code, abs, delta = 2
 ORG 00h ;posición para reset
@@ -2616,12 +2631,14 @@ POP:
 
 
 
+
 int_ioc:
+
     BANKSEL PORTB
     BTFSS PORTB, UP
-    INCF MINUTES+0
+    INCF MINUTE
     BTFSS PORTB, DOWN
-    DECF MINUTES+0
+    DECF MINUTE
     BTFSS PORTB, MODE
     INCF MODO
     BTFSS PORTB, ENTER
@@ -2635,29 +2652,28 @@ int_ioc:
 
 int_t1:
     RESET_TMR1
+    incf SECOND
 
 return_t1:
     return
 
 int_t2:
     bcf ((PIR1) and 07Fh), 1
-    incf SECOND
 
 return_t2:
     return
 
+
 int_t0:
     RESET_TMR0 ;15 ms
-    call check60m
-    call check60s
-    call check99h
+    CLRF PORTD
     bcf PORTC, 7
     CLRF PORTE
     btfsc ban0, 0
     goto display1
 
 display0:
-    movf display, w
+    movf display+0, w
     movwf PORTD
     bsf PORTE, 0
     incf ban0
@@ -2692,11 +2708,11 @@ display3:
     movf display+3, w
     movwf PORTD
     bsf PORTC, 7
+
     btfss ban0, 0
     goto display1
     incf ban1
-
-
+    incf ban0
 
 return_t0:
     return
@@ -2726,27 +2742,6 @@ table:
     retlw 01111001B ; E
     retlw 01110001B ; F
 
-table2:
-    clrf PCLATH
-    bsf PCLATH, 0
-    andlw 0x0F
-    addwf PCL ; suma (add) PCL = PCL + PCLATH + w
-    retlw 00111111B ; 0
-    retlw 011000B ; 1
-    retlw 01011011B ; 2
-    retlw 01001111B ; 3
-    retlw 01100110B ; 4
-    retlw 01101101B ; 5
-    retlw 01111101B ; 6
-    retlw 00000111B ; 7
-    retlw 01111111B ; 8
-    retlw 01101111B ; 9
-    retlw 01110111B ; A
-    retlw 01111100B ; b
-    retlw 00111001B ; C
-    retlw 01011110B ; d
-    retlw 01111001B ; E
-    retlw 01110001B ; F
 
 tablemonths:
     clrf PCLATH
@@ -2777,94 +2772,110 @@ main:
     call config_int
     BANKSEL PORTA
 
-
-loop:
+ loop:
     CLRF PORTD
+    CLRF PORTE
+    BCF ((PORTC) and 07Fh), 7
     CALL SET_DISPLAYS
     GOTO loop
 
-
-
-
 SET_DISPLAYS:
-    DIVISION MINUTES, MINUTE+1, MINUTE+2
-    DIVISION HOURS, HOUR+1, HOUR+2
+    CLRF temp
+    call check60s
+    call check60m
+    call check99h
+    DIVISION MINUTE, MINUTES1, MINUTES2, temp
+    DIVISION HOUR, HOURS1, HOURS2, temp
 
-    MOVF HOUR+1 , w ; Movemos nibble alto a W
+    MOVF HOURS1 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+3 ; Guardamos en display+3
 
-    MOVF HOUR+2 , w ; Movemos nibble alto a W
+    MOVF HOURS2 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+2 ; Guardamos en display+2
 
-    MOVF MINUTE+1 , w ; Movemos nibble alto a W
+    MOVF MINUTES1 , w ; Movemos nibble alto a W
     CALL table ; Buscamos valor a cargar en PORTD
     MOVWF display+1 ; Guardamos en display+1
 
-    MOVF MINUTE+2 , w ; Movemos nibble bajo a W
+    MOVF MINUTES2 , w ; Movemos nibble bajo a W
     CALL table ; Buscamos valor a cargar en PORTD
-    MOVWF display ; Guardamos en display
+    MOVWF display+0 ; Guardamos en display
     RETURN
 
 check60s:
+    movf SECOND, w
+    movwf temp
+
     movlw 60
-    subwf SECOND, w ; Se resta w a SECOND
-    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarma60s
     return
 
 alarma60s:
     CLRF SECOND
-    incf MINUTES+0
+    incf MINUTE
     return
 
 check60m:
+    movf MINUTE, w
+    movwf temp
+
     movlw 60
-    subwf MINUTES, w ; Se resta w a MINUTE
+    subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarma60m
 
+    movf MINUTE, w
+    movwf temp
+
     movlw 60
-    subwf MINUTES, w ; Se resta w a MINUTE
+    subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowm
 
     return
 
 alarma60m:
-    CLRF MINUTES
-    incf HOURS
+    CLRF MINUTE
+    incf HOUR
     return
 
 underflowm:
     movlw 59
-    movwf MINUTES+0
-    decf HOURS
+    movwf MINUTE
+    decf HOUR
     return
 
 
 
 check99h:
+    movf HOUR, w
+    movwf temp
+
     movlw 99
-    subwf MINUTES+0, w ; Se resta w a MINUTE
+    subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarma99h
 
+    movf HOUR, w
+    movwf temp
     movlw 99
-    subwf MINUTES+0, w ; Se resta w a MINUTE
+    subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowh
 
     return
 
 alarma99h:
-    CLRF HOURS
+    CLRF HOUR
     return
 
 underflowh:
     movlw 99
-    movwf HOURS
+    movwf HOUR
     return
 
 
@@ -2922,14 +2933,16 @@ config_io:
     BANKSEL PORTC ;se selecciona el banco 0 (00)
     CLRF PORTD
     CLRF PORTA
-    CLRF ban0 ; Limpiamos GPR
+    CLRF ban0
     CLRF ban1 ; Limpiamos GPR
 
     CLRF SECOND ; Limpiamos second
     CLRF MINUTE ; Limpiamos miunte
     CLRF HOUR ; Limpiamos hour
-    CLRF HOURS
-    CLRF MINUTES ; Limpiamos hour
+    CLRF HOURS1
+    CLRF MINUTES1 ; Limpiamos hour
+    CLRF HOURS2
+    CLRF MINUTES2 ; Limpiamos hour
 
     return
 

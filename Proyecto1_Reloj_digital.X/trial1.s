@@ -9,7 +9,7 @@
     ;
     ;Creado:			1 de Marzo, 2022
     ;Ultima modificaci�n:	1 de Marzo. 2022
- */   
+    
 PROCESSOR 16F887
 #include <xc.inc>
 #include "macros.s"
@@ -55,23 +55,17 @@ PAUSE	EQU 4	    //pausa
 	DS 2
     valor:
 	DS 2	; Contiene valor a mostrar en los displays de 7-seg
-    ban0:
-	DS 1	; Indica que display hay que encender
-    ban1:
-	DS 1	; Indica que display hay que encender
+    bandisp:
+	DS 2	; Indica que display hay que encender
     display:
 	DS 4	; Representación de cada nibble en el display de 7-seg
     HOUR:
 	DS 1	;VARIABLE QUE TENDRA VALOR DE LA HORA actual
-    HOURS1:
-	DS 2	;VARIABLE de la hora centenas y unidades
-    HOURS2:
+    HOURS:
 	DS 2	;VARIABLE de la hora centenas y unidades
     MINUTE:
 	DS 1	;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS actual
-    MINUTES1:
-	DS 2	;VARIABLE  MINUTOS centenas y unidades
-    MINUTES2:
+    MINUTES:
 	DS 2	;VARIABLE  MINUTOS centenas y unidades
     SECOND:
 	DS 2	;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
@@ -84,7 +78,7 @@ PAUSE	EQU 4	    //pausa
     DIAMAX:
 	DS 1	;VARIABLE MAXIMO DE DIAS POR MES
     temp:
-	DS 2	;VARIABLE TEMPORAL
+	DS 1	;VARIABLE TEMPORAL
     EDIT:
 	DS 1	;VARIABLE 
     PAUSA:
@@ -142,9 +136,9 @@ int_ioc:    //INTERRUPCIONES PORTB
     
     BANKSEL PORTB
     BTFSS   PORTB, UP
-    INCF    MINUTE
+    INCF    MINUTES
     BTFSS   PORTB, DOWN
-    DECF    MINUTE
+    DECF    MINUTES
     BTFSS   PORTB, MODE
     INCF    MODO
     BTFSS   PORTB, ENTER
@@ -169,30 +163,28 @@ int_t2:	    //SUBRUTINA DEL TMR2    (MEDIO SEGUNDO)
 return_t2:
     return
     
-    
 int_t0:
-    RESET_TMR0		;15 ms
-    CLRF    PORTD
-    bcf	    PORTC, 7	    //le limpia el PORTE
+    RESET_TMR0		;15 ms	
+    BCF	    PORTC, 7	    //le limpia el PORTE
     CLRF    PORTE
-    btfsc   ban0, 0	    //00 -> DISPLAY0
+    btfsc   bandisp, 0	    //00 -> DISPLAY0
     goto    display1	    //01 -> DISPLAY1
     
 display0:	//00
-    movf    display+0, w	    //w = display
+    movf    display, w	    //w = display
     movwf   PORTD	    //PORTC = w
     bsf	    PORTE, 0	    //se prende el display 1
-    incf    ban0	    //se levanta la bandera 0
+    incf    bandisp	    //se levanta la bandera 0
     return
     
 display1:	//01
     movf    display+1, w    //w = display+1
     movwf   PORTD	    //PORTC = w
     bsf	    PORTE, 1 	    //se prende el display 2 
-    incf    ban0	    //se levanta la bandera 1
-    btfss   ban0, 0	    //se revisa la bandera 1
+    incf    bandisp	    //se levanta la bandera 1
+    btfss   bandisp, 0	    //se revisa la bandera 1
     goto    display2	
-    incf    ban1	    //se levanta la bandera 0
+    incf    bandisp+1	    //se levanta la bandera 0
     return
     
 display2:	//10
@@ -201,28 +193,27 @@ display2:	//10
     movf    display+2, w    //w = display+2
     movwf   PORTD	    //PORTC = w
     bsf	    PORTE, 2 	    //se prende el display 3 
-    btfsc   ban1, 0	    //se revisa la bandera 1
+    btfsc   bandisp+1, 0	    //se revisa la bandera 1
     goto    display3	 
    // incf    ban0	    //se levanta la bandera 0	-   0
-    incf    ban1	    //se levanta la bandera 1
+    incf    bandisp+1	    //se levanta la bandera 1
     RETURN
     
 display3:	//11
     CLRF    PORTE	    //le limpia el PORTE
     bcf	    PORTC, 7	    //le limpia el PORTE
-    CLRF    PORTD
+    //CLRF    PORTD
     movf    display+3, w    //w = display+2
     movwf   PORTD	    //PORTC = w
-    bsf	    PORTC, 7	    //se prende el display 4
-    
-    btfss   ban0, 0	    //se revisa la bandera 1
-    goto    display1	 
-    incf    ban1	    //se levanta la bandera 1	-   0
-    incf    ban0	    //se levanta la bandera 0	-   0
-   
+    bsf	    PORTC, 7	    //se prende el display 4	
+    btfss   bandisp, 0	    //se revisa la bandera 1
+    goto    display3	 
+    incf    bandisp+1	    //se levanta la bandera 1	-   0
+    //incf    ban0	    //se levanta la bandera 0	-   0
+
 return_t0:
-    return
-      
+    return    
+    
    
 PSECT code, delta=2, abs
 ORG 100h
@@ -280,34 +271,32 @@ main:
     
  loop:	    //el código cueanto no hay interrupciones
     CLRF    PORTD
-    CLRF    PORTE
-    BCF	    RC7
+    
+    call    check60m
+    call    check99h
+    call    check60s 
     CALL    SET_DISPLAYS
     GOTO    loop
  
 SET_DISPLAYS:
-    CLRF    temp
-    call    check60s
-    call    check60m
-    call    check99h
-    DIVISION	MINUTE, MINUTES1, MINUTES2, temp
-    DIVISION	HOUR, HOURS1, HOURS2, temp
+    DIVISION	MINUTES, MINUTE+0, MINUTE+1, temp
+    DIVISION	HOURS, HOUR+0, HOUR+1, temp
     
-    MOVF    HOURS1 , w		; Movemos nibble alto a W
+    MOVF    HOUR+0 , w		; Movemos nibble alto a W
     CALL    table		; Buscamos valor a cargar en PORTD
     MOVWF   display+3		; Guardamos en display+3
     
-    MOVF    HOURS2 , w		; Movemos nibble alto a W
+    MOVF    HOUR+1 , w		; Movemos nibble alto a W
     CALL    table		; Buscamos valor a cargar en PORTD
     MOVWF   display+2		; Guardamos en display+2
     
-    MOVF    MINUTES1 , w		; Movemos nibble alto a W
+    MOVF    MINUTE+0 , w		; Movemos nibble alto a W
     CALL    table		; Buscamos valor a cargar en PORTD
     MOVWF   display+1		; Guardamos en display+1
     
-    MOVF    MINUTES2  , w		; Movemos nibble bajo a W
+    MOVF    MINUTE+1  , w		; Movemos nibble bajo a W
     CALL    table		; Buscamos valor a cargar en PORTD
-    MOVWF   display+0		; Guardamos en display
+    MOVWF   display		; Guardamos en display
     RETURN
 
 check60s:
@@ -322,11 +311,11 @@ check60s:
    
 alarma60s:
     CLRF    SECOND
-    incf    MINUTE
+    incf    MINUTES
     return  
    
 check60m: 
-    movf    MINUTE, w
+    movf    MINUTES, w
     movwf   temp	    //asigna un valor temporal para no modificar el
 	  
     movlw   60
@@ -334,9 +323,6 @@ check60m:
     btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call    alarma60m
     
-    movf    MINUTE, w
-    movwf   temp	    //asigna un valor temporal para no modificar el
-	
     movlw   60
     subwf   temp, w	; Se resta w a MINUTE
     btfsc   STATUS, 0	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
@@ -345,43 +331,38 @@ check60m:
     return
 
 alarma60m:
-    CLRF    MINUTE
-    incf    HOUR
+    CLRF    MINUTES
+    incf    HOURS
     return
     
 underflowm:
-    movlw   59
-    movwf   MINUTE
-    decf    HOUR
+    movlw   60
+    movwf   MINUTES
+    decf    HOURS
     return
   
 
 ////////    
-check99h:  
-    movf    HOUR, w
-    movwf   temp  
-    
+check99h:    
     movlw   99
-    subwf   temp, w	; Se resta w a MINUTE
+    subwf   MINUTES+0, w	; Se resta w a MINUTE
     btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call    alarma99h
     
-    movf    HOUR, w
-    movwf   temp  
     movlw   99
-    subwf   temp, w	; Se resta w a MINUTE
+    subwf   MINUTES+0, w	; Se resta w a MINUTE
     btfsc   STATUS, 0	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call    underflowh
     
     return
 
 alarma99h:
-    CLRF    HOUR
+    CLRF    HOURS
     return
     
 underflowh:
     movlw   99
-    movwf   HOUR
+    movwf   HOURS
     return
 
    
@@ -439,16 +420,13 @@ config_io:
     BANKSEL PORTC   ;se selecciona el banco 0 (00)
     CLRF PORTD
     CLRF PORTA
-    CLRF    ban0
-    CLRF    ban1		; Limpiamos GPR
+    CLRF    bandisp		; Limpiamos GPR
     
     CLRF    SECOND		; Limpiamos second
     CLRF    MINUTE		; Limpiamos miunte
     CLRF    HOUR		; Limpiamos hour
-    CLRF    HOURS1
-    CLRF    MINUTES1		; Limpiamos hour
-    CLRF    HOURS2
-    CLRF    MINUTES2		; Limpiamos hour
+    CLRF    HOURS
+    CLRF    MINUTES		; Limpiamos hour
         
     return 
     
@@ -504,4 +482,4 @@ config_int:
     RETURN
   
     
- 
+    */

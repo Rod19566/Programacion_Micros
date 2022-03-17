@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Proyecto1_Reloj_digital.s macros.s fail.s
+SOURCEFILES_QUOTED_IF_SPACED=Proyecto1_Reloj_digital.s macros.s fail.s trial1.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Proyecto1_Reloj_digital.o ${OBJECTDIR}/macros.o ${OBJECTDIR}/fail.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Proyecto1_Reloj_digital.o.d ${OBJECTDIR}/macros.o.d ${OBJECTDIR}/fail.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Proyecto1_Reloj_digital.o ${OBJECTDIR}/macros.o ${OBJECTDIR}/fail.o ${OBJECTDIR}/trial1.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Proyecto1_Reloj_digital.o.d ${OBJECTDIR}/macros.o.d ${OBJECTDIR}/fail.o.d ${OBJECTDIR}/trial1.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Proyecto1_Reloj_digital.o ${OBJECTDIR}/macros.o ${OBJECTDIR}/fail.o
+OBJECTFILES=${OBJECTDIR}/Proyecto1_Reloj_digital.o ${OBJECTDIR}/macros.o ${OBJECTDIR}/fail.o ${OBJECTDIR}/trial1.o
 
 # Source Files
-SOURCEFILES=Proyecto1_Reloj_digital.s macros.s fail.s
+SOURCEFILES=Proyecto1_Reloj_digital.s macros.s fail.s trial1.s
 
 
 
@@ -119,6 +119,14 @@ ${OBJECTDIR}/fail.o: fail.s  nbproject/Makefile-${CND_CONF}.mk
 	fail.s \
 	 -D__DEBUG=1  -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
 	
+${OBJECTDIR}/trial1.o: trial1.s  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/trial1.o 
+	${MP_AS} -mcpu=PIC16F887 -c \
+	-o ${OBJECTDIR}/trial1.o \
+	trial1.s \
+	 -D__DEBUG=1  -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
+	
 else
 ${OBJECTDIR}/Proyecto1_Reloj_digital.o: Proyecto1_Reloj_digital.s  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -142,6 +150,14 @@ ${OBJECTDIR}/fail.o: fail.s  nbproject/Makefile-${CND_CONF}.mk
 	${MP_AS} -mcpu=PIC16F887 -c \
 	-o ${OBJECTDIR}/fail.o \
 	fail.s \
+	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
+	
+${OBJECTDIR}/trial1.o: trial1.s  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/trial1.o 
+	${MP_AS} -mcpu=PIC16F887 -c \
+	-o ${OBJECTDIR}/trial1.o \
+	trial1.s \
 	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
 	
 endif
