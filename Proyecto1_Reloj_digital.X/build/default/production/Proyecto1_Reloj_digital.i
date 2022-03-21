@@ -2635,20 +2635,27 @@ POP:
 int_ioc:
 
     BANKSEL PORTB
-    BTFSS PORTB, UP
-    INCF MINUTE
-    BTFSS PORTB, DOWN
-    DECF MINUTE
     BTFSS PORTB, MODE
     INCF MODO
     BTFSS PORTB, ENTER
     INCF EDIT
+
+    btfsc EDIT, 0
+    return
+
+
+    BTFSS PORTB, UP
+    INCF MINUTE
+    BTFSS PORTB, DOWN
+    DECF MINUTE
     BTFSS PORTB, PAUSE
     INCF PAUSA
 
-    BCF ((INTCON) and 07Fh), 0
 
+    BCF ((INTCON) and 07Fh), 0
     return
+
+
 
 int_t1:
     RESET_TMR1
@@ -2666,53 +2673,63 @@ return_t2:
 
 int_t0:
     RESET_TMR0 ;15 ms
-    CLRF PORTD
-    bcf PORTC, 7
     CLRF PORTE
+    BCF ((PORTC) and 07Fh), 7
+    CLRF PORTD
+
     btfsc ban0, 0
     goto display1
+
+    btfsc ban0, 1
+    goto display2
+
+    btfsc ban0, 2
+    goto display3
+    goto display0
+
+
 
 display0:
     movf display+0, w
     movwf PORTD
     bsf PORTE, 0
-    incf ban0
+
+    bsf ban0, 0
+    bcf ban0, 1
+    bcf ban0, 2
     return
 
 display1:
     movf display+1, w
     movwf PORTD
     bsf PORTE, 1
-    incf ban0
-    btfss ban0, 0
-    goto display2
-    incf ban1
+
+    bcf ban0, 0
+    bsf ban0, 1
+    bcf ban0, 2
     return
 
 display2:
-    CLRF PORTE
-    CLRF PORTD
     movf display+2, w
     movwf PORTD
     bsf PORTE, 2
-    btfsc ban1, 0
-    goto display3
 
-    incf ban1
-    RETURN
+    bcf ban0, 0
+    bcf ban0, 1
+    bsf ban0, 2
+    return
 
 display3:
     CLRF PORTE
-    bcf PORTC, 7
     CLRF PORTD
+    bsf ((PORTC) and 07Fh), 7
     movf display+3, w
     movwf PORTD
-    bsf PORTC, 7
 
-    btfss ban0, 0
-    goto display1
-    incf ban1
-    incf ban0
+    bcf ban0, 0
+    bcf ban0, 1
+    bcf ban0, 2
+    return
 
 return_t0:
     return
@@ -2783,7 +2800,7 @@ SET_DISPLAYS:
     CLRF temp
     call check60s
     call check60m
-    call check99h
+    call check12h
     DIVISION MINUTE, MINUTES1, MINUTES2, temp
     DIVISION HOUR, HOURS1, HOURS2, temp
 
@@ -2846,35 +2863,44 @@ alarma60m:
 underflowm:
     movlw 59
     movwf MINUTE
+
+
+    movf HOUR, w
+    movwf temp
+    movlw 0
+    subwf temp, w
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call underflowh
     decf HOUR
     return
 
 
 
-check99h:
+check12h:
     movf HOUR, w
     movwf temp
 
-    movlw 99
+    movlw 24
     subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
-    call alarma99h
+    call alarma12h
 
     movf HOUR, w
     movwf temp
-    movlw 99
+
+    movlw 24
     subwf temp, w ; Se resta w a MINUTE
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowh
 
     return
 
-alarma99h:
+alarma12h:
     CLRF HOUR
     return
 
 underflowh:
-    movlw 99
+    movlw 24
     movwf HOUR
     return
 

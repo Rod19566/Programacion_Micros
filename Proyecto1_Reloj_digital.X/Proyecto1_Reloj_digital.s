@@ -1,4 +1,4 @@
- /* Archivo:	    Proyecto1_Reloj_digital
+/* Archivo:	    Proyecto1_Reloj_digital
     ; Dispositivo:  PIC16F887
     ; Autor:	    Dina Rodríguez
     ; Compilador:   pic-as (v2.30), MPLABX V6.00
@@ -141,20 +141,27 @@ POP:
 int_ioc:    //INTERRUPCIONES PORTB
     
     BANKSEL PORTB
-    BTFSS   PORTB, UP
-    INCF    MINUTE
-    BTFSS   PORTB, DOWN
-    DECF    MINUTE
     BTFSS   PORTB, MODE
     INCF    MODO
     BTFSS   PORTB, ENTER
     INCF    EDIT
+    
+    btfsc   EDIT, 0
+    return
+    
+    
+    BTFSS   PORTB, UP
+    INCF    MINUTE
+    BTFSS   PORTB, DOWN
+    DECF    MINUTE
     BTFSS   PORTB, PAUSE
     INCF    PAUSA
     
-    BCF	    RBIF
     
+    BCF	    RBIF    //bandera del boton
     return
+    
+    
     
 int_t1:	    //SUBRUTINA DEL TMR1    (CUENTA DEL TIEMPO) 1 segundo
     RESET_TMR1
@@ -299,7 +306,7 @@ SET_DISPLAYS:
     CLRF    temp
     call    check60s
     call    check60m
-    call    check99h
+    call    check12h
     DIVISION	MINUTE, MINUTES1, MINUTES2, temp
     DIVISION	HOUR, HOURS1, HOURS2, temp
     
@@ -362,35 +369,44 @@ alarma60m:
 underflowm:
     movlw   59
     movwf   MINUTE
+    
+    
+    movf    HOUR, w
+    movwf   temp  
+    movlw   0
+    subwf   temp, w
+    btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call    underflowh
     decf    HOUR
     return
   
 
 ////////    
-check99h:  
+check12h:  
     movf    HOUR, w
     movwf   temp  
-    
-    movlw   99
+    	  
+    movlw   24
     subwf   temp, w	; Se resta w a MINUTE
     btfsc   STATUS, 2	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
-    call    alarma99h
+    call    alarma12h
     
     movf    HOUR, w
-    movwf   temp  
-    movlw   99
+    movwf   temp  	    //asigna un valor temporal para no modificar el
+	
+    movlw   24
     subwf   temp, w	; Se resta w a MINUTE
     btfsc   STATUS, 0	; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call    underflowh
     
     return
 
-alarma99h:
+alarma12h:
     CLRF    HOUR
     return
     
 underflowh:
-    movlw   99
+    movlw   24
     movwf   HOUR
     return
 
