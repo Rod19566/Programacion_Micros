@@ -171,55 +171,65 @@ return_t2:
     
     
 int_t0:
-    RESET_TMR0		;15 ms
-    CLRF    PORTD
-    bcf	    PORTC, 7	    //le limpia el PORTE
+    RESET_TMR0	    	;15 ms
     CLRF    PORTE
-    btfsc   ban0, 0	    //00 -> DISPLAY0
-    goto    display1	    //01 -> DISPLAY1
+    BCF	    RC7
+    CLRF    PORTD
+    
+    btfsc   ban0, 0
+    goto    display1   //01
+    
+    btfsc   ban0, 1
+    goto    display2   //10
+    
+    btfsc   ban0, 2
+    goto    display3   //11
+    goto    display0
+   
+    //then goes to displat0
     
 display0:	//00
     movf    display+0, w	    //w = display
-    movwf   PORTD	    //PORTC = w
+    movwf   PORTD	    //PORTD = w
     bsf	    PORTE, 0	    //se prende el display 1
-    incf    ban0	    //se levanta la bandera 0
+    
+    bsf	ban0,   0
+    bcf	ban0,   1
+    bcf	ban0,   2
     return
     
 display1:	//01
     movf    display+1, w    //w = display+1
     movwf   PORTD	    //PORTC = w
-    bsf	    PORTE, 1 	    //se prende el display 2 
-    incf    ban0	    //se levanta la bandera 1
-    btfss   ban0, 0	    //se revisa la bandera 1
-    goto    display2	
-    incf    ban1	    //se levanta la bandera 0
+    bsf	    PORTE, 1 	    //se prende el display 2 3
+    
+    bcf	ban0,   0
+    bsf	ban0,   1
+    bcf	ban0,   2
     return
     
-display2:	//10
-    CLRF    PORTE	    //le limpia el PORTE
-    CLRF    PORTD
+display2:	//11
     movf    display+2, w    //w = display+2
     movwf   PORTD	    //PORTC = w
     bsf	    PORTE, 2 	    //se prende el display 3 
-    btfsc   ban1, 0	    //se revisa la bandera 1
-    goto    display3	 
-   // incf    ban0	    //se levanta la bandera 0	-   0
-    incf    ban1	    //se levanta la bandera 1
-    RETURN
+    
+    bcf	ban0,   0
+    bcf	ban0,   1
+    bsf	ban0,   2
+    return
     
 display3:	//11
     CLRF    PORTE	    //le limpia el PORTE
-    bcf	    PORTC, 7	    //le limpia el PORTE
     CLRF    PORTD
-    movf    display+3, w    //w = display+2
+    bsf	    RC7	    //se prende el display 3
+    movf    display+3, w    //w = display+1
     movwf   PORTD	    //PORTC = w
-    bsf	    PORTC, 7	    //se prende el display 4
     
-    btfss   ban0, 0	    //se revisa la bandera 1
-    goto    display1	 
-    incf    ban1	    //se levanta la bandera 1	-   0
-    incf    ban0	    //se levanta la bandera 0	-   0
-   
+    bcf	ban0,   0
+    bcf	ban0,   1
+    bcf	ban0,   2
+    return
+    
 return_t0:
     return
       
