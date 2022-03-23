@@ -2549,6 +2549,8 @@ PAUSE EQU 4
  DS 2
     valor:
  DS 2 ; Contiene valor a mostrar en los displays de 7-seg
+    halfie:
+ DS 1 ; control de medio segundo
     ban0:
  DS 1 ; Indica que display hay que encender
     ban1:
@@ -2556,17 +2558,17 @@ PAUSE EQU 4
     display:
  DS 4 ; Representación de cada nibble en el display de 7-seg
     HOUR:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LA HORA actual
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LA HORA actual
     HOURS1:
- DS 2 ;VARIABLE de la hora centenas y unidades
+ DS 1 ;VARIABLE de la hora centenas y unidades
     HOURS2:
- DS 2 ;VARIABLE de la hora centenas y unidades
+ DS 1 ;VARIABLE de la hora centenas y unidades
     MINUTE:
- DS 1 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS actual
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS actual
     MINUTES1:
- DS 2 ;VARIABLE MINUTOS centenas y unidades
+ DS 1 ;VARIABLE MINUTOS centenas y unidades
     MINUTES2:
- DS 2 ;VARIABLE MINUTOS centenas y unidades
+ DS 1 ;VARIABLE MINUTOS centenas y unidades
     SECOND:
  DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS SEGUNDOS
     MODO:
@@ -2574,9 +2576,9 @@ PAUSE EQU 4
     MONTH:
  DS 1 ;VARIABLE QUE TENDRA EL MES
     MONTH1:
- DS 2 ;VARIABLE DIAS centenas y unidades
+ DS 1 ;VARIABLE DIAS centenas y unidades
     MONTH2:
- DS 2 ;VARIABLE DIAS centenas y unidades
+ DS 1 ;VARIABLE DIAS centenas y unidades
     DAY:
  DS 1 ;VARIABLE DIAS actual
     DAY1:
@@ -2587,10 +2589,28 @@ PAUSE EQU 4
  DS 1 ;VARIABLE MAXIMO DE DIAS POR MES
     temp:
  DS 2 ;VARIABLE TEMPORAL
+    tEDIT:
+ DS 1 ;VARIABLE
     EDIT:
+ DS 1 ;VARIABLE
+    EDIT1:
  DS 1 ;VARIABLE
     PAUSA:
  DS 1 ;VARIABLE
+    CONT:
+ DS 1 ;VARIABLE
+    tSECOND:
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LA HORA actual
+    tSECOND1:
+ DS 1 ;VARIABLE de la hora centenas y unidades
+    tSECOND2:
+ DS 1 ;VARIABLE de la hora centenas y unidades
+    tMINUTE:
+ DS 2 ;VARIABLE QUE TENDRA VALOR DE LOS MINUTOS actual
+    tMINUTES1:
+ DS 1 ;VARIABLE MINUTOS centenas y unidades
+    tMINUTES2:
+ DS 1 ;VARIABLE MINUTOS centenas y unidades
 
 PSECT udata_shr ;memoria compartida
     W_TEMP:
@@ -2685,26 +2705,81 @@ int_ioc:
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     goto modeup_3
 
+    return
 
     modeup_0:
+    btfsc PAUSA, 0
+    call incminute
+    btfss PAUSA, 0
+    call inchour
+
+    return
+
+    incminute:
     BTFSS PORTB, UP
     incf MINUTE
     BTFSS PORTB, DOWN
     DECF MINUTE
     return
 
+    inchour:
+    BTFSS PORTB, UP
+    incf HOUR
+    BTFSS PORTB, DOWN
+    DECF HOUR
+    return
+
     modeup_1:
+    btfsc PAUSA, 0
+    call incday
+    btfss PAUSA, 0
+    call incmonth
+    return
+
+    incday:
     BTFSS PORTB, UP
     incf DAY
     BTFSS PORTB, DOWN
     DECF DAY
     return
 
+    incmonth:
+    BTFSS PORTB, UP
+    incf MONTH
+    BTFSS PORTB, DOWN
+    DECF MONTH
     return
 
     modeup_2:
 
+    movf PAUSA, w
+    movwf temp
+    movlw 0
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    goto inctminute
 
+    movf PAUSA, w
+    movwf temp
+    movlw 1
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    goto inctsecond
+
+    inctminute:
+    clrf tEDIT
+    BTFSS PORTB, UP
+    incf tMINUTE
+    BTFSS PORTB, DOWN
+    DECF tMINUTE
+    return
+
+    inctsecond:
+    clrf tEDIT
+    BTFSS PORTB, UP
+    incf tSECOND
+    BTFSS PORTB, DOWN
+    DECF tSECOND
     return
 
     modeup_3:
@@ -2718,11 +2793,20 @@ int_t1:
     RESET_TMR1
     incf SECOND
 
+    movf PAUSA, w
+    movwf temp
+    movlw 2
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    decf tSECOND
+
+
 return_t1:
     return
 
 
 int_t2:
+    incf halfie
     bcf ((PIR1) and 07Fh), 1
 
 return_t2:
@@ -2732,10 +2816,15 @@ return_t2:
 int_t0:
     RESET_TMR0 ;15 ms
 
+    btfsc EDIT, 0
+    bsf ((PORTA) and 07Fh), 4
+
+    btfss EDIT, 0
+    bcf ((PORTA) and 07Fh), 4
 
     movf MODO, w
     movwf temp
-    movlw 4
+    movlw 3
     subwf temp, w ; Se resta w a SECOND
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     CLRF MODO
@@ -2753,10 +2842,11 @@ int_t0:
     btfsc ban0, 2
     goto display3
     goto display0
-
+    return
 
 
 display0:
+
     movf display+0, w
     movwf PORTD
     bsf PORTE, 0
@@ -2772,7 +2862,7 @@ display1:
     movf display+1, w
     movwf PORTD
     bsf PORTE, 1
-    btfsc SECOND, 0
+    btfsc halfie, 0
     bsf ((PORTD) and 07Fh), 7
 
     bcf ban0, 0
@@ -2781,10 +2871,11 @@ display1:
     return
 
 display2:
+    CLRF PORTD
     movf display+2, w
     movwf PORTD
     bsf PORTE, 2
-    btfsc SECOND, 0
+    btfsc halfie, 0
     bsf ((PORTD) and 07Fh), 7
 
     bcf ban0, 0
@@ -2831,24 +2922,117 @@ table:
     retlw 01110001B ; F
 
 
-tablemonths:
-    clrf PCLATH
-    bsf PCLATH, 0
-    andlw 0x0B
-    INCF PCL
-    addwf PCL ; suma (add) PCL = PCL + PCLATH + w
-    retlw 31 ; 0 ENERO
-    retlw 28 ; 1 FEBRERO
-    retlw 31 ; 2 MARZO
-    retlw 30 ; 3 ABRIL
-    retlw 31 ; 4 MAYO
-    retlw 30 ; 5 JUNIO
-    retlw 31 ; 6 JULIO
-    retlw 31 ; 7 AGOSTO
-    retlw 30 ; 8 SEPTIEMBRE
-    retlw 31 ; 9 OCTUBRE
-    retlw 30 ; A NOVIEMBRE
-    retlw 31 ; B DICIEMBRE
+max28days:
+    movlw 28
+    movwf DIAMAX
+    movwf temp
+    return
+
+max29days:
+    movlw 29
+    movwf DIAMAX
+    movwf temp
+    return
+
+max30days:
+    movlw 30
+    movwf DIAMAX
+    movwf temp
+    return
+
+max31days:
+    movlw 31
+    movwf DIAMAX
+    movwf temp
+    return
+
+maxdaysmonths:
+
+    movf MONTH, w
+    movwf temp
+    movlw 1
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 2
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max28days
+
+    movf MONTH, w
+    movwf temp
+    movlw 3
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 4
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max30days
+
+    movf MONTH, w
+    movwf temp
+    movlw 5
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 6
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max30days
+
+    movf MONTH, w
+    movwf temp
+    movlw 7
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 8
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 9
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max30days
+
+    movf MONTH, w
+    movwf temp
+    movlw 10
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    movf MONTH, w
+    movwf temp
+    movlw 11
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max30days
+
+    movf MONTH, w
+    movwf temp
+    movlw 12
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call max31days
+
+    return
 
 main:
     call config_reloj
@@ -2861,14 +3045,17 @@ main:
     BANKSEL PORTA
 
  loop:
-    CLRF PORTE
+
+
     BCF ((PORTC) and 07Fh), 7
+    BCF ((PORTA) and 07Fh), 4
 
     call checkmode
     GOTO loop
 
 checkmode:
     CLRF PORTA
+    CLRF PORTD
 
     movf MODO, w
     movwf temp
@@ -2900,34 +3087,56 @@ checkmode:
 
     return
 
+    check_pausa2:
+    movf PAUSA, w
+    movwf temp
+    movlw 2
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    CLRF PAUSA
+    return
+
+    check_pausa3:
+    movf PAUSA, w
+    movwf temp
+    movlw 3
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    CLRF PAUSA
+    return
+
     m0:
     bsf PORTA, 0
     CALL SET_DISPLAYS00
+    call check_pausa2
+
     return
 
     m1:
     CALL SET_DISPLAYS01
     bsf PORTA, 1
+    call check_pausa2
     return
 
     m2:
-
+    CALL SET_DISPLAYS10
     bsf PORTA, 2
-
+    call check_pausa3
     return
 
     m3:
-
+    CALL SET_DISPLAYS11
     bsf PORTA, 3
+    call check_pausa2
 
     return
 
 
 SET_DISPLAYS00:
     CLRF temp
-    call check60s
-    call check60m
-    call check24h
+    call checkseconds
+    call checkminutes
+    call checkhours
     DIVISION MINUTE, MINUTES1, MINUTES2, temp
     DIVISION HOUR, HOURS1, HOURS2, temp
 
@@ -2948,7 +3157,7 @@ SET_DISPLAYS00:
     MOVWF display+0 ; Guardamos en display
     RETURN
 
-check60s:
+checkseconds:
     movf SECOND, w
     movwf temp
 
@@ -2963,7 +3172,7 @@ alarma60s:
     incf MINUTE
     return
 
-check60m:
+checkminutes:
     movf MINUTE, w
     movwf temp
 
@@ -2992,7 +3201,6 @@ underflowm:
     movlw 59
     movwf MINUTE
 
-
     movf HOUR, w
     movwf temp
     movlw 0
@@ -3000,14 +3208,13 @@ underflowm:
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call underflowh
     decf HOUR
+
     return
 
 
-
-check24h:
+checkhours:
     movf HOUR, w
     movwf temp
-
     movlw 24
     subwf temp, w ; Se resta w a HOUR
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
@@ -3015,7 +3222,6 @@ check24h:
 
     movf HOUR, w
     movwf temp
-
     movlw 24
     subwf temp, w ; Se resta w a HOUR
     btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
@@ -3028,7 +3234,7 @@ alarma24h:
     return
 
 underflowh:
-    movlw 24
+    movlw 23
     movwf HOUR
     return
 
@@ -3064,7 +3270,6 @@ check12m:
     movf MONTH, w
     movwf temp
 
-
     movlw 13
     subwf temp, w ; Se resta w a MINUTE temp = temp - 12
     btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
@@ -3072,7 +3277,6 @@ check12m:
 
     movf MONTH, w
     movwf temp
-
 
     movlw 13
     subwf temp, w ; Se resta w a MINUTE
@@ -3083,32 +3287,148 @@ check12m:
 
 alarma12m:
     CLRF MONTH
-    CLRF DAY
     return
 
 underflowmon:
     movlw 12
     movwf MONTH
-    CLRF DAY
     return
 
  checkxd:
-    movf MONTH, w
-    call tablemonths
-    movwf DIAMAX
 
+    call maxdaysmonths
     movf DAY, w
-    subwf DIAMAX , w ; DIAMAX = DIAMAX - DAY
-    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    subwf temp, w
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
     call alarmaxd
+
+    call maxdaysmonths
+    movf DAY, w
+    subwf temp, w ; Se resta w a MINUTE temp = temp - 12
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call underflowxd
+
     return
 
 alarmaxd:
     CLRF DAY
-    incf MONTH
+    return
+
+underflowxd:
+    movf DIAMAX, w
+    movwf DAY
     return
 
 
+
+  SET_DISPLAYS10:
+    CLRF temp
+    call tcheck60s
+    call tcheck99m
+    DIVISION tMINUTE, tMINUTES1, tMINUTES2, temp
+    DIVISION tSECOND, tSECOND1, tSECOND2, temp
+
+    MOVF tMINUTES1 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+3 ; Guardamos en display+3
+
+    MOVF tMINUTES2 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+2 ; Guardamos en display+2
+
+    MOVF tSECOND1 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+1 ; Guardamos en display+1
+
+    MOVF tSECOND2 , w ; Movemos nibble bajo a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+0 ; Guardamos en display
+    RETURN
+
+tcheck60s:
+    movf tSECOND, w
+    movwf temp
+
+    movlw 60
+    subwf temp, w ; Se resta w a SECOND
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call talarma60s
+
+    movf tSECOND, w
+    movwf temp
+
+    movlw 60
+    subwf temp, w ; Se resta w a MINUTE
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call tunderflows
+
+    return
+
+talarma60s:
+    CLRF tSECOND
+    incf tMINUTE
+    return
+
+tunderflows:
+    CLRF tSECOND
+    movlw 59
+    movwf tSECOND
+    decf tMINUTE
+    return
+
+tcheck99m:
+    movf tMINUTE, w
+    movwf temp
+
+    movlw 100
+    subwf temp, w ; Se resta w a MINUTE
+    btfsc STATUS, 2 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call talarma99m
+
+    movf tMINUTE, w
+    movwf temp
+
+    movlw 100
+    subwf temp, w ; Se resta w a MINUTE
+    btfsc STATUS, 0 ; si la resta da 0 significa que son iguales entonces la zero flag se enciende
+    call tunderflowm
+
+    return
+
+talarma99m:
+    CLRF tMINUTE
+    CLRF tSECOND
+    return
+
+tunderflowm:
+    movlw 99
+    movwf tMINUTE
+
+    return
+
+SET_DISPLAYS11:
+; CLRF temp
+; call tcheck60s
+; call tcheck99m
+; DIVISION tMINUTE, tMINUTES1, tMINUTES2, temp
+; DIVISION tSECOND, tSECOND1, tSECOND2, temp
+
+    MOVF 0 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+3 ; Guardamos en display+3
+
+    MOVF 0 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+2 ; Guardamos en display+2
+
+    MOVF 0 , w ; Movemos nibble alto a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+1 ; Guardamos en display+1
+
+    MOVF 0 , w ; Movemos nibble bajo a W
+    CALL table ; Buscamos valor a cargar en PORTD
+    MOVWF display+0 ; Guardamos en display
+    RETURN
 
 
 config_reloj:
@@ -3167,14 +3487,26 @@ config_io:
     CLRF ban0
     CLRF ban1 ; Limpiamos GPR
 
-    CLRF MODO ; Limpiamos second
+    CLRF MODO ; Limpiamos modo
+    CLRF EDIT ; Limpiamos edit
+    CLRF PAUSA ; Limpiamos second
+    CLRF tEDIT ; Limpiamos second
     CLRF SECOND ; Limpiamos second
+    CLRF tSECOND1 ; Limpiamos secondtimer
+    CLRF tSECOND2 ; Limpiamos secondtimer
     CLRF MINUTE ; Limpiamos miunte
+    CLRF DAY ; Limpiamos miunte
+    CLRF MONTH
+    incf DAY ; Limpiamos miunte
+    incf MONTH ; Limpiamos miunte
     CLRF HOUR ; Limpiamos hour
     CLRF HOURS1
     CLRF MINUTES1 ; Limpiamos hour
     CLRF HOURS2
     CLRF MINUTES2 ; Limpiamos hour
+    CLRF tMINUTE ; Limpiamos miunte
+    CLRF tMINUTES1 ; Limpiamos hour
+    CLRF tMINUTES2 ; Limpiamos hour
 
     return
 
