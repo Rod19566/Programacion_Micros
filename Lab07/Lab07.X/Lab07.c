@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include "setup.h"
 
-#define _XTAL_FREQ 4000000      //configuracion 4MHz
+#define _XTAL_FREQ 2000000      //configuracion 4MHz
 
 /*------------------------------------------------------------------------------
  * CONSTANTES 
@@ -41,7 +41,7 @@
 ------------------------------------------------*/
 
 /* -----------PROTOTIPO DE FUNCIONES 
-void setup(void);
+//void setup(void);
 */
 
 /*-------INTERRUPCIONES -----------------*/
@@ -55,11 +55,19 @@ void __interrupt() isr (void){
         }
         INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
     }
+    
+    if(INTCONbits.T0IF){    //se revisa bandera del timer
+        resettmr0();
+        PORTC++;           
+    }
+    
     return;
 }
 
 void main(void) {
     setup();                        // Llamamos a la funci n de configuraciones�
+    setuptmr0(); 
+    configint();
     while(1){
         
     }

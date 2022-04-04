@@ -30,13 +30,16 @@ void setup(void){
     WPUBbits.WPUB0 = 1;         // Habilitamos resistencia de pull-up de RB0
     WPUBbits.WPUB1 = 1;         // Habilitamos resistencia de pull-up de RB1
     
-    INTCONbits.GIE = 1;         // Habilitamos interrupciones globales
     INTCONbits.RBIE = 1;        // Habilitamos interrupciones del PORTB
     IOCBbits.IOCB0 = 1;         // Habilitamos interrupci n por cambio de estado para RB0
     IOCBbits.IOCB1 = 1;         // Habilitamos interrupci n por cambio de estado para RB1
     INTCONbits.RBIF = 0;        // Limpiamos bandera de interrupci n�
-}
+    
+    //configuracion del reloj
+    OSCCONbits.IRCF = 0b0101; // 2MHz
+    OSCCONbits.SCS = 1;       // Oscilador interno
 
+}
  
  // Td = Pre * TMR1*Ti
  // N = 65536-(Td/Pre*Ti)
@@ -44,8 +47,34 @@ void setup(void){
  //Ttmr1if = Prescaler * PR2 * Postscaler * (1/(Fosc/4))
  //PR2 = Ttmr2if/Prescaler * Postscaler * (1/(Fosc/4))
 
-void setuptmr0(void){
+
+void resettmr0(void){
+    TMR0 = 60;              //para 100 ms
+    INTCONbits.T0IF=0;     // ; Limpiamos bandera de TMR0
+}
+
+void configint(void){
     
+    INTCONbits.T0IE=1;     // Habilitamos interrupcion TMR0
+    INTCONbits.T0IF=0;     // ; Limpiamos bandera de TMR0
+    INTCONbits.GIE = 1;         // Habilitamos interrupciones globales
+    INTCONbits.PEIE=1;      // ENABLE peripherial INTERRUPT
     
 }
+
+
+void setuptmr0(void){
+    //OSCCON|=0x70;      // SELECT 8MHz Internal Oscillator
+    OPTION_REGbits.T0CS=0; // SELECT INTERNAL SOURCE TMR0
+    OPTION_REGbits.PSA=0;  // PRESCALER ASSIGNED TO TIMER0
+    OPTION_REGbits.PS2=1;  // PRESCALER ASSIGNED TO TIMER0
+    OPTION_REGbits.PS1=1;  // PRESCALER ASSIGNED TO TIMER0
+    OPTION_REGbits.PS0=1;  // PRESCALER ASSIGNED TO TIMER0 256
+    //OPTION_REG&=0xF8;  // SELECT 1:2 PRESCALER
+    
+    resettmr0();
+    
+}
+
+
 

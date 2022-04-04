@@ -2657,14 +2657,41 @@ void setup(void){
     WPUBbits.WPUB0 = 1;
     WPUBbits.WPUB1 = 1;
 
-    INTCONbits.GIE = 1;
     INTCONbits.RBIE = 1;
     IOCBbits.IOCB0 = 1;
     IOCBbits.IOCB1 = 1;
     INTCONbits.RBIF = 0;
+
+
+    OSCCONbits.IRCF = 0b0101;
+    OSCCONbits.SCS = 1;
+
 }
-# 47 "setup.c"
+# 51 "setup.c"
+void resettmr0(void){
+    TMR0 = 60;
+    INTCONbits.T0IF=0;
+}
+
+void configint(void){
+
+    INTCONbits.T0IE=1;
+    INTCONbits.T0IF=0;
+    INTCONbits.GIE = 1;
+    INTCONbits.PEIE=1;
+
+}
+
+
 void setuptmr0(void){
 
+    OPTION_REGbits.T0CS=0;
+    OPTION_REGbits.PSA=0;
+    OPTION_REGbits.PS2=1;
+    OPTION_REGbits.PS1=1;
+    OPTION_REGbits.PS0=1;
+
+
+    resettmr0();
 
 }

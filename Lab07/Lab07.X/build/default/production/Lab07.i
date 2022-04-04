@@ -2753,6 +2753,9 @@ extern int printf(const char *, ...);
 # 1 "./setup.h" 1
 # 35 "./setup.h"
 extern void setup(void);
+extern void setuptmr0(void);
+extern void resettmr0(void);
+extern void configint(void);
 # 27 "Lab07.c" 2
 # 48 "Lab07.c"
 void __attribute__((picinterrupt(("")))) isr (void){
@@ -2765,11 +2768,19 @@ void __attribute__((picinterrupt(("")))) isr (void){
         }
         INTCONbits.RBIF = 0;
     }
+
+    if(INTCONbits.T0IF){
+        resettmr0();
+        PORTC++;
+    }
+
     return;
 }
 
 void main(void) {
     setup();
+    setuptmr0();
+    configint();
     while(1){
 
     }
