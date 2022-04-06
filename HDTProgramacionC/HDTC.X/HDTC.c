@@ -40,30 +40,34 @@
  uint8_t var = 0;  
  int8_t icont = 0; 
  int8_t var1 = -1;      // Solo declarada
- int valores[] = {1, 127, 95, 36, 15, 253, 63};
+ int valores[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 // uint8_t var2 = 0; // Declarada e inicializada
 /*------------------------------------------------*/
 
 /* -----------PROTOTIPO DE FUNCIONES */
 void setport(void);
 void ejer3(void);
+void checkpos(void);
 /*----------------------*/
 
 /*-------INTERRUPCIONES -----------------*/
 void __interrupt() isr (void){
     if(INTCONbits.RBIF){            // Fue interrupci n del PORTB�
-        if(!INCREMENTAR){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
-            //PORTA++;                // Incremento del PORTC (INCF PORTC) 
+        if(!INCREMENTAR){                 // Verificamos si fue RB0 quien gener  la �interrupci n
+            var++; 
+            if (var == 21) var=0;
+                        // Incremento del PORTC (INCF PORTC) 
         }
         if(!DECREMENTAR){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
-            //PORTA--;                // Incremento del PORTC (INCF PORTC) 
+            var--; 
+            if (var == 255) var=20;               // Incremento del PORTC (INCF PORTC) 
         }
         INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
     }
     
     if(INTCONbits.T0IF){    //se revisa bandera del timer
         resettmr0();
-        setport();
+       // setport();
         //PORTC++;           
     }
     if(PIR1bits.TMR1IF){/*
@@ -122,6 +126,18 @@ void setport(void){
         
     return;
 }
+void checkpos(void){
+    for(int i=0;i<10;i++){
+        if (var == valores[i]){
+            icont = i;
+            break;
+        }        
+        else icont=0;
+    }
+    PORTC = icont;
+    return;
+}
+
 
 void main(void) {
     setup();                        // Llamamos a la funci n de configuraciones�
@@ -129,7 +145,8 @@ void main(void) {
    // setuptmr1(); 
     configint();
     while(1){
-        ejer3();
+        PORTA = var;
+        checkpos();
     }
     return;
 }

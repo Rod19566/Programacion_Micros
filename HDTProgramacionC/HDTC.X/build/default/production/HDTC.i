@@ -2798,30 +2798,34 @@ extern void configint(void);
  uint8_t var = 0;
  int8_t icont = 0;
  int8_t var1 = -1;
- int valores[] = {1, 127, 95, 36, 15, 253, 63};
+ int valores[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 
 
 
 void setport(void);
 void ejer3(void);
+void checkpos(void);
 
 
 
 void __attribute__((picinterrupt(("")))) isr (void){
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
+            var++;
+            if (var == 21) var=0;
 
         }
         if(!PORTBbits.RB1){
-
+            var--;
+            if (var == 255) var=20;
         }
         INTCONbits.RBIF = 0;
     }
 
     if(INTCONbits.T0IF){
         resettmr0();
-        setport();
+
 
     }
     if(PIR1bits.TMR1IF){
@@ -2880,6 +2884,18 @@ void setport(void){
 
     return;
 }
+void checkpos(void){
+    for(int i=0;i<10;i++){
+        if (var == valores[i]){
+            icont = i;
+            break;
+        }
+        else icont=0;
+    }
+    PORTC = icont;
+    return;
+}
+
 
 void main(void) {
     setup();
@@ -2887,7 +2903,8 @@ void main(void) {
 
     configint();
     while(1){
-        ejer3();
+        PORTA = var;
+        checkpos();
     }
     return;
 }

@@ -11,13 +11,11 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"53 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
+"54 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
 [v _isr isr `II(v  1 e 1 0 ]
-"78
-[v _ejer3 ejer3 `(v  1 e 1 0 ]
-"87
-[v _setport setport `(v  1 e 1 0 ]
-"126
+"129
+[v _checkpos checkpos `(v  1 e 1 0 ]
+"142
 [v _main main `(v  1 e 1 0 ]
 "14 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\setup.c
 [v _setup setup `(v  1 e 1 0 ]
@@ -65,7 +63,7 @@
 ]
 [u S36 . 1 `S22 1 . 1 0 `S31 1 . 1 0 ]
 [v _INTCONbits INTCONbits `VES36  1 e 1 @11 ]
-[s S83 . 1 `uc 1 TMR1IF 1 0 :1:0 
+[s S79 . 1 `uc 1 TMR1IF 1 0 :1:0 
 `uc 1 TMR2IF 1 0 :1:1 
 `uc 1 CCP1IF 1 0 :1:2 
 `uc 1 SSPIF 1 0 :1:3 
@@ -74,13 +72,13 @@
 `uc 1 ADIF 1 0 :1:6 
 ]
 "554
-[u S91 . 1 `S83 1 . 1 0 ]
-[v _PIR1bits PIR1bits `VES91  1 e 1 @12 ]
+[u S87 . 1 `S79 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES87  1 e 1 @12 ]
 "658
 [v _TMR1L TMR1L `VEuc  1 e 1 @14 ]
 "665
 [v _TMR1H TMR1H `VEuc  1 e 1 @15 ]
-[s S353 . 1 `uc 1 TMR1ON 1 0 :1:0 
+[s S351 . 1 `uc 1 TMR1ON 1 0 :1:0 
 `uc 1 TMR1CS 1 0 :1:1 
 `uc 1 nT1SYNC 1 0 :1:2 
 `uc 1 T1OSCEN 1 0 :1:3 
@@ -89,7 +87,7 @@
 `uc 1 T1GINV 1 0 :1:7 
 ]
 "701
-[s S361 . 1 `uc 1 . 1 0 :2:0 
+[s S359 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 T1INSYNC 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
 `uc 1 T1CKPS0 1 0 :1:4 
@@ -97,12 +95,12 @@
 `uc 1 . 1 0 :1:6 
 `uc 1 T1GIV 1 0 :1:7 
 ]
-[s S369 . 1 `uc 1 . 1 0 :2:0 
+[s S367 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 T1SYNC 1 0 :1:2 
 ]
-[u S372 . 1 `S353 1 . 1 0 `S361 1 . 1 0 `S369 1 . 1 0 ]
-[v _T1CONbits T1CONbits `VES372  1 e 1 @16 ]
-[s S198 . 1 `uc 1 PS 1 0 :3:0 
+[u S370 . 1 `S351 1 . 1 0 `S359 1 . 1 0 `S367 1 . 1 0 ]
+[v _T1CONbits T1CONbits `VES370  1 e 1 @16 ]
+[s S196 . 1 `uc 1 PS 1 0 :3:0 
 `uc 1 PSA 1 0 :1:3 
 `uc 1 T0SE 1 0 :1:4 
 `uc 1 T0CS 1 0 :1:5 
@@ -110,15 +108,15 @@
 `uc 1 nRBPU 1 0 :1:7 
 ]
 "1367
-[s S205 . 1 `uc 1 PS0 1 0 :1:0 
+[s S203 . 1 `uc 1 PS0 1 0 :1:0 
 `uc 1 PS1 1 0 :1:1 
 `uc 1 PS2 1 0 :1:2 
 ]
-[u S209 . 1 `S198 1 . 1 0 `S205 1 . 1 0 ]
-[v _OPTION_REGbits OPTION_REGbits `VES209  1 e 1 @129 ]
+[u S207 . 1 `S196 1 . 1 0 `S203 1 . 1 0 ]
+[v _OPTION_REGbits OPTION_REGbits `VES207  1 e 1 @129 ]
 "1417
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
-[s S177 . 1 `uc 1 TRISB0 1 0 :1:0 
+[s S175 . 1 `uc 1 TRISB0 1 0 :1:0 
 `uc 1 TRISB1 1 0 :1:1 
 `uc 1 TRISB2 1 0 :1:2 
 `uc 1 TRISB3 1 0 :1:3 
@@ -128,11 +126,11 @@
 `uc 1 TRISB7 1 0 :1:7 
 ]
 "1496
-[u S186 . 1 `S177 1 . 1 0 ]
-[v _TRISBbits TRISBbits `VES186  1 e 1 @134 ]
+[u S184 . 1 `S175 1 . 1 0 ]
+[v _TRISBbits TRISBbits `VES184  1 e 1 @134 ]
 "1541
 [v _TRISC TRISC `VEuc  1 e 1 @135 ]
-[s S334 . 1 `uc 1 TMR1IE 1 0 :1:0 
+[s S332 . 1 `uc 1 TMR1IE 1 0 :1:0 
 `uc 1 TMR2IE 1 0 :1:1 
 `uc 1 CCP1IE 1 0 :1:2 
 `uc 1 SSPIE 1 0 :1:3 
@@ -141,26 +139,26 @@
 `uc 1 ADIE 1 0 :1:6 
 ]
 "1719
-[u S342 . 1 `S334 1 . 1 0 ]
-[v _PIE1bits PIE1bits `VES342  1 e 1 @140 ]
-[s S294 . 1 `uc 1 SCS 1 0 :1:0 
+[u S340 . 1 `S332 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES340  1 e 1 @140 ]
+[s S292 . 1 `uc 1 SCS 1 0 :1:0 
 `uc 1 LTS 1 0 :1:1 
 `uc 1 HTS 1 0 :1:2 
 `uc 1 OSTS 1 0 :1:3 
 `uc 1 IRCF 1 0 :3:4 
 ]
 "1883
-[s S300 . 1 `uc 1 . 1 0 :4:0 
+[s S298 . 1 `uc 1 . 1 0 :4:0 
 `uc 1 IRCF0 1 0 :1:4 
 `uc 1 IRCF1 1 0 :1:5 
 `uc 1 IRCF2 1 0 :1:6 
 ]
-[u S305 . 1 `S294 1 . 1 0 `S300 1 . 1 0 ]
-[v _OSCCONbits OSCCONbits `VES305  1 e 1 @143 ]
-[s S224 . 1 `uc 1 WPUB 1 0 :8:0 
+[u S303 . 1 `S292 1 . 1 0 `S298 1 . 1 0 ]
+[v _OSCCONbits OSCCONbits `VES303  1 e 1 @143 ]
+[s S222 . 1 `uc 1 WPUB 1 0 :8:0 
 ]
 "2367
-[s S226 . 1 `uc 1 WPUB0 1 0 :1:0 
+[s S224 . 1 `uc 1 WPUB0 1 0 :1:0 
 `uc 1 WPUB1 1 0 :1:1 
 `uc 1 WPUB2 1 0 :1:2 
 `uc 1 WPUB3 1 0 :1:3 
@@ -169,12 +167,12 @@
 `uc 1 WPUB6 1 0 :1:6 
 `uc 1 WPUB7 1 0 :1:7 
 ]
-[u S235 . 1 `S224 1 . 1 0 `S226 1 . 1 0 ]
-[v _WPUBbits WPUBbits `VES235  1 e 1 @149 ]
-[s S268 . 1 `uc 1 IOCB 1 0 :8:0 
+[u S233 . 1 `S222 1 . 1 0 `S224 1 . 1 0 ]
+[v _WPUBbits WPUBbits `VES233  1 e 1 @149 ]
+[s S266 . 1 `uc 1 IOCB 1 0 :8:0 
 ]
 "2437
-[s S270 . 1 `uc 1 IOCB0 1 0 :1:0 
+[s S268 . 1 `uc 1 IOCB0 1 0 :1:0 
 `uc 1 IOCB1 1 0 :1:1 
 `uc 1 IOCB2 1 0 :1:2 
 `uc 1 IOCB3 1 0 :1:3 
@@ -183,8 +181,8 @@
 `uc 1 IOCB6 1 0 :1:6 
 `uc 1 IOCB7 1 0 :1:7 
 ]
-[u S279 . 1 `S268 1 . 1 0 `S270 1 . 1 0 ]
-[v _IOCBbits IOCBbits `VES279  1 e 1 @150 ]
+[u S277 . 1 `S266 1 . 1 0 `S268 1 . 1 0 ]
+[v _IOCBbits IOCBbits `VES277  1 e 1 @150 ]
 "3388
 [v _ANSEL ANSEL `VEuc  1 e 1 @392 ]
 "3450
@@ -205,14 +203,18 @@
 [v _RA6 RA6 `VEb  1 e 0 @46 ]
 "4105
 [v _RA7 RA7 `VEb  1 e 0 @47 ]
-"42 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
+"40 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
+[v _var var `uc  1 e 1 0 ]
+"41
+[v _icont icont `c  1 e 1 0 ]
+"42
 [v _var1 var1 `c  1 e 1 0 ]
 "43
-[v _valores valores `[7]i  1 e 14 0 ]
-"126
+[v _valores valores `[10]i  1 e 20 0 ]
+"142
 [v _main main `(v  1 e 1 0 ]
 {
-"135
+"152
 } 0
 "75 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\setup.c
 [v _setuptmr0 setuptmr0 `(v  1 e 1 0 ]
@@ -229,30 +231,25 @@
 {
 "42
 } 0
-"78 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
-[v _ejer3 ejer3 `(v  1 e 1 0 ]
-{
-"79
-[v ejer3@i i `i  1 a 2 2 ]
-"84
-} 0
-"61 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\setup.c
+"61
 [v _configint configint `(v  1 e 1 0 ]
 {
 "72
 } 0
-"53 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
+"129 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
+[v _checkpos checkpos `(v  1 e 1 0 ]
+{
+"130
+[v checkpos@i i `i  1 a 2 8 ]
+"139
+} 0
+"54
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"76
+"80
 } 0
 "51 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\setup.c
 [v i1_resettmr0 resettmr0 `(v  1 e 1 0 ]
 {
 "54
-} 0
-"87 C:\Users\WMGWW\Universidad\Semestre12022\Micros\HDTProgramacionC\HDTC.X\HDTC.c
-[v _setport setport `(v  1 e 1 0 ]
-{
-"124
 } 0
