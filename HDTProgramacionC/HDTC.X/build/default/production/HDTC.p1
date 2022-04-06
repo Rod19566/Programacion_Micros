@@ -30,6 +30,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "37 ./setup.h
 [; ;./setup.h: 37: extern void resettmr0(void);
 [v _resettmr0 `(v ~T0 @X0 0 ef ]
+"48 HDTC.c
+[; ;HDTC.c: 48: void setport(void);
+[v _setport `(v ~T0 @X0 0 ef ]
 "544 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 544:     struct {
 [s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -41,13 +44,14 @@ Version 4.0 HI-TECH Software Intermediate Code
 "554
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 554: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x00C)));
 [v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
-"39 ./setup.h
-[; ;./setup.h: 39: extern void resettmr1(void);
-[v _resettmr1 `(v ~T0 @X0 0 ef ]
-"45 HDTC.c
-[; ;HDTC.c: 45: void setport(void);
-[v _setport `(v ~T0 @X0 0 ef ]
-"167 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+[v F36 `(v ~T0 @X0 1 tf1`ul ]
+"12 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\builtins.h
+[v __delay `JF36 ~T0 @X0 0 e ]
+[p i __delay ]
+"291 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 291: extern volatile unsigned char PORTC __attribute__((address(0x007)));
+[v _PORTC `Vuc ~T0 @X0 0 e@7 ]
+"167
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 167: extern volatile unsigned char PORTA __attribute__((address(0x005)));
 [v _PORTA `Vuc ~T0 @X0 0 e@5 ]
 "4084
@@ -81,9 +85,6 @@ Version 4.0 HI-TECH Software Intermediate Code
 "36
 [; ;./setup.h: 36: extern void setuptmr0(void);
 [v _setuptmr0 `(v ~T0 @X0 0 ef ]
-"38
-[; ;./setup.h: 38: extern void setuptmr1(void);
-[v _setuptmr1 `(v ~T0 @X0 0 ef ]
 "40
 [; ;./setup.h: 40: extern void configint(void);
 [v _configint `(v ~T0 @X0 0 ef ]
@@ -345,244 +346,291 @@ Version 4.0 HI-TECH Software Intermediate Code
 "3547
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 3547: __asm("EECON2 equ 018Dh");
 [; <" EECON2 equ 018Dh ;# ">
-"39 HDTC.c
-[; ;HDTC.c: 39:  uint8_t var = 0;
+"40 HDTC.c
+[; ;HDTC.c: 40:  uint8_t var = 0;
 [v _var `uc ~T0 @X0 1 e ]
 [i _var
 -> -> 0 `i `uc
 ]
-"40
-[; ;HDTC.c: 40:  uint8_t var1 = -1;
-[v _var1 `uc ~T0 @X0 1 e ]
+"41
+[; ;HDTC.c: 41:  int8_t icont = 0;
+[v _icont `c ~T0 @X0 1 e ]
+[i _icont
+-> -> 0 `i `c
+]
+"42
+[; ;HDTC.c: 42:  int8_t var1 = -1;
+[v _var1 `c ~T0 @X0 1 e ]
 [i _var1
--> -U -> 1 `i `uc
+-> -U -> 1 `i `c
+]
+"43
+[; ;HDTC.c: 43:  int valores[] = {1, 127, 95, 36, 15, 253, 63};
+[v _valores `i ~T0 @X0 -> 7 `i e ]
+[i _valores
+:U ..
+-> 1 `i
+-> 127 `i
+-> 95 `i
+-> 36 `i
+-> 15 `i
+-> 253 `i
+-> 63 `i
+..
 ]
 [v $root$_isr `(v ~T0 @X0 0 e ]
-"49
-[; ;HDTC.c: 49: void __attribute__((picinterrupt(("")))) isr (void){
+"53
+[; ;HDTC.c: 53: void __attribute__((picinterrupt(("")))) isr (void){
 [v _isr `(v ~T1 @X0 1 ef ]
 {
 [e :U _isr ]
 [f ]
-"50
-[; ;HDTC.c: 50:     if(INTCONbits.RBIF){
+"54
+[; ;HDTC.c: 54:     if(INTCONbits.RBIF){
 [e $ ! != -> . . _INTCONbits 0 0 `i -> 0 `i 140  ]
 {
-"51
-[; ;HDTC.c: 51:         if(!PORTBbits.RB0){
+"55
+[; ;HDTC.c: 55:         if(!PORTBbits.RB0){
 [e $ ! ! != -> . . _PORTBbits 0 0 `i -> 0 `i 141  ]
 {
-"53
-[; ;HDTC.c: 53:         }
+"57
+[; ;HDTC.c: 57:         }
 }
 [e :U 141 ]
-"54
-[; ;HDTC.c: 54:         if(!PORTBbits.RB1){
+"58
+[; ;HDTC.c: 58:         if(!PORTBbits.RB1){
 [e $ ! ! != -> . . _PORTBbits 0 1 `i -> 0 `i 142  ]
 {
-"56
-[; ;HDTC.c: 56:         }
+"60
+[; ;HDTC.c: 60:         }
 }
 [e :U 142 ]
-"57
-[; ;HDTC.c: 57:         INTCONbits.RBIF = 0;
+"61
+[; ;HDTC.c: 61:         INTCONbits.RBIF = 0;
 [e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
-"58
-[; ;HDTC.c: 58:     }
+"62
+[; ;HDTC.c: 62:     }
 }
 [e :U 140 ]
-"60
-[; ;HDTC.c: 60:     if(INTCONbits.T0IF){
+"64
+[; ;HDTC.c: 64:     if(INTCONbits.T0IF){
 [e $ ! != -> . . _INTCONbits 0 2 `i -> 0 `i 143  ]
 {
-"61
-[; ;HDTC.c: 61:         resettmr0();
-[e ( _resettmr0 ..  ]
-"63
-[; ;HDTC.c: 63:     }
-}
-[e :U 143 ]
-"64
-[; ;HDTC.c: 64:     if(PIR1bits.TMR1IF){
-[e $ ! != -> . . _PIR1bits 0 0 `i -> 0 `i 144  ]
-{
 "65
-[; ;HDTC.c: 65:         resettmr1();
-[e ( _resettmr1 ..  ]
+[; ;HDTC.c: 65:         resettmr0();
+[e ( _resettmr0 ..  ]
 "66
-[; ;HDTC.c: 66:         var++;
-[e ++ _var -> -> 1 `i `uc ]
-"67
-[; ;HDTC.c: 67:         if (var%2==0) setport();
-[e $ ! == % -> _var `i -> 2 `i -> 0 `i 145  ]
+[; ;HDTC.c: 66:         setport();
 [e ( _setport ..  ]
-[e :U 145 ]
 "68
 [; ;HDTC.c: 68:     }
 }
+[e :U 143 ]
+"69
+[; ;HDTC.c: 69:     if(PIR1bits.TMR1IF){
+[e $ ! != -> . . _PIR1bits 0 0 `i -> 0 `i 144  ]
+{
+"73
+[; ;HDTC.c: 73:     }
+}
 [e :U 144 ]
-"70
-[; ;HDTC.c: 70:     return;
+"75
+[; ;HDTC.c: 75:     return;
 [e $UE 139  ]
-"71
-[; ;HDTC.c: 71: }
+"76
+[; ;HDTC.c: 76: }
 [e :UE 139 ]
 }
-"73
-[; ;HDTC.c: 73: void setport(void){
+"78
+[; ;HDTC.c: 78: void ejer3(void){
+[v _ejer3 `(v ~T0 @X0 1 ef ]
+{
+[e :U _ejer3 ]
+[f ]
+"79
+[; ;HDTC.c: 79:     for(int i=0;i<=6;i++){
+{
+[v _i `i ~T0 @X0 1 a ]
+[e = _i -> 0 `i ]
+[e $ <= _i -> 6 `i 146  ]
+[e $U 147  ]
+[e :U 146 ]
+{
+"80
+[; ;HDTC.c: 80:         _delay((unsigned long)((100)*(2000000/4000.0)));
+[e ( __delay (1 -> * -> -> 100 `i `d / -> -> 2000000 `l `d .4000.0 `ul ]
+"81
+[; ;HDTC.c: 81:        PORTC = valores[i];
+[e = _PORTC -> *U + &U _valores * -> -> _i `ui `ux -> -> # *U &U _valores `ui `ux `uc ]
+"82
+[; ;HDTC.c: 82:     }
+}
+[e ++ _i -> 1 `i ]
+[e $ <= _i -> 6 `i 146  ]
+[e :U 147 ]
+}
+"83
+[; ;HDTC.c: 83:     return;
+[e $UE 145  ]
+"84
+[; ;HDTC.c: 84: }
+[e :UE 145 ]
+}
+"87
+[; ;HDTC.c: 87: void setport(void){
 [v _setport `(v ~T0 @X0 1 ef ]
 {
 [e :U _setport ]
 [f ]
-"74
-[; ;HDTC.c: 74:     PORTA = 0b00000000;
-[e = _PORTA -> -> 0 `i `uc ]
-"75
-[; ;HDTC.c: 75:     var1++;
-[e ++ _var1 -> -> 1 `i `uc ]
-"76
-[; ;HDTC.c: 76:     switch (var1){
-[e $U 148  ]
-{
-"77
-[; ;HDTC.c: 77:         case 0:
-[e :U 149 ]
-"78
-[; ;HDTC.c: 78:             RA0 = 1;
-[e = _RA0 -> -> 1 `i `b ]
-"79
-[; ;HDTC.c: 79:             break;
-[e $U 147  ]
-"80
-[; ;HDTC.c: 80:         case 1:
-[e :U 150 ]
-"81
-[; ;HDTC.c: 81:             RA1 = 1;
-[e = _RA1 -> -> 1 `i `b ]
-"82
-[; ;HDTC.c: 82:             break;
-[e $U 147  ]
-"83
-[; ;HDTC.c: 83:         case 2:
-[e :U 151 ]
-"84
-[; ;HDTC.c: 84:             RA2 = 1;
-[e = _RA2 -> -> 1 `i `b ]
-"85
-[; ;HDTC.c: 85:             break;
-[e $U 147  ]
-"86
-[; ;HDTC.c: 86:         case 3:
-[e :U 152 ]
-"87
-[; ;HDTC.c: 87:             RA3 = 1;
-[e = _RA3 -> -> 1 `i `b ]
 "88
-[; ;HDTC.c: 88:             break;
-[e $U 147  ]
+[; ;HDTC.c: 88:     PORTA = 0b00000000;
+[e = _PORTA -> -> 0 `i `uc ]
 "89
-[; ;HDTC.c: 89:         case 4:
-[e :U 153 ]
-"90
-[; ;HDTC.c: 90:            RA4 = 1;
-[e = _RA4 -> -> 1 `i `b ]
-"91
-[; ;HDTC.c: 91:             break;
-[e $U 147  ]
+[; ;HDTC.c: 89:     var1++;
+[e ++ _var1 -> -> 1 `i `c ]
 "92
-[; ;HDTC.c: 92:         case 5:
-[e :U 154 ]
+[; ;HDTC.c: 92:     switch (var1){
+[e $U 151  ]
+{
 "93
-[; ;HDTC.c: 93:             RA5 = 1;
-[e = _RA5 -> -> 1 `i `b ]
+[; ;HDTC.c: 93:         case 0:
+[e :U 152 ]
 "94
-[; ;HDTC.c: 94:             break;
-[e $U 147  ]
-"95
-[; ;HDTC.c: 95:         case 6:
-[e :U 155 ]
-"96
-[; ;HDTC.c: 96:             RA6 = 1;
-[e = _RA6 -> -> 1 `i `b ]
-"97
-[; ;HDTC.c: 97:             break;
-[e $U 147  ]
-"98
-[; ;HDTC.c: 98:         case 7:
-[e :U 156 ]
-"99
-[; ;HDTC.c: 99:             RA7 = 1;
-[e = _RA7 -> -> 1 `i `b ]
-"100
-[; ;HDTC.c: 100:             break;
-[e $U 147  ]
-"101
-[; ;HDTC.c: 101:         default:
-[e :U 157 ]
-"102
-[; ;HDTC.c: 102:             var1 = 0;
-[e = _var1 -> -> 0 `i `uc ]
-"103
-[; ;HDTC.c: 103:             RA0 = 1;
+[; ;HDTC.c: 94:             RA0 = 1;
 [e = _RA0 -> -> 1 `i `b ]
+"95
+[; ;HDTC.c: 95:             break;
+[e $U 150  ]
+"96
+[; ;HDTC.c: 96:         case 1:
+[e :U 153 ]
+"97
+[; ;HDTC.c: 97:             RA1 = 1;
+[e = _RA1 -> -> 1 `i `b ]
+"98
+[; ;HDTC.c: 98:             break;
+[e $U 150  ]
+"99
+[; ;HDTC.c: 99:         case 2:
+[e :U 154 ]
+"100
+[; ;HDTC.c: 100:             RA2 = 1;
+[e = _RA2 -> -> 1 `i `b ]
+"101
+[; ;HDTC.c: 101:             break;
+[e $U 150  ]
+"102
+[; ;HDTC.c: 102:         case 3:
+[e :U 155 ]
+"103
+[; ;HDTC.c: 103:             RA3 = 1;
+[e = _RA3 -> -> 1 `i `b ]
 "104
 [; ;HDTC.c: 104:             break;
-[e $U 147  ]
+[e $U 150  ]
 "105
-[; ;HDTC.c: 105:     }
-}
-[e $U 147  ]
-[e :U 148 ]
-[e [\ -> _var1 `i , $ -> 0 `i 149
- , $ -> 1 `i 150
- , $ -> 2 `i 151
- , $ -> 3 `i 152
- , $ -> 4 `i 153
- , $ -> 5 `i 154
- , $ -> 6 `i 155
- , $ -> 7 `i 156
- 157 ]
-[e :U 147 ]
+[; ;HDTC.c: 105:         case 4:
+[e :U 156 ]
+"106
+[; ;HDTC.c: 106:            RA4 = 1;
+[e = _RA4 -> -> 1 `i `b ]
 "107
-[; ;HDTC.c: 107:     return;
-[e $UE 146  ]
+[; ;HDTC.c: 107:             break;
+[e $U 150  ]
 "108
-[; ;HDTC.c: 108: }
-[e :UE 146 ]
+[; ;HDTC.c: 108:         case 5:
+[e :U 157 ]
+"109
+[; ;HDTC.c: 109:             RA5 = 1;
+[e = _RA5 -> -> 1 `i `b ]
+"110
+[; ;HDTC.c: 110:             break;
+[e $U 150  ]
+"111
+[; ;HDTC.c: 111:         case 6:
+[e :U 158 ]
+"112
+[; ;HDTC.c: 112:             RA6 = 1;
+[e = _RA6 -> -> 1 `i `b ]
+"113
+[; ;HDTC.c: 113:             break;
+[e $U 150  ]
+"114
+[; ;HDTC.c: 114:         case 7:
+[e :U 159 ]
+"115
+[; ;HDTC.c: 115:             RA7 = 1;
+[e = _RA7 -> -> 1 `i `b ]
+"116
+[; ;HDTC.c: 116:             break;
+[e $U 150  ]
+"117
+[; ;HDTC.c: 117:         default:
+[e :U 160 ]
+"118
+[; ;HDTC.c: 118:             var1 = 0;
+[e = _var1 -> -> 0 `i `c ]
+"119
+[; ;HDTC.c: 119:             RA0 = 1;
+[e = _RA0 -> -> 1 `i `b ]
+"120
+[; ;HDTC.c: 120:             break;
+[e $U 150  ]
+"121
+[; ;HDTC.c: 121:     }
+}
+[e $U 150  ]
+[e :U 151 ]
+[e [\ -> _var1 `i , $ -> 0 `i 152
+ , $ -> 1 `i 153
+ , $ -> 2 `i 154
+ , $ -> 3 `i 155
+ , $ -> 4 `i 156
+ , $ -> 5 `i 157
+ , $ -> 6 `i 158
+ , $ -> 7 `i 159
+ 160 ]
+[e :U 150 ]
+"123
+[; ;HDTC.c: 123:     return;
+[e $UE 149  ]
+"124
+[; ;HDTC.c: 124: }
+[e :UE 149 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"110
-[; ;HDTC.c: 110: void main(void) {
+"126
+[; ;HDTC.c: 126: void main(void) {
 [v _main `(v ~T0 @X0 1 ef ]
 {
 [e :U _main ]
 [f ]
-"111
-[; ;HDTC.c: 111:     setup();
+"127
+[; ;HDTC.c: 127:     setup();
 [e ( _setup ..  ]
-"112
-[; ;HDTC.c: 112:     setuptmr0();
+"128
+[; ;HDTC.c: 128:     setuptmr0();
 [e ( _setuptmr0 ..  ]
-"113
-[; ;HDTC.c: 113:     setuptmr1();
-[e ( _setuptmr1 ..  ]
-"114
-[; ;HDTC.c: 114:     configint();
+"130
+[; ;HDTC.c: 130:     configint();
 [e ( _configint ..  ]
-"115
-[; ;HDTC.c: 115:     while(1){
-[e :U 160 ]
+"131
+[; ;HDTC.c: 131:     while(1){
+[e :U 163 ]
 {
-"117
-[; ;HDTC.c: 117:     }
+"132
+[; ;HDTC.c: 132:         ejer3();
+[e ( _ejer3 ..  ]
+"133
+[; ;HDTC.c: 133:     }
 }
-[e :U 159 ]
-[e $U 160  ]
-[e :U 161 ]
-"118
-[; ;HDTC.c: 118:     return;
-[e $UE 158  ]
-"119
-[; ;HDTC.c: 119: }
-[e :UE 158 ]
+[e :U 162 ]
+[e $U 163  ]
+[e :U 164 ]
+"134
+[; ;HDTC.c: 134:     return;
+[e $UE 161  ]
+"135
+[; ;HDTC.c: 135: }
+[e :UE 161 ]
 }

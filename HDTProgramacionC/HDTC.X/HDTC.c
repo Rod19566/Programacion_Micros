@@ -24,9 +24,10 @@
         
 #include <xc.h>
 #include <stdio.h>
+#include <math.h>
 #include "setup.h"
 
-#define _XTAL_FREQ 4000000      //configuracion 4MHz
+#define _XTAL_FREQ 2000000      //configuracion 2MHz
 
 /*------------------------------------------------------------------------------
  * CONSTANTES 
@@ -37,12 +38,15 @@
 /*----------VARIABLES----------------------------
 // Ejemplos:*/
  uint8_t var = 0;  
- uint8_t var1 = -1;      // Solo declarada
+ int8_t icont = 0; 
+ int8_t var1 = -1;      // Solo declarada
+ int valores[] = {1, 127, 95, 36, 15, 253, 63};
 // uint8_t var2 = 0; // Declarada e inicializada
 /*------------------------------------------------*/
 
 /* -----------PROTOTIPO DE FUNCIONES */
 void setport(void);
+void ejer3(void);
 /*----------------------*/
 
 /*-------INTERRUPCIONES -----------------*/
@@ -59,20 +63,32 @@ void __interrupt() isr (void){
     
     if(INTCONbits.T0IF){    //se revisa bandera del timer
         resettmr0();
+        setport();
         //PORTC++;           
     }
-    if(PIR1bits.TMR1IF){
+    if(PIR1bits.TMR1IF){/*
         resettmr1();
-        var++;
-        if (var%2==0) setport();
+        setport();
+        ejer3();*/
     }
     
     return;
 }
 
+void ejer3(void){
+    for(int i=0;i<=6;i++){
+        __delay_ms(100);
+       PORTC = valores[i];
+    }
+    return;
+}
+
+
 void setport(void){
     PORTA = 0b00000000; 
     var1++;
+    //PORTC = decimalToBinary(decimalnum);
+    
     switch (var1){
         case 0:
             RA0 = 1;
@@ -110,10 +126,10 @@ void setport(void){
 void main(void) {
     setup();                        // Llamamos a la funci n de configuraciones�
     setuptmr0();                     // Llamamos a la funci n de configuraciones�
-    setuptmr1(); 
+   // setuptmr1(); 
     configint();
     while(1){
-        
+        ejer3();
     }
     return;
 }

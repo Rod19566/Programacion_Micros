@@ -36,7 +36,7 @@ void setup(void){
     INTCONbits.RBIF = 0;        // Limpiamos bandera de interrupci n�
     
     //configuracion del reloj
-    OSCCONbits.IRCF = 0b0110; // 4MHz
+    OSCCONbits.IRCF = 0b010; // 2MHz
     OSCCONbits.SCS = 1;       // Oscilador interno
 
 }
@@ -49,7 +49,7 @@ void setup(void){
 
 
 void resettmr0(void){
-    TMR0 = 60;              //para 100 ms
+    TMR0 = 11;              //para 1 s
     INTCONbits.T0IF=0;     // ; Limpiamos bandera de TMR0
 }
 void resettmr1(void){

@@ -2663,13 +2663,13 @@ void setup(void){
     INTCONbits.RBIF = 0;
 
 
-    OSCCONbits.IRCF = 0b0110;
+    OSCCONbits.IRCF = 0b010;
     OSCCONbits.SCS = 1;
 
 }
 # 51 "setup.c"
 void resettmr0(void){
-    TMR0 = 60;
+    TMR0 = 11;
     INTCONbits.T0IF=0;
 }
 void resettmr1(void){

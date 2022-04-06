@@ -2750,6 +2750,41 @@ extern int sprintf(char *, const char *, ...);
 extern int printf(const char *, ...);
 # 26 "HDTC.c" 2
 
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.36\\pic\\include\\c90\\math.h" 1 3
+
+
+
+# 1 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\\pic\\include\\__unsupported.h" 1 3
+# 4 "C:\\Program Files\\Microchip\\xc8\\v2.36\\pic\\include\\c90\\math.h" 2 3
+# 30 "C:\\Program Files\\Microchip\\xc8\\v2.36\\pic\\include\\c90\\math.h" 3
+extern double fabs(double);
+extern double floor(double);
+extern double ceil(double);
+extern double modf(double, double *);
+extern double sqrt(double);
+extern double atof(const char *);
+extern double sin(double) ;
+extern double cos(double) ;
+extern double tan(double) ;
+extern double asin(double) ;
+extern double acos(double) ;
+extern double atan(double);
+extern double atan2(double, double) ;
+extern double log(double);
+extern double log10(double);
+extern double pow(double, double) ;
+extern double exp(double) ;
+extern double sinh(double) ;
+extern double cosh(double) ;
+extern double tanh(double);
+extern double eval_poly(double, const double *, int);
+extern double frexp(double, int *);
+extern double ldexp(double, int);
+extern double fmod(double, double);
+extern double trunc(double);
+extern double round(double);
+# 27 "HDTC.c" 2
+
 # 1 "./setup.h" 1
 # 35 "./setup.h"
 extern void setup(void);
@@ -2758,15 +2793,18 @@ extern void resettmr0(void);
 extern void setuptmr1(void);
 extern void resettmr1(void);
 extern void configint(void);
-# 27 "HDTC.c" 2
-# 39 "HDTC.c"
+# 28 "HDTC.c" 2
+# 40 "HDTC.c"
  uint8_t var = 0;
- uint8_t var1 = -1;
+ int8_t icont = 0;
+ int8_t var1 = -1;
+ int valores[] = {1, 127, 95, 36, 15, 253, 63};
 
 
 
 
 void setport(void);
+void ejer3(void);
 
 
 
@@ -2783,20 +2821,32 @@ void __attribute__((picinterrupt(("")))) isr (void){
 
     if(INTCONbits.T0IF){
         resettmr0();
+        setport();
 
     }
     if(PIR1bits.TMR1IF){
-        resettmr1();
-        var++;
-        if (var%2==0) setport();
+
+
+
     }
 
     return;
 }
 
+void ejer3(void){
+    for(int i=0;i<=6;i++){
+        _delay((unsigned long)((100)*(2000000/4000.0)));
+       PORTC = valores[i];
+    }
+    return;
+}
+
+
 void setport(void){
     PORTA = 0b00000000;
     var1++;
+
+
     switch (var1){
         case 0:
             RA0 = 1;
@@ -2834,10 +2884,10 @@ void setport(void){
 void main(void) {
     setup();
     setuptmr0();
-    setuptmr1();
+
     configint();
     while(1){
-
+        ejer3();
     }
     return;
 }
