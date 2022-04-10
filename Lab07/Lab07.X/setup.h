@@ -36,6 +36,10 @@ extern void setup(void);
 extern void setuptmr0(void);
 extern void resettmr0(void);
 extern void configint(void);
+extern int display_table(int x);
+int cen(int x);
+int dec(int x);
+int uni(int x);
   
 
 #endif

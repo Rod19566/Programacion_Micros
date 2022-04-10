@@ -2756,8 +2756,21 @@ extern void setup(void);
 extern void setuptmr0(void);
 extern void resettmr0(void);
 extern void configint(void);
+extern int display_table(int x);
+int cen(int x);
+int dec(int x);
+int uni(int x);
 # 27 "Lab07.c" 2
-# 48 "Lab07.c"
+# 39 "Lab07.c"
+uint8_t ban = 0;
+uint8_t segment = 0;
+
+
+
+void displays(void);
+
+
+
 void __attribute__((picinterrupt(("")))) isr (void){
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
@@ -2772,8 +2785,37 @@ void __attribute__((picinterrupt(("")))) isr (void){
     if(INTCONbits.T0IF){
         resettmr0();
         PORTC++;
+        PORTD = 0;
+        displays();
     }
 
+    return;
+}
+void displays(void){
+    RE0 = 0;
+    RE1 = 0;
+    RE2 = 0;
+    switch(ban){
+        case 0:
+            RE0 = 1;
+            segment = cen((int)PORTA);
+            ban++;
+            break;
+        case 1:
+            RE1 = 1;
+            segment = dec((int)PORTA);
+            ban++;
+            break;
+        case 2:
+            RE2 = 1;
+            segment = uni((int)PORTA);
+            ban = 0;
+            break;
+        default:
+            break;
+    }
+
+    PORTD = display_table(segment);
     return;
 }
 

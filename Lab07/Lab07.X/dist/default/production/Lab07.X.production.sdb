@@ -13,16 +13,26 @@
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
 "48 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\Lab07.c
 [v _isr isr `II(v  1 e 1 0 ]
-"67
+"68
+[v _displays displays `(v  1 e 1 0 ]
+"96
 [v _main main `(v  1 e 1 0 ]
 "14 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
 [v _setup setup `(v  1 e 1 0 ]
-"51
+"56
 [v _resettmr0 resettmr0 `(v  1 e 1 0 ]
 [v i1_resettmr0 resettmr0 `(v  1 e 1 0 ]
-"56
+"61
 [v _configint configint `(v  1 e 1 0 ]
-"66
+"70
+[v _display_table display_table `(i  1 e 2 0 ]
+"97
+[v _cen cen `(i  1 e 2 0 ]
+"107
+[v _dec dec `(i  1 e 2 0 ]
+"120
+[v _uni uni `(i  1 e 2 0 ]
+"132
 [v _setuptmr0 setuptmr0 `(v  1 e 1 0 ]
 "60 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
 [v _TMR0 TMR0 `VEuc  1 e 1 @1 ]
@@ -42,6 +52,10 @@
 [v _PORTBbits PORTBbits `VES63  1 e 1 @6 ]
 "291
 [v _PORTC PORTC `VEuc  1 e 1 @7 ]
+"353
+[v _PORTD PORTD `VEuc  1 e 1 @8 ]
+"415
+[v _PORTE PORTE `VEuc  1 e 1 @9 ]
 [s S22 . 1 `uc 1 RBIF 1 0 :1:0 
 `uc 1 INTF 1 0 :1:1 
 `uc 1 T0IF 1 0 :1:2 
@@ -59,7 +73,7 @@
 ]
 [u S36 . 1 `S22 1 . 1 0 `S31 1 . 1 0 ]
 [v _INTCONbits INTCONbits `VES36  1 e 1 @11 ]
-[s S146 . 1 `uc 1 PS 1 0 :3:0 
+[s S181 . 1 `uc 1 PS 1 0 :3:0 
 `uc 1 PSA 1 0 :1:3 
 `uc 1 T0SE 1 0 :1:4 
 `uc 1 T0CS 1 0 :1:5 
@@ -67,15 +81,15 @@
 `uc 1 nRBPU 1 0 :1:7 
 ]
 "1367
-[s S153 . 1 `uc 1 PS0 1 0 :1:0 
+[s S188 . 1 `uc 1 PS0 1 0 :1:0 
 `uc 1 PS1 1 0 :1:1 
 `uc 1 PS2 1 0 :1:2 
 ]
-[u S157 . 1 `S146 1 . 1 0 `S153 1 . 1 0 ]
-[v _OPTION_REGbits OPTION_REGbits `VES157  1 e 1 @129 ]
+[u S192 . 1 `S181 1 . 1 0 `S188 1 . 1 0 ]
+[v _OPTION_REGbits OPTION_REGbits `VES192  1 e 1 @129 ]
 "1417
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
-[s S125 . 1 `uc 1 TRISB0 1 0 :1:0 
+[s S160 . 1 `uc 1 TRISB0 1 0 :1:0 
 `uc 1 TRISB1 1 0 :1:1 
 `uc 1 TRISB2 1 0 :1:2 
 `uc 1 TRISB3 1 0 :1:3 
@@ -85,28 +99,32 @@
 `uc 1 TRISB7 1 0 :1:7 
 ]
 "1496
-[u S134 . 1 `S125 1 . 1 0 ]
-[v _TRISBbits TRISBbits `VES134  1 e 1 @134 ]
+[u S169 . 1 `S160 1 . 1 0 ]
+[v _TRISBbits TRISBbits `VES169  1 e 1 @134 ]
 "1541
 [v _TRISC TRISC `VEuc  1 e 1 @135 ]
-[s S242 . 1 `uc 1 SCS 1 0 :1:0 
+"1603
+[v _TRISD TRISD `VEuc  1 e 1 @136 ]
+"1665
+[v _TRISE TRISE `VEuc  1 e 1 @137 ]
+[s S277 . 1 `uc 1 SCS 1 0 :1:0 
 `uc 1 LTS 1 0 :1:1 
 `uc 1 HTS 1 0 :1:2 
 `uc 1 OSTS 1 0 :1:3 
 `uc 1 IRCF 1 0 :3:4 
 ]
 "1883
-[s S248 . 1 `uc 1 . 1 0 :4:0 
+[s S283 . 1 `uc 1 . 1 0 :4:0 
 `uc 1 IRCF0 1 0 :1:4 
 `uc 1 IRCF1 1 0 :1:5 
 `uc 1 IRCF2 1 0 :1:6 
 ]
-[u S253 . 1 `S242 1 . 1 0 `S248 1 . 1 0 ]
-[v _OSCCONbits OSCCONbits `VES253  1 e 1 @143 ]
-[s S172 . 1 `uc 1 WPUB 1 0 :8:0 
+[u S288 . 1 `S277 1 . 1 0 `S283 1 . 1 0 ]
+[v _OSCCONbits OSCCONbits `VES288  1 e 1 @143 ]
+[s S207 . 1 `uc 1 WPUB 1 0 :8:0 
 ]
 "2367
-[s S174 . 1 `uc 1 WPUB0 1 0 :1:0 
+[s S209 . 1 `uc 1 WPUB0 1 0 :1:0 
 `uc 1 WPUB1 1 0 :1:1 
 `uc 1 WPUB2 1 0 :1:2 
 `uc 1 WPUB3 1 0 :1:3 
@@ -115,12 +133,12 @@
 `uc 1 WPUB6 1 0 :1:6 
 `uc 1 WPUB7 1 0 :1:7 
 ]
-[u S183 . 1 `S172 1 . 1 0 `S174 1 . 1 0 ]
-[v _WPUBbits WPUBbits `VES183  1 e 1 @149 ]
-[s S216 . 1 `uc 1 IOCB 1 0 :8:0 
+[u S218 . 1 `S207 1 . 1 0 `S209 1 . 1 0 ]
+[v _WPUBbits WPUBbits `VES218  1 e 1 @149 ]
+[s S251 . 1 `uc 1 IOCB 1 0 :8:0 
 ]
 "2437
-[s S218 . 1 `uc 1 IOCB0 1 0 :1:0 
+[s S253 . 1 `uc 1 IOCB0 1 0 :1:0 
 `uc 1 IOCB1 1 0 :1:1 
 `uc 1 IOCB2 1 0 :1:2 
 `uc 1 IOCB3 1 0 :1:3 
@@ -129,44 +147,96 @@
 `uc 1 IOCB6 1 0 :1:6 
 `uc 1 IOCB7 1 0 :1:7 
 ]
-[u S227 . 1 `S216 1 . 1 0 `S218 1 . 1 0 ]
-[v _IOCBbits IOCBbits `VES227  1 e 1 @150 ]
+[u S262 . 1 `S251 1 . 1 0 `S253 1 . 1 0 ]
+[v _IOCBbits IOCBbits `VES262  1 e 1 @150 ]
 "3388
 [v _ANSEL ANSEL `VEuc  1 e 1 @392 ]
 "3450
 [v _ANSELH ANSELH `VEuc  1 e 1 @393 ]
-"67 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\Lab07.c
+"4210
+[v _RE0 RE0 `VEb  1 e 0 @72 ]
+"4213
+[v _RE1 RE1 `VEb  1 e 0 @73 ]
+"4216
+[v _RE2 RE2 `VEb  1 e 0 @74 ]
+"39 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\Lab07.c
+[v _ban ban `uc  1 e 1 0 ]
+"40
+[v _segment segment `uc  1 e 1 0 ]
+"96
 [v _main main `(v  1 e 1 0 ]
 {
-"75
+"104
 } 0
-"66 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
+"132 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
 [v _setuptmr0 setuptmr0 `(v  1 e 1 0 ]
 {
-"77
+"143
 } 0
-"51
+"56
 [v _resettmr0 resettmr0 `(v  1 e 1 0 ]
 {
-"54
+"59
 } 0
 "14
 [v _setup setup `(v  1 e 1 0 ]
 {
-"42
+"47
 } 0
-"56
+"61
 [v _configint configint `(v  1 e 1 0 ]
 {
-"63
+"68
 } 0
 "48 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\Lab07.c
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"65
+"67
 } 0
-"51 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
+"56 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
 [v i1_resettmr0 resettmr0 `(v  1 e 1 0 ]
 {
-"54
+"59
+} 0
+"68 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\Lab07.c
+[v _displays displays `(v  1 e 1 0 ]
+{
+"94
+} 0
+"120 C:\Users\WMGWW\Universidad\Semestre12022\Micros\Lab07\Lab07.X\setup.c
+[v _uni uni `(i  1 e 2 0 ]
+{
+"121
+[v uni@temp temp `i  1 a 2 3 ]
+"120
+[v uni@x x `i  1 p 2 0 ]
+"130
+} 0
+"70
+[v _display_table display_table `(i  1 e 2 0 ]
+{
+[v display_table@x x `i  1 p 2 0 ]
+"95
+} 0
+"107
+[v _dec dec `(i  1 e 2 0 ]
+{
+"108
+[v dec@temp temp `i  1 a 2 5 ]
+"109
+[v dec@cont cont `i  1 a 2 3 ]
+"107
+[v dec@x x `i  1 p 2 0 ]
+"118
+} 0
+"97
+[v _cen cen `(i  1 e 2 0 ]
+{
+"98
+[v cen@temp temp `i  1 a 2 5 ]
+"99
+[v cen@cont cont `i  1 a 2 3 ]
+"97
+[v cen@x x `i  1 p 2 0 ]
+"105
 } 0

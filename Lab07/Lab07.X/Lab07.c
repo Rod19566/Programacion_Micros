@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include "setup.h"
 
-#define _XTAL_FREQ 2000000      //configuracion 4MHz
+#define _XTAL_FREQ 2000000      //configuracion 2MHz
 
 /*------------------------------------------------------------------------------
  * CONSTANTES 
@@ -34,15 +34,15 @@
 #define INCREMENTAR PORTBbits.RB0     // Asignamos un alias a RB0
 #define DECREMENTAR PORTBbits.RB1     // Asignamos un alias a RB1
 
-/*----------VARIABLES----------------------------
+//----------VARIABLES----------------------------
 // Ejemplos:
-// uint8_t var;      // Solo declarada
-// uint8_t var2 = 0; // Declarada e inicializada
-------------------------------------------------*/
+uint8_t ban = 0;        // declarada inicializada bandera de los 7 segments
+uint8_t segment = 0;    // valor que tiene el segment
+//------------------------------------------------/
 
-/* -----------PROTOTIPO DE FUNCIONES 
-//void setup(void);
-*/
+// -----------PROTOTIPO DE FUNCIONES 
+void displays(void);
+//
 
 /*-------INTERRUPCIONES -----------------*/
 void __interrupt() isr (void){
@@ -58,17 +58,46 @@ void __interrupt() isr (void){
     
     if(INTCONbits.T0IF){    //se revisa bandera del timer
         resettmr0();
-        PORTC++;           
+        PORTC++; 
+        PORTD = 0;
+        displays();
     }
     
     return;
 }
+void displays(void){
+    RE0 = 0;
+    RE1 = 0;
+    RE2 = 0;
+    switch(ban){
+        case 0:
+            RE0 = 1;
+            segment = cen((int)PORTA);
+            ban++;
+            break;
+        case 1:
+            RE1 = 1;
+            segment = dec((int)PORTA);
+            ban++;
+            break;
+        case 2:
+            RE2 = 1;
+            segment = uni((int)PORTA);
+            ban = 0;
+            break;
+        default:
+            break;   
+    }
+    
+    PORTD = display_table(segment);     //PORTD se le asigna segment 
+    return;                             //por medio de la funcion display_table
+}
 
 void main(void) {
-    setup();                        // Llamamos a la funci n de configuraciones�
-    setuptmr0(); 
-    configint();
-    while(1){
+    setup();                        // Llamamos a la funcin de configuraciones
+    setuptmr0();                    // funcion de configuracion  Timer0
+    configint();                    //funcion de configuracion de interrupciones
+    while(1){   //LOOP
         
     }
     return;

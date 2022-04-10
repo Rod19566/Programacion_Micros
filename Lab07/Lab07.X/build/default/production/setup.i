@@ -2647,6 +2647,11 @@ void setup(void){
     PORTA = 0;
     TRISC = 0x00;
     PORTC = 0;
+    TRISD = 0x00;
+    PORTD = 0;
+
+    TRISE = 0x00;
+    PORTE = 0;
 
 
 
@@ -2667,21 +2672,82 @@ void setup(void){
     OSCCONbits.SCS = 1;
 
 }
-# 51 "setup.c"
+# 56 "setup.c"
 void resettmr0(void){
-    TMR0 = 60;
+    TMR0 = 253;
     INTCONbits.T0IF=0;
 }
 
 void configint(void){
 
-    INTCONbits.T0IE=1;
-    INTCONbits.T0IF=0;
+    INTCONbits.T0IE = 1;
+    INTCONbits.T0IF = 0;
     INTCONbits.GIE = 1;
-    INTCONbits.PEIE=1;
+    INTCONbits.PEIE = 1;
 
 }
 
+int display_table(int x){
+   switch (x){
+       case 0: return 0b00111111;
+
+       case 1: return 0b00000110;
+
+       case 2: return 0b01011011;
+
+       case 3: return 0b01001111;
+
+       case 4: return 0b01100110;
+
+       case 5: return 0b01101101;
+
+       case 6: return 0b01111101;
+
+       case 7: return 0b00000111;
+
+       case 8: return 0b01111111;
+
+       case 9: return 0b01101111;
+
+       default: return 0b00000000;
+               break;
+   }
+}
+
+int cen(int x){
+    int temp = x;
+    int cont = 0;
+    while( temp-100 >= 0){
+        temp = temp - 100;
+        cont++;
+    }
+    return cont;
+}
+
+int dec(int x){
+    int temp = x;
+    int cont = 0;
+    while( temp-100 >= 0){
+        temp = temp - 100;
+    }
+    while( temp-10 >= 0){
+        temp = temp - 10;
+        cont++;
+    }
+    return cont;
+}
+
+int uni(int x){
+    int temp = x;
+    int cont = 0;
+    while( temp-100 >= 0){
+        temp = temp - 100;
+    }
+    while( temp-10 >= 0){
+        temp = temp - 10;
+    }
+    return temp;
+}
 
 void setuptmr0(void){
 
