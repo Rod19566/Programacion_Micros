@@ -2651,44 +2651,104 @@ extern __bank0 __bit __timeout;
 
 
 
+int contPOT = 0;
+int tempPOT = 0;
+
+void configint(void);
+void resettmr0(void);
+void setuptmr0(void);
+
 
 void __attribute__((picinterrupt(("")))) isr(void){
 
     if (ADIF == 1) {
 
 
-        if(ADCON0bits.CHS == 0){
+        if(!ADCON0bits.CHS){
             CCPR1L = (ADRESH>>1)+124;
             CCP1CONbits.DC1B1 = ADRESH & 0b01;
             CCP1CONbits.DC1B0 = (ADRESL>>7);
             ADCON0bits.CHS = 1;
         }
 
-        else{
+        else if(ADCON0bits.CHS == 1) {
+
             CCPR2L = (ADRESH>>1)+124;
             CCP2CONbits.DC2B1 = ADRESH & 0b01;
             CCP2CONbits.DC2B0 = (ADRESL>>7);
+            ADCON0bits.CHS = 0b0010;
+        }
+        else if(ADCON0bits.CHS == 2) {
+            tempPOT = ADRESH>>1 & 0b01;
+
             ADCON0bits.CHS = 0;
         }
+
         _delay((unsigned long)((50)*(8000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
+
     }
+
+    if(INTCONbits.T0IF){
+        contPOT++;
+
+        if (contPOT == tempPOT) {
+            contPOT = 0;
+            RD5 = 0;
+        }
+        else if (contPOT == 0) {
+            RD5 = 1;
+        }
+        resettmr0();
+    }
+
+}
+void resettmr0(void){
+    TMR0 = 1;
+    INTCONbits.T0IF=0;
 }
 
+void setuptmr0(void){
+    OPTION_REGbits.T0CS=0;
+    OPTION_REGbits.PSA=0;
+    OPTION_REGbits.PS2=1;
+    OPTION_REGbits.PS1=1;
+    OPTION_REGbits.PS0=1;
+    resettmr0();
+
+}
+
+void configint(void){
+
+    INTCONbits.T0IE = 1;
+    INTCONbits.T0IF = 0;
+    PIR1bits.ADIF = 0;
+    PIE1bits.ADIE = 1;
+    INTCONbits.GIE = 1;
+    INTCONbits.PEIE = 1;
+
+}
 void main(void) {
+
+
+
 
 
     OSCCONbits.IRCF = 0b0111;
     OSCCONbits.SCS = 1;
+    configint();
 
     ANSELH = 0;
     ANSELbits.ANS0 = 1;
     ANSELbits.ANS1 = 1;
-    TRISA = 3;
+    ANSELbits.ANS2 = 1;
+    TRISA = 0b00000111;
     TRISC = 0;
     PORTA = 0;
     PORTC = 0;
+    TRISD = 0b00100000;
+    PORTD = 0;
     PORTB = 0;
 
     ADCON0bits.ADCS = 2;
@@ -2707,23 +2767,27 @@ void main(void) {
     CCPR1L = 0x0f;
     CCP1CONbits.DC1B = 0;
 
+
     TRISCbits.TRISC1 = 1;
     CCP2CONbits.CCP2M = 0b1100;
     CCPR2L = 0x0f;
     CCP2CONbits.DC2B1 = 0;
+
 
     PIR1bits.TMR2IF = 0;
     T2CONbits.T2CKPS = 0b11;
     T2CONbits.TMR2ON = 1;
     while(PIR1bits.TMR2IF == 0);
     PIR1bits.TMR2IF = 0;
+
+    TRISDbits.TRISD5 = 0;
     TRISCbits.TRISC2 = 0;
     TRISCbits.TRISC1 = 0;
 
-    PIR1bits.ADIF = 0;
-    PIE1bits.ADIE = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
+
     ADCON0bits.GO = 1;
-    while (1){}
+
+
+    while (1){
+    }
 }
