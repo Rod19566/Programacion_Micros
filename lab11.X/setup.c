@@ -20,6 +20,8 @@ void setup(void){
     ANSEL = 0;
     ANSELH = 0;                 // I/O digitales
     
+    TRISE = 0b00000001;         // RB0 como entrada
+    PORTE = 0;
     OSCCONbits.IRCF = 0b100;    // 1MHz
     OSCCONbits.SCS = 1;         // Reloj interno
     
@@ -52,12 +54,10 @@ void setup(void){
     ADCON0bits.GO = 1;      //ADC conversion
     
     //MAESTRO
-    if(PORTBbits.RB0){ //if maestro
+    if(PORTEbits.RE0){ //if maestro
         
     TRISA  = 0b00000111; //AN0, AN1 y AN2 como inputs y los demas como outputs
     PORTA = 0;
-    TRISB = 0b00000001;         // RB0 como entrada
-    PORTB = 0;
     //configuracion adc
     ADCON0bits.ADCS = 2;    //10 se selecciona Fosc/32 para conversion 4us full TAD
     ADCON0bits.CHS0 = 0;    //se selecciona el canal AN0
@@ -86,7 +86,18 @@ void setup(void){
     else{
         TRISC = 0b00011000; // -> SDI y SCK entradas, SD0 como salida
         PORTC = 0;
+        TRISBbits.TRISB0 = 1;       // RB0 como entrada (configurada con control de bits)
+        TRISBbits.TRISB1 = 1;       // RB1 como entrada (configurada con control de bits)
         
+        OPTION_REGbits.nRBPU = 0;   // Habilitamos resistencias de pull-up del PORTB
+        WPUBbits.WPUB0 = 1;         // Habilitamos resistencia de pull-up de RB0
+        WPUBbits.WPUB1 = 1;         // Habilitamos resistencia de pull-up de RB1
+    
+        INTCONbits.RBIE = 1;        // Habilitamos interrupciones del PORTB
+        IOCBbits.IOCB0 = 1;         // Habilitamos interrupci n por cambio de estado para RB0
+        IOCBbits.IOCB1 = 1;         // Habilitamos interrupci n por cambio de estado para RB1
+        INTCONbits.RBIF = 0;        // Limpiamos bandera de interrupci n?
+   
         // SSPCON <5:0>
         SSPCONbits.SSPM = 0b0100;   // -> SPI Esclavo, SS hablitado
         SSPCONbits.CKP = 0;         // -> Reloj inactivo en 0

@@ -2740,11 +2740,10 @@ extern int printf(const char *, ...);
 # 32 "./setup.h"
 extern void setup(void);
 # 12 "lab11.c" 2
-# 21 "lab11.c"
+# 23 "lab11.c"
 uint8_t cont = 0;
 uint8_t potvalue = 0;
-
-
+uint8_t contvalue = 0;
 
 
 
@@ -2757,49 +2756,44 @@ void __attribute__((picinterrupt(("")))) isr (void){
     if (ADIF == 1) {
         if(!ADCON0bits.CHS){
             potvalue = ADRESH;
-            ADCON0bits.CHS = 1;
         }
-
-        else if(ADCON0bits.CHS == 1) {
-
-            CCPR2L = (ADRESH>>1)+124;
-            CCP2CONbits.DC2B1 = ADRESH & 0b01;
-            CCP2CONbits.DC2B0 = (ADRESL>>7);
-            ADCON0bits.CHS = 0b0010;
-        }
-        else if(ADCON0bits.CHS == 2) {
-            PIR1bits.ADIF = 0;
-            ADCON0bits.CHS = 0;
-
-
-        }
-
         _delay((unsigned long)((40)*(1000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
-
     }
-
+        if(INTCONbits.RBIF){
+        if(!PORTBbits.RB0){
+            contvalue++;
+        }
+        if(!PORTBbits.RB1){
+            contvalue--;
+        }
+        INTCONbits.RBIF = 0;
+    }
     return;
 }
-
 
 void main(void) {
     setup();
     while(1){
+        if(PORTEbits.RE0){
+            _delay((unsigned long)((1000)*(1000000/4000.0)));
+            if(SSPSTATbits.BF){
 
-
-        if(PORTBbits.RB0){
-
-            SSPBUF = potvalue;
-            while(!SSPSTATbits.BF){}
-
+                SSPBUF = potvalue;
                 PORTD = potvalue;
-                _delay((unsigned long)((10)*(1000000/4000.0)));
 
-
+            }
         }
+        else if(!PORTEbits.RE0){
+            _delay((unsigned long)((1000)*(1000000/4000.0)));
+            if(SSPSTATbits.BF){
 
+                SSPBUF = contvalue;
+                PORTD = contvalue;
+
+            }
+        }
     }
     return;
 }

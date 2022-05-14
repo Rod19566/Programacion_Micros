@@ -2649,24 +2649,8 @@ void setup(void){
     ANSEL = 0;
     ANSELH = 0;
 
-        TRISD = 0;
-        PORTD = 0;
-    ANSELbits.ANS0 = 1;
-    ANSELbits.ANS1 = 1;
-    ANSELbits.ANS2 = 1;
-    TRISA = 0b00000111;
-
-    TRISB = 0b00000001;
-    PORTB = 0;
-
-    ADCON0bits.ADCS = 2;
-    ADCON0bits.CHS0 = 0;
-    ADCON1bits.VCFG1 = 0;
-    ADCON1bits.VCFG0 = 0;
-    ADCON1bits.ADFM = 0;
-    ADCON0bits.ADON = 1;
-    _delay((unsigned long)((50)*(1000000/4000000.0)));
-
+    TRISE = 0b00000001;
+    PORTE = 0;
     OSCCONbits.IRCF = 0b100;
     OSCCONbits.SCS = 1;
 
@@ -2694,15 +2678,27 @@ void setup(void){
 
     INTCONbits.GIE = 1;
     INTCONbits.PEIE = 1;
-    PIE1bits.RCIE = 1;
-    PIR1bits.ADIF = 0;
-    PIE1bits.ADIE = 1;
 
     _delay((unsigned long)((50)*(1000000/4000000.0)));
     ADCON0bits.GO = 1;
 
 
-    if(PORTBbits.RB0){
+    if(PORTEbits.RE0){
+
+    TRISA = 0b00000111;
+    PORTA = 0;
+
+    ADCON0bits.ADCS = 2;
+    ADCON0bits.CHS0 = 0;
+    ADCON1bits.VCFG1 = 0;
+    ADCON1bits.VCFG0 = 0;
+    ADCON1bits.ADFM = 0;
+    ADCON0bits.ADON = 1;
+    _delay((unsigned long)((50)*(1000000/4000000.0)));
+
+    PIR1bits.ADIF = 0;
+    PIE1bits.ADIE = 1;
+
         TRISC = 0b00010000;
         PORTC = 0;
 
@@ -2719,6 +2715,17 @@ void setup(void){
     else{
         TRISC = 0b00011000;
         PORTC = 0;
+        TRISBbits.TRISB0 = 1;
+        TRISBbits.TRISB1 = 1;
+
+        OPTION_REGbits.nRBPU = 0;
+        WPUBbits.WPUB0 = 1;
+        WPUBbits.WPUB1 = 1;
+
+        INTCONbits.RBIE = 1;
+        IOCBbits.IOCB0 = 1;
+        IOCBbits.IOCB1 = 1;
+        INTCONbits.RBIF = 0;
 
 
         SSPCONbits.SSPM = 0b0100;
@@ -2730,7 +2737,5 @@ void setup(void){
 
         PIR1bits.SSPIF = 0;
         PIE1bits.SSPIE = 1;
-        INTCONbits.PEIE = 1;
-        INTCONbits.GIE = 1;
     }
 }
