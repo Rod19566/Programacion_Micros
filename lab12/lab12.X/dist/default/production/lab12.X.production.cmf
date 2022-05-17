@@ -14,14 +14,14 @@
 $dist/default/production\lab12.X.production.o
 cinit CODE 0 F F 5 2 1
 idloc IDLOC 5 2000 2000 4 2 1
-text1 CODE 0 14 14 4D 2 1
-text2 CODE 0 61 61 21 2 1
-maintext CODE 0 82 82 12 2 1
+text1 CODE 0 14 14 4F 2 1
+text2 CODE 0 63 63 31 2 1
+maintext CODE 0 94 94 12 2 1
 cstackCOMMON COMMON 1 70 70 4 1 1
 intentry CODE 0 4 4 8 2 1
 bssCOMMON COMMON 1 74 74 1 1 1
 config CONFIG 4 2007 2007 2 2 1
-$C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+$C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 idloc IDLOC 5 2000 2000 4 2 1
 reset_vec CODE 0 0 0 3 2 1
 end_init CODE 0 C C 3 2 1
@@ -41,11 +41,11 @@ BANK1 A0-EF 1
 BANK2 110-16F 1
 BANK3 190-1EF 1
 CONST 3-3 2
-CONST 94-1FFF 2
+CONST A6-1FFF 2
 ENTRY 3-3 2
-ENTRY 94-1FFF 2
+ENTRY A6-1FFF 2
 CODE 3-3 2
-CODE 94-1FFF 2
+CODE A6-1FFF 2
 SFR0 0-1F 1
 SFR1 80-9F 1
 SFR2 100-10F 1
@@ -53,9 +53,9 @@ SFR3 180-18F 1
 COMMON 75-7D 1
 EEDATA 2100-21FF 2
 STRCODE 3-3 2
-STRCODE 94-1FFF 2
+STRCODE A6-1FFF 2
 STRING 3-3 2
-STRING 94-1FFF 2
+STRING A6-1FFF 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -70,24 +70,30 @@ STRING 94-1FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $dist/default/production\lab12.X.production.o
-F cinit CODE >625:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-F cinit CODE >628:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-F cinit CODE >639:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-10 cinit CODE >645:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-10 cinit CODE >647:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-11 cinit CODE >648:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
-4 intentry CODE >30:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-61 text2 CODE >30:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-61 text2 CODE >31:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-67 text2 CODE >32:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-6C text2 CODE >32:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-70 text2 CODE >33:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-74 text2 CODE >34:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-75 text2 CODE >37:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-79 text2 CODE >38:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-7A text2 CODE >40:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-7A text2 CODE >41:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-7B text2 CODE >43:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+F cinit CODE >625:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+F cinit CODE >628:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+F cinit CODE >639:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+10 cinit CODE >645:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+10 cinit CODE >647:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+11 cinit CODE >648:C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.s
+4 intentry CODE >32:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+63 text2 CODE >32:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+63 text2 CODE >33:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+69 text2 CODE >34:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+6E text2 CODE >34:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+72 text2 CODE >35:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+76 text2 CODE >36:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+77 text2 CODE >39:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+7B text2 CODE >40:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+7F text2 CODE >41:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+80 text2 CODE >42:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+81 text2 CODE >43:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+81 text2 CODE >44:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+87 text2 CODE >46:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+88 text2 CODE >47:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+88 text2 CODE >48:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+8C text2 CODE >50:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+8D text2 CODE >53:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
 14 text1 CODE >13:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 14 text1 CODE >14:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 17 text1 CODE >15:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
@@ -102,28 +108,30 @@ F cinit CODE >639:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
 33 text1 CODE >31:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 34 text1 CODE >32:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 35 text1 CODE >33:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-37 text1 CODE >34:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+36 text1 CODE >34:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+37 text1 CODE >35:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 39 text1 CODE >36:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-3D text1 CODE >37:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-3E text1 CODE >40:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-42 text1 CODE >42:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-45 text1 CODE >43:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-46 text1 CODE >45:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-4C text1 CODE >46:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-4F text1 CODE >47:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-52 text1 CODE >48:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-56 text1 CODE >51:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-59 text1 CODE >52:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-5C text1 CODE >53:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-5D text1 CODE >54:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+3B text1 CODE >38:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+3F text1 CODE >39:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+40 text1 CODE >42:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+44 text1 CODE >44:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+47 text1 CODE >45:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+48 text1 CODE >47:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+4E text1 CODE >48:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+51 text1 CODE >49:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+54 text1 CODE >50:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+58 text1 CODE >53:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+5B text1 CODE >54:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 5E text1 CODE >55:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 5F text1 CODE >56:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 60 text1 CODE >57:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
-82 maintext CODE >45:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-82 maintext CODE >46:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-87 maintext CODE >49:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-8D maintext CODE >50:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
-8E maintext CODE >52:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+61 text1 CODE >58:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+62 text1 CODE >59:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
+94 maintext CODE >55:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+94 maintext CODE >56:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+99 maintext CODE >59:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+9F maintext CODE >60:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+A0 maintext CODE >62:C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -138,26 +146,26 @@ F cinit CODE >639:C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.s
 %SYMTAB
 ___latbits 2 0 ABS 0 - dist/default/production\lab12.X.production.o
 _potvalue 74 0 COMMON 1 bssCOMMON dist/default/production\lab12.X.production.o
-__Hspace_0 94 0 ABS 0 - -
+__Hspace_0 A6 0 ABS 0 - -
 __Hspace_1 75 0 ABS 0 - -
 __Hspace_2 0 0 ABS 0 - -
 __Hspace_3 0 0 ABS 0 - -
 __Hspace_4 4010 0 ABS 0 - -
 __Heeprom_data 0 0 EEDATA 3 eeprom_data -
 __Hstrings 0 0 ABS 0 strings -
-___sp 0 0 STACK 2 stack C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-_main 104 0 CODE 0 maintext dist/default/production\lab12.X.production.o
+___sp 0 0 STACK 2 stack C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+_main 128 0 CODE 0 maintext dist/default/production\lab12.X.production.o
 btemp 7E 0 ABS 0 - dist/default/production\lab12.X.production.o
-start 18 0 CODE 0 init C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+start 18 0 CODE 0 init C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 __HbssCOMMON 0 0 ABS 0 bssCOMMON -
 _OPTION_REGbits 81 0 ABS 0 - dist/default/production\lab12.X.production.o
 __Hpowerup 0 0 CODE 0 powerup -
-intlevel0 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-intlevel1 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-intlevel2 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-intlevel3 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-intlevel4 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-intlevel5 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+intlevel0 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+intlevel1 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+intlevel2 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+intlevel3 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+intlevel4 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+intlevel5 0 0 ENTRY 0 functab C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 __LbssCOMMON 0 0 ABS 0 bssCOMMON -
 _OSCCONbits 8F 0 ABS 0 - dist/default/production\lab12.X.production.o
 wtemp0 7E 0 ABS 0 - dist/default/production\lab12.X.production.o
@@ -166,12 +174,12 @@ __Hclrtext 0 0 ABS 0 clrtext -
 _ADRESH 1E 0 ABS 0 - dist/default/production\lab12.X.production.o
 _ANSELH 189 0 ABS 0 - dist/default/production\lab12.X.production.o
 __Lmaintext 0 0 ABS 0 maintext -
-___stackhi 0 0 ABS 0 - C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
-___stacklo 0 0 ABS 0 - C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+___stackhi 0 0 ABS 0 - C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
+___stacklo 0 0 ABS 0 - C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 _WPUBbits 95 0 ABS 0 - dist/default/production\lab12.X.production.o
 start_initialization 1E 0 CODE 0 cinit dist/default/production\lab12.X.production.o
 _TRISBbits 86 0 ABS 0 - dist/default/production\lab12.X.production.o
-___int_sp 0 0 STACK 2 stack C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+___int_sp 0 0 STACK 2 stack C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 __Hbank0 0 0 ABS 0 bank0 -
 __Hbank1 0 0 ABS 0 bank1 -
 __Hbank2 0 0 ABS 0 bank2 -
@@ -208,16 +216,16 @@ __Lsfr2 0 0 ABS 0 sfr2 -
 __Lsfr3 0 0 ABS 0 sfr3 -
 __Ltext 0 0 ABS 0 text -
 __HcstackCOMMON 0 0 ABS 0 cstackCOMMON -
-__S0 94 0 ABS 0 - -
+__S0 A6 0 ABS 0 - -
 __S1 75 0 ABS 0 - -
 __S3 0 0 ABS 0 - -
-_isr C2 0 CODE 0 text2 dist/default/production\lab12.X.production.o
+_isr C6 0 CODE 0 text2 dist/default/production\lab12.X.production.o
 saved_w 7E 0 ABS 0 - dist/default/production\lab12.X.production.o
-__end_of_isr 104 0 CODE 0 text2 dist/default/production\lab12.X.production.o
+__end_of_isr 128 0 CODE 0 text2 dist/default/production\lab12.X.production.o
 __Lintentry 8 0 CODE 0 intentry -
-reset_vec 0 0 CODE 0 reset_vec C:\Users\WMGWW\AppData\Local\Temp\xcAsugg.o
+reset_vec 0 0 CODE 0 reset_vec C:\Users\WMGWW\AppData\Local\Temp\xcAsjb4.o
 _PIE1bits 8C 0 ABS 0 - dist/default/production\lab12.X.production.o
-__pmaintext 104 0 CODE 0 maintext dist/default/production\lab12.X.production.o
+__pmaintext 128 0 CODE 0 maintext dist/default/production\lab12.X.production.o
 __Lcommon 0 0 ABS 0 common -
 __Lconfig 0 0 CONFIG 4 config -
 _ADCON0bits 1F 0 ABS 0 - dist/default/production\lab12.X.production.o
@@ -236,7 +244,7 @@ __Hintentry 18 0 CODE 0 intentry -
 __Lstrings 0 0 ABS 0 strings -
 __Hreset_vec 6 0 CODE 0 reset_vec -
 __ptext1 28 0 CODE 0 text1 dist/default/production\lab12.X.production.o
-__ptext2 C2 0 CODE 0 text2 dist/default/production\lab12.X.production.o
+__ptext2 C6 0 CODE 0 text2 dist/default/production\lab12.X.production.o
 __Lpowerup 0 0 CODE 0 powerup -
 __Leeprom_data 0 0 EEDATA 3 eeprom_data -
 __Lreset_vec 0 0 CODE 0 reset_vec -
@@ -245,7 +253,7 @@ __Lfunctab 0 0 ENTRY 0 functab -
 __Lclrtext 0 0 ABS 0 clrtext -
 __pcstackCOMMON 70 0 COMMON 1 cstackCOMMON dist/default/production\lab12.X.production.o
 __Hend_init 1E 0 CODE 0 end_init -
-__end_of_main 128 0 CODE 0 maintext dist/default/production\lab12.X.production.o
+__end_of_main 14C 0 CODE 0 maintext dist/default/production\lab12.X.production.o
 _ANSEL 188 0 ABS 0 - dist/default/production\lab12.X.production.o
 _PORTA 5 0 ABS 0 - dist/default/production\lab12.X.production.o
 _PORTC 7 0 ABS 0 - dist/default/production\lab12.X.production.o
@@ -253,7 +261,7 @@ _PORTD 8 0 ABS 0 - dist/default/production\lab12.X.production.o
 _TRISA 85 0 ABS 0 - dist/default/production\lab12.X.production.o
 _TRISC 87 0 ABS 0 - dist/default/production\lab12.X.production.o
 _TRISD 88 0 ABS 0 - dist/default/production\lab12.X.production.o
-__end_of_setup C2 0 CODE 0 text1 dist/default/production\lab12.X.production.o
+__end_of_setup C6 0 CODE 0 text1 dist/default/production\lab12.X.production.o
 __Hram 0 0 ABS 0 ram -
 __Lram 0 0 ABS 0 ram -
 interrupt_function 8 0 CODE 0 intentry dist/default/production\lab12.X.production.o
@@ -287,7 +295,7 @@ __initialization 1E 0 CODE 0 cinit dist/default/production\lab12.X.production.o
 # All other numeric quantities are in decimal.
 %SEGMENTS
 cstackCOMMON 1 70 70 5 1
-intentry 0 4 8 90 2
+intentry 0 4 8 A2 2
 reset_vec 0 0 0 3 2
 # %NOTES Section
 # This section contains data of all the note-psects.  The beginning of the section

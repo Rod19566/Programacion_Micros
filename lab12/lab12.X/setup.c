@@ -29,9 +29,11 @@ void setup(void){
         
     //Configuracion push button
     TRISBbits.TRISB0 = 1;       //RB0 
+    TRISBbits.TRISB1 = 1;       //RB1
+    TRISBbits.TRISB2 = 1;       //RB1 
     OPTION_REGbits.nRBPU = 0;
-    WPUBbits.WPUB = 0x01;       //0001 RB0 
-    IOCBbits.IOCB = 0x01;       //RB0 y RB1 pull ups e interrupciones
+    WPUBbits.WPUB = 0b00000111;       //0001 RB0 
+    IOCBbits.IOCB = 0b00000111;       //RB0 y RB1 pull ups e interrupciones
     
     OSCCONbits.IRCF = 0b0100;   //1MHz
     OSCCONbits.SCS = 1;
@@ -55,3 +57,28 @@ void setup(void){
     INTCONbits.RBIE = 1;        //interrupciones en PORTB y TMR0
     INTCONbits.RBIF = 0;        //Apagamos banderas
 }
+
+
+//uint8_t read_EEPROM(uint8_t address){
+//    EEADR = address;
+//    EECON1bits.EEPGD = 0; 
+//    EECON1bits.RD = 1;
+//    return EEDAT;
+//}
+//
+//uint8_t write_EEPROM(uint8_t address, uint8_t data){
+//    EEADR = address;
+//    EEDAT = data; 
+//    
+//    EECON1bits.EEPGD = 0; 
+//    EECON1bits.WREN = 1;        //EEPROM write habilitado
+//    
+//    INTCONbits.GIE = 0;         //Int. deshabilitado
+//    EECON2 = 0x55;
+//    EECON2 = 0xAA;
+//    EECON1bits.WR = 1;
+//    
+//    EECON1bits.WREN = 0;         //EEPROM write deshabilitado
+//    INTCONbits.GIE = 1;         //Int. habilitado
+//}
+

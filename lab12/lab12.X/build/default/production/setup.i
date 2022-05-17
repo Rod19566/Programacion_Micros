@@ -2658,9 +2658,11 @@ void setup(void){
 
 
     TRISBbits.TRISB0 = 1;
+    TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB2 = 1;
     OPTION_REGbits.nRBPU = 0;
-    WPUBbits.WPUB = 0x01;
-    IOCBbits.IOCB = 0x01;
+    WPUBbits.WPUB = 0b00000111;
+    IOCBbits.IOCB = 0b00000111;
 
     OSCCONbits.IRCF = 0b0100;
     OSCCONbits.SCS = 1;

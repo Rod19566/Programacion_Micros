@@ -30,9 +30,8 @@
 #define	SETUP_H
 
 extern void setup(void);
-
-//extern void setuptmr0(void);
-//extern void configint(void);
+extern uint8_t read_EEPROM(uint8_t );
+extern uint8_t write_EEPROM(uint8_t, uint8_t);
   
 
 #endif

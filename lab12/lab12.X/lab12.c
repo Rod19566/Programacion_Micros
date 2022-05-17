@@ -23,7 +23,9 @@
 #include <xc.h>
 #include <stdint.h>
 #include "setup.h"
-#define SLEEP PORTBbits.RB0     // Asignamos un alias a RB0
+#define SLEEPbut PORTBbits.RB0     // Asignamos un alias a RB0
+#define WAKEbut PORTBbits.RB1     // Asignamos un alias a RB1
+#define SAVEbut PORTBbits.RB2     // Asignamos un alias a RB2
 
 uint8_t potvalue = 0;
 
@@ -31,14 +33,22 @@ void __interrupt() isr (void){
     if(PIR1bits.ADIF){              //ADC en RA2 donde guardamos el valor del potenciometro
         if(ADCON0bits.CHS == 2)     //en una variable
             potvalue = ADRESH;        
-        PIR1bits.ADIF = 0;
+            PIR1bits.ADIF = 0;
     } //ADIF
     
     if(INTCONbits.RBIF){            // Fue interrupci n del PORTB�
-        if(!SLEEP){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
-             
+        if(!SLEEPbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+            SLEEP();
+            INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
         }
-        INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+        if(!WAKEbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+            
+            INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+        }
+        if(!SAVEbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+            
+            INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+        }
     }
 }
 

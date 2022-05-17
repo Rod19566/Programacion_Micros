@@ -443,60 +443,66 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;setup.c: 31:     TRISBbits.TRISB0 = 1;
 [e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
 "32
-[; ;setup.c: 32:     OPTION_REGbits.nRBPU = 0;
-[e = . . _OPTION_REGbits 0 5 -> -> 0 `i `uc ]
+[; ;setup.c: 32:     TRISBbits.TRISB1 = 1;
+[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
 "33
-[; ;setup.c: 33:     WPUBbits.WPUB = 0x01;
-[e = . . _WPUBbits 0 0 -> -> 1 `i `uc ]
+[; ;setup.c: 33:     TRISBbits.TRISB2 = 1;
+[e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
 "34
-[; ;setup.c: 34:     IOCBbits.IOCB = 0x01;
-[e = . . _IOCBbits 0 0 -> -> 1 `i `uc ]
+[; ;setup.c: 34:     OPTION_REGbits.nRBPU = 0;
+[e = . . _OPTION_REGbits 0 5 -> -> 0 `i `uc ]
+"35
+[; ;setup.c: 35:     WPUBbits.WPUB = 0b00000111;
+[e = . . _WPUBbits 0 0 -> -> 7 `i `uc ]
 "36
-[; ;setup.c: 36:     OSCCONbits.IRCF = 0b0100;
+[; ;setup.c: 36:     IOCBbits.IOCB = 0b00000111;
+[e = . . _IOCBbits 0 0 -> -> 7 `i `uc ]
+"38
+[; ;setup.c: 38:     OSCCONbits.IRCF = 0b0100;
 [e = . . _OSCCONbits 0 4 -> -> 4 `i `uc ]
-"37
-[; ;setup.c: 37:     OSCCONbits.SCS = 1;
+"39
+[; ;setup.c: 39:     OSCCONbits.SCS = 1;
 [e = . . _OSCCONbits 0 0 -> -> 1 `i `uc ]
-"40
-[; ;setup.c: 40:     ADCON0bits.ADCS = 0b00;
-[e = . . _ADCON0bits 0 3 -> -> 0 `i `uc ]
 "42
-[; ;setup.c: 42:     ADCON1bits.VCFG0 = 0;
+[; ;setup.c: 42:     ADCON0bits.ADCS = 0b00;
+[e = . . _ADCON0bits 0 3 -> -> 0 `i `uc ]
+"44
+[; ;setup.c: 44:     ADCON1bits.VCFG0 = 0;
 [e = . . _ADCON1bits 0 1 -> -> 0 `i `uc ]
-"43
-[; ;setup.c: 43:     ADCON1bits.VCFG1 = 0;
-[e = . . _ADCON1bits 0 2 -> -> 0 `i `uc ]
 "45
-[; ;setup.c: 45:     ADCON0bits.CHS = 0b0010;
-[e = . . _ADCON0bits 0 2 -> -> 2 `i `uc ]
-"46
-[; ;setup.c: 46:     ADCON1bits.ADFM = 0;
-[e = . . _ADCON1bits 0 4 -> -> 0 `i `uc ]
+[; ;setup.c: 45:     ADCON1bits.VCFG1 = 0;
+[e = . . _ADCON1bits 0 2 -> -> 0 `i `uc ]
 "47
-[; ;setup.c: 47:     ADCON0bits.ADON = 1;
-[e = . . _ADCON0bits 0 0 -> -> 1 `i `uc ]
+[; ;setup.c: 47:     ADCON0bits.CHS = 0b0010;
+[e = . . _ADCON0bits 0 2 -> -> 2 `i `uc ]
 "48
-[; ;setup.c: 48:     _delay((unsigned long)((40)*(1000000/4000000.0)));
+[; ;setup.c: 48:     ADCON1bits.ADFM = 0;
+[e = . . _ADCON1bits 0 4 -> -> 0 `i `uc ]
+"49
+[; ;setup.c: 49:     ADCON0bits.ADON = 1;
+[e = . . _ADCON0bits 0 0 -> -> 1 `i `uc ]
+"50
+[; ;setup.c: 50:     _delay((unsigned long)((40)*(1000000/4000000.0)));
 [e ( __delay (1 -> * -> -> 40 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
-"51
-[; ;setup.c: 51:     PIR1bits.ADIF = 0;
-[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
-"52
-[; ;setup.c: 52:     PIE1bits.ADIE = 1;
-[e = . . _PIE1bits 0 6 -> -> 1 `i `uc ]
 "53
-[; ;setup.c: 53:     INTCONbits.PEIE = 1;
-[e = . . _INTCONbits 0 6 -> -> 1 `i `uc ]
+[; ;setup.c: 53:     PIR1bits.ADIF = 0;
+[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
 "54
-[; ;setup.c: 54:     INTCONbits.GIE = 1;
-[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
+[; ;setup.c: 54:     PIE1bits.ADIE = 1;
+[e = . . _PIE1bits 0 6 -> -> 1 `i `uc ]
 "55
-[; ;setup.c: 55:     INTCONbits.RBIE = 1;
-[e = . . _INTCONbits 0 3 -> -> 1 `i `uc ]
+[; ;setup.c: 55:     INTCONbits.PEIE = 1;
+[e = . . _INTCONbits 0 6 -> -> 1 `i `uc ]
 "56
-[; ;setup.c: 56:     INTCONbits.RBIF = 0;
-[e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
+[; ;setup.c: 56:     INTCONbits.GIE = 1;
+[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
 "57
-[; ;setup.c: 57: }
+[; ;setup.c: 57:     INTCONbits.RBIE = 1;
+[e = . . _INTCONbits 0 3 -> -> 1 `i `uc ]
+"58
+[; ;setup.c: 58:     INTCONbits.RBIF = 0;
+[e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
+"59
+[; ;setup.c: 59: }
 [e :UE 138 ]
 }

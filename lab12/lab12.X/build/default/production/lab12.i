@@ -2655,7 +2655,11 @@ extern __bank0 __bit __timeout;
 # 1 "./setup.h" 1
 # 32 "./setup.h"
 extern void setup(void);
+extern uint8_t read_EEPROM(uint8_t );
+extern uint8_t write_EEPROM(uint8_t, uint8_t);
 # 25 "lab12.c" 2
+
+
 
 
 
@@ -2665,14 +2669,22 @@ void __attribute__((picinterrupt(("")))) isr (void){
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 2)
             potvalue = ADRESH;
-        PIR1bits.ADIF = 0;
+            PIR1bits.ADIF = 0;
     }
 
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
-
+            __asm("sleep");
+            INTCONbits.RBIF = 0;
         }
-        INTCONbits.RBIF = 0;
+        if(!PORTBbits.RB1){
+
+            INTCONbits.RBIF = 0;
+        }
+        if(!PORTBbits.RB2){
+
+            INTCONbits.RBIF = 0;
+        }
     }
 }
 

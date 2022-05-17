@@ -11,9 +11,9 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"30 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+"32 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
 [v _isr isr `II(v  1 e 1 0 ]
-"45
+"55
 [v _main main `(v  1 e 1 0 ]
 "13 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 [v _setup setup `(v  1 e 1 0 ]
@@ -186,20 +186,20 @@
 [v _ANSEL ANSEL `VEuc  1 e 1 @392 ]
 "3450
 [v _ANSELH ANSELH `VEuc  1 e 1 @393 ]
-"28 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+"30 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
 [v _potvalue potvalue `uc  1 e 1 0 ]
-"45
+"55
 [v _main main `(v  1 e 1 0 ]
 {
-"55
+"65
 } 0
 "13 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\setup.c
 [v _setup setup `(v  1 e 1 0 ]
 {
-"57
+"59
 } 0
-"30 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
+"32 C:\Users\WMGWW\Universidad\Semestre12022\Micros\lab12\lab12.X\lab12.c
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"43
+"53
 } 0
