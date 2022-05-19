@@ -29,12 +29,12 @@ CND_CONF=default
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 IMAGE_TYPE=debug
 OUTPUT_SUFFIX=elf
-DEBUGGABLE_SUFFIX=
+DEBUGGABLE_SUFFIX=elf
 FINAL_IMAGE=${DISTDIR}/ProyectoSlave.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 else
 IMAGE_TYPE=production
 OUTPUT_SUFFIX=hex
-DEBUGGABLE_SUFFIX=
+DEBUGGABLE_SUFFIX=elf
 FINAL_IMAGE=${DISTDIR}/ProyectoSlave.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 endif
 
@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=ProtectoSlave.c setup.c
+SOURCEFILES_QUOTED_IF_SPACED=setup.c ProyectoSlave.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/ProtectoSlave.p1 ${OBJECTDIR}/setup.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/ProtectoSlave.p1.d ${OBJECTDIR}/setup.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/setup.p1 ${OBJECTDIR}/ProyectoSlave.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/setup.p1.d ${OBJECTDIR}/ProyectoSlave.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/ProtectoSlave.p1 ${OBJECTDIR}/setup.p1
+OBJECTFILES=${OBJECTDIR}/setup.p1 ${OBJECTDIR}/ProyectoSlave.p1
 
 # Source Files
-SOURCEFILES=ProtectoSlave.c setup.c
+SOURCEFILES=setup.c ProyectoSlave.c
 
 
 
@@ -94,14 +94,6 @@ MP_PROCESSOR_OPTION=16F887
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/ProtectoSlave.p1: ProtectoSlave.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ProtectoSlave.p1.d 
-	@${RM} ${OBJECTDIR}/ProtectoSlave.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=none   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/ProtectoSlave.p1 ProtectoSlave.c 
-	@-${MV} ${OBJECTDIR}/ProtectoSlave.d ${OBJECTDIR}/ProtectoSlave.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/ProtectoSlave.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/setup.p1: setup.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/setup.p1.d 
@@ -110,15 +102,15 @@ ${OBJECTDIR}/setup.p1: setup.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/setup.d ${OBJECTDIR}/setup.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/setup.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-else
-${OBJECTDIR}/ProtectoSlave.p1: ProtectoSlave.c  nbproject/Makefile-${CND_CONF}.mk 
+${OBJECTDIR}/ProyectoSlave.p1: ProyectoSlave.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/ProtectoSlave.p1.d 
-	@${RM} ${OBJECTDIR}/ProtectoSlave.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/ProtectoSlave.p1 ProtectoSlave.c 
-	@-${MV} ${OBJECTDIR}/ProtectoSlave.d ${OBJECTDIR}/ProtectoSlave.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/ProtectoSlave.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	@${RM} ${OBJECTDIR}/ProyectoSlave.p1.d 
+	@${RM} ${OBJECTDIR}/ProyectoSlave.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=none   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/ProyectoSlave.p1 ProyectoSlave.c 
+	@-${MV} ${OBJECTDIR}/ProyectoSlave.d ${OBJECTDIR}/ProyectoSlave.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/ProyectoSlave.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+else
 ${OBJECTDIR}/setup.p1: setup.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/setup.p1.d 
@@ -126,6 +118,14 @@ ${OBJECTDIR}/setup.p1: setup.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/setup.p1 setup.c 
 	@-${MV} ${OBJECTDIR}/setup.d ${OBJECTDIR}/setup.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/setup.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/ProyectoSlave.p1: ProyectoSlave.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ProyectoSlave.p1.d 
+	@${RM} ${OBJECTDIR}/ProyectoSlave.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-osccal -mno-resetbits -mno-save-resetbits -mno-download -mno-stackcall -mdefault-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto     -o ${OBJECTDIR}/ProyectoSlave.p1 ProyectoSlave.c 
+	@-${MV} ${OBJECTDIR}/ProyectoSlave.d ${OBJECTDIR}/ProyectoSlave.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/ProyectoSlave.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

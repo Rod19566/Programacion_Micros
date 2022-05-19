@@ -26,33 +26,63 @@
 #include <stdint.h>
 #include "setup.h"
 
-
+#define LEN_MSG 20               // Constante para definir largo de mensaje e 
+/*------------------------------------------------------------------------------
+ * VARIABLES 
+ ------------------------------------------------------------------------------*/
+char msg[LEN_MSG] = {'C', 'h', 'o', 'o', 's', 'e', ' ', 'P', 'o', 's', 'i', 't', 'i', 'o', 'n', ':', ' ', ' ', 0x0D, 0x0A};
 uint8_t potvalue = 0;
+uint8_t index = 0;             // Variable para saber que posici n del mensaje 
+uint8_t mode = 0;       //variable for mode
+uint8_t oldvalue = 0;          // Variable para guardar el valor anterior recibido
 
 //Interruptions
 void __interrupt() isr (void){
     
+    if(PIR1bits.RCIF){          // Hay datos recibidos?
+        
+        msg[17] = RCREG;     // Guardamos valor recibido en el arreglo mensaje
+        //PORTD = msg[6];     // Mostramos valor recibido en el PORTD
+    }
+    
     //ADC Interrupt
      if (ADIF == 1) {
-        if(!ADCON0bits.CHS){
-            CCPR1L = (ADRESH>>1)+124;
-            CCP1CONbits.DC1B1 = ADRESH & 0b01; 
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
+        if(!ADCON0bits.CHS){ //POT Eye 1
             ADCON0bits.CHS = 1; 
         }
-        //canal pwm2
-        else if(ADCON0bits.CHS == 1) {
+        else if(ADCON0bits.CHS == 1) { //POT Eye 2
+            ADCON0bits.CHS = 2;//se cambia a canal del tercer pot
+        } 
+        else if(ADCON0bits.CHS == 2) {      //POT Eyebrow   1
+            ADCON0bits.CHS = 3;//se cambia a canal del tercer pot
+        } 
+        else if(ADCON0bits.CHS == 3) {      //POT Eyebrow   2
             ADCON0bits.CHS = 0;//se cambia a canal del tercer pot
         } 
-        
         __delay_us(40);   
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
         
     }
 }
+void
+send(char x[]){
 
+       if (oldvalue != msg[17] ){                // Verificamos que el nuevo valor 
+            while(x[index]  !=  0){              // Loop para imprimir el mensaje 
+                if (PIR1bits.TXIF){             // Esperamos a que este
+                    TXREG = x[index];        // Cargamos caracter a enviar  
+                    index++;                  // Incrementamos indice para enviar 
+
+           }// if PIR1bits
+                oldvalue = msg[17];   //almacena el la posicion 6 de msg el valor ingresado
+            }//while                               //
+        }//if !=
+}
 
 void main(void) {
+    if (mode == 3){
+        send("Eliga \r 1. Leer Potenciometro \r 2. Enviar Ascii \r");
+    }
     return;
 }

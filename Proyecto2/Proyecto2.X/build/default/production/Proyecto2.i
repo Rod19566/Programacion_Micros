@@ -2661,32 +2661,62 @@ extern void setup(void);
 
 
 
+
+
+
+char msg[20] = {'C', 'h', 'o', 'o', 's', 'e', ' ', 'P', 'o', 's', 'i', 't', 'i', 'o', 'n', ':', ' ', ' ', 0x0D, 0x0A};
 uint8_t potvalue = 0;
+uint8_t index = 0;
+uint8_t mode = 0;
+uint8_t oldvalue = 0;
 
 
 void __attribute__((picinterrupt(("")))) isr (void){
 
+    if(PIR1bits.RCIF){
+
+        msg[17] = RCREG;
+
+    }
+
 
      if (ADIF == 1) {
         if(!ADCON0bits.CHS){
-            CCPR1L = (ADRESH>>1)+124;
-            CCP1CONbits.DC1B1 = ADRESH & 0b01;
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
             ADCON0bits.CHS = 1;
         }
-
         else if(ADCON0bits.CHS == 1) {
+            ADCON0bits.CHS = 2;
+        }
+        else if(ADCON0bits.CHS == 2) {
+            ADCON0bits.CHS = 3;
+        }
+        else if(ADCON0bits.CHS == 3) {
             ADCON0bits.CHS = 0;
         }
-
         _delay((unsigned long)((40)*(1000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
 
     }
 }
+void
+send(char x[]){
 
+       if (oldvalue != msg[17] ){
+            while(x[index] != 0){
+                if (PIR1bits.TXIF){
+                    TXREG = x[index];
+                    index++;
+
+           }
+                oldvalue = msg[17];
+            }
+        }
+}
 
 void main(void) {
+    if (mode == 3){
+        send("Eliga \r 1. Leer Potenciometro \r 2. Enviar Ascii \r");
+    }
     return;
 }
