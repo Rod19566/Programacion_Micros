@@ -2667,9 +2667,11 @@ void configint(void){
 
     TRISBbits.TRISB0 = 1;
     TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB2 = 1;
+    TRISBbits.TRISB3 = 1;
     OPTION_REGbits.nRBPU = 0;
-    WPUBbits.WPUB = 0b00000011;
-    IOCBbits.IOCB = 0b00000011;
+    WPUBbits.WPUB = 0b00001111;
+    IOCBbits.IOCB = 0b00001111;
 
 }
 void setup(void){
@@ -2725,7 +2727,6 @@ void setup(void){
     while(PIR1bits.TMR2IF == 0);
     PIR1bits.TMR2IF = 0;
 
-    TRISCbits.TRISC3 = 0;
     TRISCbits.TRISC2 = 0;
     TRISCbits.TRISC1 = 0;
 

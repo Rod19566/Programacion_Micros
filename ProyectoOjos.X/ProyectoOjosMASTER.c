@@ -31,9 +31,9 @@
 unsigned char contLED = 0;
 unsigned char temppwm = 0;
 
-uint8_t potvalue = 0;
+uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
 uint8_t index = 0;             // Variable para saber que posici n del mensaje 
-uint8_t mode = 0;       //variable for mode
+uint8_t mode = 1;       //variable for mode
 uint8_t oldvalue = 0;          // Variable para guardar el valor anterior recibido
 
 //prototipos
@@ -43,7 +43,9 @@ void setuptmr0(void);
 
 //constantes
 #define MODEbut PORTBbits.RB0     // Asignamos un alias a RB0
-#define SAVEbut PORTBbits.RB1     // Asignamos un alias a RB1
+#define SAVE1but PORTBbits.RB1     // Asignamos un alias a RB1
+#define SAVE2but PORTBbits.RB2     // Asignamos un alias a RB2
+#define SAVE3but PORTBbits.RB3     // Asignamos un alias a RB3
 #define _XTAL_FREQ 8000000      //configuracion 8MHz
 //----------------------interrupciones------------------------------------------
 void __interrupt() isr(void){   
@@ -64,15 +66,19 @@ void __interrupt() isr(void){
             ADCON0bits.CHS = 0b0010;//se cambia a canal del tercer pot
         }
         else if(ADCON0bits.CHS == 2) {
-            temppwm = ADRESH;
-            PIR1bits.ADIF = 0;
+//            CCPR2L = (ADRESH>>1)+124;
+//            CCP2CONbits.DC2B1 = ADRESH & 0b01;
+//            CCP2CONbits.DC2B0 = (ADRESL>>7);
+//            
             ADCON0bits.CHS = 3;//se cambia a canal del primer pot
            // CCP2CONbits.DC2B0 = (ADRESL>>7);
             
         } 
-        else if(ADCON0bits.CHS == 3) {
-            temppwm = ADRESH;
-            PIR1bits.ADIF = 0;
+        else if(ADCON0bits.CHS == 3) {  
+//            CCPR2L = (ADRESH>>1)+124;
+//            CCP2CONbits.DC2B1 = ADRESH & 0b01;
+//            CCP2CONbits.DC2B0 = (ADRESL>>7);
+            
             ADCON0bits.CHS = 0;//se cambia a canal del primer pot
            // CCP2CONbits.DC2B0 = (ADRESL>>7);
             
@@ -86,43 +92,25 @@ void __interrupt() isr(void){
     if(INTCONbits.T0IF){    //se revisa bandera del timer0
        
         resettmr0();  
-        contLED++;
-        TMR0 = 250;
-        if (contLED < temppwm) RC3 = 1;
         
-        else RC3 = 0;
-//        
-//        if (contLED == temppwm) {
-//            contLED = 0;
-//        }
-//      
-        resettmr0();  
-//        if (ledActualBrightness > contLED) RD5 = 1;
-//        else  RD5 = 0;
-//        contLED++;      
-//        
-//        if (contLED > 19) contLED = 0;
-//        
-//        if    b(ledTargetBrightness >= ledActualBrightness)
-//			ledActualBrightness = ledTargetBrightness;
-//		else
-//		{
-//			fadeCounter++;
-//			if (fadeCounter == 24)
-//			{
-//				ledActualBrightness--;
-//				fadeCounter = 0;
-//			}	
-//		}        
+      
     }//tmr0
     
     if(INTCONbits.RBIF){            // Fue interrupci n del PORTB�
         if(!MODEbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
             mode++;
         }
-        if(!SAVEbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+        if(!SAVE1but){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
             //PORTD = read_EEPROM(1);
-            mode--;
+            
+        }
+        if(!SAVE2but){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+            //PORTD = read_EEPROM(1);
+            
+        }
+        if(!SAVE3but){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
+            //PORTD = read_EEPROM(1);
+            
         }
         INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
     } //RBIF
@@ -135,7 +123,18 @@ void main(void) {
     //LOOP
     while (1){ 
     
-    if (mode == 4) mode = 0; //mode reseter
+    if (mode == 4) mode = 1; //mode reseter
+    
+    PORTD = mode; //SHOWS MODE
+    if (mode == 3) {
+        
+    }
+    if (mode == 2) {
+        
+    }
+    if (mode == 1) {
+        
+    }
     PORTD = mode; //SHOWS MODE
    }      
 }

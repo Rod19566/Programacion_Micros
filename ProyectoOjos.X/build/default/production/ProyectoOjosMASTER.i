@@ -2770,21 +2770,16 @@ extern void configint(void);
 unsigned char contLED = 0;
 unsigned char temppwm = 0;
 
-uint8_t potvalue = 0;
+uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
 uint8_t index = 0;
-uint8_t mode = 0;
+uint8_t mode = 1;
 uint8_t oldvalue = 0;
 
 
 void configint(void);
 void resettmr0(void);
 void setuptmr0(void);
-
-
-
-
-
-
+# 51 "ProyectoOjosMASTER.c"
 void __attribute__((picinterrupt(("")))) isr(void){
 
     if (ADIF == 1) {
@@ -2803,15 +2798,19 @@ void __attribute__((picinterrupt(("")))) isr(void){
             ADCON0bits.CHS = 0b0010;
         }
         else if(ADCON0bits.CHS == 2) {
-            temppwm = ADRESH;
-            PIR1bits.ADIF = 0;
+
+
+
+
             ADCON0bits.CHS = 3;
 
 
         }
         else if(ADCON0bits.CHS == 3) {
-            temppwm = ADRESH;
-            PIR1bits.ADIF = 0;
+
+
+
+
             ADCON0bits.CHS = 0;
 
 
@@ -2825,18 +2824,8 @@ void __attribute__((picinterrupt(("")))) isr(void){
     if(INTCONbits.T0IF){
 
         resettmr0();
-        contLED++;
-        TMR0 = 250;
-        if (contLED < temppwm) RC3 = 1;
-
-        else RC3 = 0;
 
 
-
-
-
-        resettmr0();
-# 117 "ProyectoOjosMASTER.c"
     }
 
     if(INTCONbits.RBIF){
@@ -2845,7 +2834,15 @@ void __attribute__((picinterrupt(("")))) isr(void){
         }
         if(!PORTBbits.RB1){
 
-            mode--;
+
+        }
+        if(!PORTBbits.RB2){
+
+
+        }
+        if(!PORTBbits.RB3){
+
+
         }
         INTCONbits.RBIF = 0;
     }
@@ -2858,7 +2855,18 @@ void main(void) {
 
     while (1){
 
-    if (mode == 4) mode = 0;
+    if (mode == 4) mode = 1;
+
+    PORTD = mode;
+    if (mode == 3) {
+
+    }
+    if (mode == 2) {
+
+    }
+    if (mode == 1) {
+
+    }
     PORTD = mode;
    }
 }

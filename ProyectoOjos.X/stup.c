@@ -38,11 +38,13 @@ void configint(void){
     
        
     //Configuracion push button
-    TRISBbits.TRISB0 = 1;       //RB0 y RB1
-    TRISBbits.TRISB1 = 1;       //RB0 y RB1
+    TRISBbits.TRISB0 = 1;       //RB0 
+    TRISBbits.TRISB1 = 1;       //RB1
+    TRISBbits.TRISB2 = 1;       //RB2
+    TRISBbits.TRISB3 = 1;       //RB3
     OPTION_REGbits.nRBPU = 0;   // Habilitamos resistencias de pull-up del PORTB
-    WPUBbits.WPUB = 0b00000011;       //0011 RB0 and RB1 
-    IOCBbits.IOCB = 0b00000011;       //RB0 y RB1 pull ups e interrupciones
+    WPUBbits.WPUB = 0b00001111;       //0011 RB0 and RB1 
+    IOCBbits.IOCB = 0b00001111;       //RB0 y RB1 pull ups e interrupciones
 
 }
 void setup(void){
@@ -98,7 +100,6 @@ void setup(void){
     while(PIR1bits.TMR2IF == 0);//esperar un ciclo de tmr2
     PIR1bits.TMR2IF = 0;
     
-    TRISCbits.TRISC3 = 0;       //out manual pwm3
     TRISCbits.TRISC2 = 0;       //out pwm2
     TRISCbits.TRISC1 = 0;       //out pwm1
     
