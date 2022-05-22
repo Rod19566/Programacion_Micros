@@ -9,6 +9,10 @@
 #include <xc.h>
 
 #define _XTAL_FREQ 8000000      //configuracion 8MHz
+#define I2C_SPEED 100000
+#define ADDRESS 0x08
+#define READ 0b0
+#define WRITE 0b1
 
 void resettmr0(void){
    // TMR0 = 5;              //para 15.1 ms
@@ -107,3 +111,49 @@ void setup(void){
     ADCON0bits.GO = 1;      //ADC conversion
     
 }
+
+void setupI2C(void){
+    SSPADD = ((_XTAL_FREQ)/(4*I2C_SPEED)) - 1;  // 100 kHz
+    SSPSTATbits.SMP = 1;                        // Velocidad de rotaci n�
+    SSPCONbits.SSPM = 0b1000;                   // I2C master mode, clock = Fosc/(4*(SSPADD+1))
+    SSPCONbits.SSPEN = 1;                       // Habilitamos pines de I2C
+    PIR1bits.SSPIF = 0;                         // Limpiamos bandera de interrupci n de I2C�
+}
+    
+void wait_I2C(void){
+    while(!PIR1bits.SSPIF);     // Esperamos a que se ejecute instruccion de I2C
+    PIR1bits.SSPIF = 0;         // Limpimos bandera
+}
+void start_I2C(void){
+    SSPCON2bits.SEN = 1;        // Inicializar comunicaci n�
+    wait_I2C();
+}
+void restart_I2C(void){
+    SSPCON2bits.RSEN = 1;       // Reiniciar de comunicaci n�
+    wait_I2C();
+}
+void stop_I2C(void){
+    SSPCON2bits.PEN = 1;        // Finalizar comunicaci n�
+    wait_I2C();
+}
+void send_ACK(void){
+    SSPCON2bits.ACKDT = 0;      // Confirmar que se recibi  la data�
+    SSPCON2bits.ACKEN = 1;      // Envio de ack al esclavo
+    wait_I2C();
+}
+void send_NACK(void){
+    SSPCON2bits.ACKDT = 1;      // Confirmar recepci n al finalizar comunicaci n��
+    SSPCON2bits.ACKEN = 1;      // Envio de nack al esclavo
+    wait_I2C();
+}
+__bit write_I2C(uint8_t data){
+    SSPBUF = data;              // Cargar dato a enviar en el buffer
+    wait_I2C();
+    return ACKSTAT;             // Obtener ACK del esclavo
+}
+uint8_t read_I2C(void){
+    SSPCON2bits.RCEN = 1;       // Pedir dato al esclavo  
+    wait_I2C();
+    return SSPBUF;              // Regresar dato recibido
+}
+    

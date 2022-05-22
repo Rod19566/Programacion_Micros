@@ -2637,6 +2637,10 @@ extern __bank0 __bit __timeout;
 
 
 
+
+
+
+
 void resettmr0(void){
 
     INTCONbits.T0IF=0;
@@ -2733,4 +2737,49 @@ void setup(void){
 
     ADCON0bits.GO = 1;
 
+}
+
+void setupI2C(void){
+    SSPADD = ((8000000)/(4*100000)) - 1;
+    SSPSTATbits.SMP = 1;
+    SSPCONbits.SSPM = 0b1000;
+    SSPCONbits.SSPEN = 1;
+    PIR1bits.SSPIF = 0;
+}
+
+void wait_I2C(void){
+    while(!PIR1bits.SSPIF);
+    PIR1bits.SSPIF = 0;
+}
+void start_I2C(void){
+    SSPCON2bits.SEN = 1;
+    wait_I2C();
+}
+void restart_I2C(void){
+    SSPCON2bits.RSEN = 1;
+    wait_I2C();
+}
+void stop_I2C(void){
+    SSPCON2bits.PEN = 1;
+    wait_I2C();
+}
+void send_ACK(void){
+    SSPCON2bits.ACKDT = 0;
+    SSPCON2bits.ACKEN = 1;
+    wait_I2C();
+}
+void send_NACK(void){
+    SSPCON2bits.ACKDT = 1;
+    SSPCON2bits.ACKEN = 1;
+    wait_I2C();
+}
+__bit write_I2C(uint8_t data){
+    SSPBUF = data;
+    wait_I2C();
+    return ACKSTAT;
+}
+uint8_t read_I2C(void){
+    SSPCON2bits.RCEN = 1;
+    wait_I2C();
+    return SSPBUF;
 }

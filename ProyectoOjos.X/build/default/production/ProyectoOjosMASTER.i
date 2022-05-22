@@ -2761,6 +2761,17 @@ extern void setup(void);
 extern void setuptmr0(void);
 extern void resettmr0(void);
 extern void configint(void);
+
+
+extern void setupI2C(void);
+extern void wait_I2C(void);
+extern void start_I2C(void);
+extern void restart_I2C(void);
+extern void stop_I2C(void);
+extern void send_ACK(void);
+extern void send_NACK(void);
+extern __bit write_I2C(uint8_t);
+extern uint8_t read_I2C(void);
 # 26 "ProyectoOjosMASTER.c" 2
 
 
@@ -2770,52 +2781,55 @@ extern void configint(void);
 unsigned char contLED = 0;
 unsigned char temppwm = 0;
 
-uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
+uint8_t potvalue1a = 0, potvalue2a = 0, potvalue3a = 0, potvalue4a = 0;
+uint8_t potvalue1b = 0, potvalue2b = 0, potvalue3b = 0, potvalue4b = 0;
 uint8_t index = 0;
 uint8_t mode = 1;
 uint8_t oldvalue = 0;
+uint8_t cont=0x00, data = 0, response = 0, amount = 0;
 
 
 void configint(void);
 void resettmr0(void);
 void setuptmr0(void);
-# 51 "ProyectoOjosMASTER.c"
+# 57 "ProyectoOjosMASTER.c"
 void __attribute__((picinterrupt(("")))) isr(void){
 
     if (ADIF == 1) {
         if(!ADCON0bits.CHS){
             CCPR1L = (ADRESH>>1)+124;
-            CCP1CONbits.DC1B1 = ADRESH & 0b01;
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
+            potvalue1a = ADRESH & 0b01;
+            potvalue1b = (ADRESL>>7);
+            CCP1CONbits.DC1B1 = potvalue1a;
+            CCP1CONbits.DC1B0 = potvalue1b;
             ADCON0bits.CHS = 1;
         }
 
         else if(ADCON0bits.CHS == 1) {
-
             CCPR2L = (ADRESH>>1)+124;
-            CCP2CONbits.DC2B1 = ADRESH & 0b01;
-            CCP2CONbits.DC2B0 = (ADRESL>>7);
+            potvalue2a = ADRESH & 0b01;
+            potvalue2b = (ADRESL>>7);
+            CCP2CONbits.DC2B1 = potvalue2a;
+            CCP2CONbits.DC2B0 = potvalue2b;
+
             ADCON0bits.CHS = 0b0010;
         }
         else if(ADCON0bits.CHS == 2) {
-
-
-
-
+            CCPR2L = (ADRESH>>1)+124;
+            potvalue3a = (ADRESH>>1)+124;
+            potvalue3b = (ADRESL>>7);
             ADCON0bits.CHS = 3;
-
 
         }
         else if(ADCON0bits.CHS == 3) {
-
-
-
+            CCPR2L = (ADRESH>>1)+124;
+            potvalue4a = (ADRESH>>1)+124;
+            potvalue4b = (ADRESL>>7);
 
             ADCON0bits.CHS = 0;
 
 
         }
-
         _delay((unsigned long)((40)*(8000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
@@ -2832,18 +2846,22 @@ void __attribute__((picinterrupt(("")))) isr(void){
         if(!PORTBbits.RB0){
             mode++;
         }
-        if(!PORTBbits.RB1){
+        if (mode == 1){
+
+            if(!PORTBbits.RB1){
 
 
+            }
+            if(!PORTBbits.RB2){
+
+
+            }
+            if(!PORTBbits.RB3){
+
+
+            }
         }
-        if(!PORTBbits.RB2){
 
-
-        }
-        if(!PORTBbits.RB3){
-
-
-        }
         INTCONbits.RBIF = 0;
     }
 
@@ -2852,6 +2870,7 @@ void __attribute__((picinterrupt(("")))) isr(void){
 
 void main(void) {
     setup();
+    setupI2C();
 
     while (1){
 
@@ -2868,5 +2887,17 @@ void main(void) {
 
     }
     PORTD = mode;
+
+    data = (uint8_t)((0x08<<1)+0b0);
+        start_I2C();
+        write_I2C(data);
+        write_I2C(amount);
+        stop_I2C();
+
+
+
+        _delay((unsigned long)((100)*(8000000/4000.0)));
+
    }
+    return;
 }
