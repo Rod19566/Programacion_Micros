@@ -25,19 +25,6 @@
 #include <stdio.h>
 #include "stup.h"
 
-#define delayTMR0 250
-
-//variables
-unsigned char contLED = 0;
-unsigned char temppwm = 0;
-
-uint8_t potvalue1a = 0, potvalue2a = 0, potvalue3a = 0, potvalue4a = 0;
-uint8_t potvalue1b = 0, potvalue2b = 0, potvalue3b = 0, potvalue4b = 0;
-uint8_t index = 0;             // Variable para saber que posici n del mensaje 
-uint8_t mode = 1;       //variable for mode
-uint8_t oldvalue = 0;          // Variable para guardar el valor anterior recibido
-uint8_t cont=0x00, data = 0, response = 0, amount = 0;
-
 //prototipos
 void configint(void);
 void resettmr0(void);
@@ -50,42 +37,46 @@ void setuptmr0(void);
 #define SAVE3but PORTBbits.RB3     // Asignamos un alias a RB3
 //#define I2C_SPEED 100000
 #define ADDRESS 0x08
+#define LEN_MSG 7   
 #define READ 0b0
 #define WRITE 0b1
-#define _XTAL_FREQ 8000000      //configuracion 8MHz
+#define _XTAL_FREQ 4000000      //configuracion 8MHz
+//variables
+char mensaje[LEN_MSG] = {'P', 'o', 't', '1', ':', ' ', ' '};
+//char mensaje[LEN_MSG] = {'D', 'a', 't', 'o', ':', ' ', ' ', , 0x0A};
+uint8_t indice = 0;             // Variable para saber que posici n del mensaje �enviar al serial
+uint8_t valor_old = 0, potsel = 0;          // Variable para guardar el valor anterior recibido
+
+uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
+uint8_t index = 0;             // Variable para saber que posici n del mensaje 
+uint8_t mode = 1;       //variable for mode
+uint8_t oldvalue = 0;          // Variable para guardar el valor anterior recibido
+uint8_t  data = 0, response = 0, amount = 0;
+uint8_t addeeprom, cont = 0;
+
 //----------------------interrupciones------------------------------------------
 void __interrupt() isr(void){   
     //ADC INTERRUPT
-    if (ADIF == 1) {
+    if (ADIF == 1 && mode == 1) {
         if(!ADCON0bits.CHS){
-            CCPR1L = (ADRESH>>1)+124;
-            potvalue1a =  ADRESH & 0b01;
-            potvalue1b = (ADRESL>>7);
-            CCP1CONbits.DC1B1 = potvalue1a;
-            CCP1CONbits.DC1B0 = potvalue1b;
+            potvalue1 = (ADRESH>>1)+124;
+            CCPR1L = potvalue1; 
             ADCON0bits.CHS = 1; 
         }
         //canal pwm2
-        else if(ADCON0bits.CHS == 1) {
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue2a = ADRESH & 0b01;
-            potvalue2b = (ADRESL>>7);
-            CCP2CONbits.DC2B1 = potvalue2a;
-            CCP2CONbits.DC2B0 = potvalue2b;
+        else if(ADCON0bits.CHS == 1 && mode == 1) {
+            potvalue2 = (ADRESH>>1)+124;
+            CCPR2L = potvalue2; 
             
             ADCON0bits.CHS = 0b0010;//se cambia a canal del tercer pot
         }
-        else if(ADCON0bits.CHS == 2) {
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue3a = (ADRESH>>1)+124;
-            potvalue3b = (ADRESL>>7);
+        else if(ADCON0bits.CHS == 2 && mode == 1) {
+            potvalue3 = (ADRESH>>1)+124;
             ADCON0bits.CHS = 3;//se cambia a canal del tercer pot
             
         } 
-        else if(ADCON0bits.CHS == 3) {  
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue4a = (ADRESH>>1)+124;
-            potvalue4b = (ADRESL>>7);
+        else if(ADCON0bits.CHS == 3 && mode == 1) {  
+            potvalue4 = (ADRESH>>1)+124;
             
             ADCON0bits.CHS = 0;//se cambia a canal del primer pot
            // CCP2CONbits.DC2B0 = (ADRESL>>7);
@@ -95,7 +86,7 @@ void __interrupt() isr(void){
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
         
-    }
+    } //adif
     if(INTCONbits.T0IF){    //se revisa bandera del timer0
        
         resettmr0();  
@@ -111,21 +102,58 @@ void __interrupt() isr(void){
             
             if(!SAVE1but){                 // Verificamos si fue RB1 quien gener  la �interrupci n�
                 //PORTD = read_EEPROM(1);
-            
+                            // Verificamos si fue RB1 quien gener  la �interrupci n�
+                write_EEPROM(1, potvalue1);
+                write_EEPROM(2, potvalue2);
+                write_EEPROM(3, potvalue3);
+                write_EEPROM(4, potvalue4);
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
             }
             if(!SAVE2but){                 // Verificamos si fue RB2 quien gener  la �interrupci n�
             //PORTD = read_EEPROM(1);
             
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
             }
             if(!SAVE3but){                 // Verificamos si fue RB3 quien gener  la �interrupci n�
             //PORTD = read_EEPROM(1);
             
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
             }
-        } //if mode right
-        
-        INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+        } //if mode manual
+       if (mode == 2){
+            
+            if(!SAVE1but){                 // Verificamos si fue RB1 quien gener  la �interrupci n�
+                //PORTD = read_EEPROM(1);
+                            // Verificamos si fue RB1 quien gener  la �interrupci n�
+                potvalue1 = read_EEPROM(1);
+                potvalue2 = read_EEPROM(2);
+                potvalue3 = read_EEPROM(3);
+                potvalue4 = read_EEPROM(4);
+                
+                
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+            }
+            if(!SAVE2but){                 // Verificamos si fue RB2 quien gener  la �interrupci n�
+            //PORTD = read_EEPROM(1);
+                CCPR1L = read_EEPROM(1);
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+            }
+            if(!SAVE3but){                 // Verificamos si fue RB3 quien gener  la �interrupci n�
+            //PORTD = read_EEPROM(1);
+            
+                INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
+            }
+        } 
+       // INTCONbits.RBIF = 0;    // Limpiamos bandera de interrupci n�
     } //RBIF
-    
+    if(PIR1bits.RCIF && mode == 3){          // Hay datos recibidos?
+        //__delay_ms(50);
+        if (RCREG<=4 && RCREG>=1){
+            mensaje[3] = RCREG; // ELECCION de potenciometro
+            potsel = mensaje[3];
+        } else mensaje[6] = RCREG; 
+        
+    }
     } //interrupciones
     
 
@@ -138,8 +166,33 @@ void main(void) {
     if (mode == 4) mode = 1; //mode reseter
     
     PORTD = mode; //SHOWS MODE
-    if (mode == 3) {
-        
+    if (mode == 3) { //consola
+        indice = 0;                             // Reiniciamos indice para enviar todo el mensaje
+        if (valor_old != mensaje[6]){           // Verificamos que el nuevo valor recibido en el serial 
+                                                //   sea diferente al anterior, para imprimir solo 
+            while(indice<LEN_MSG){              // Loop para imprimir el mensaje completo
+                if (PIR1bits.TXIF){             // Esperamos a que est  libre el �TXREG para poder enviar por el serial
+                    TXREG = mensaje[indice];    // Cargamos caracter a enviar
+                    indice++;                   // Incrementamos indice para enviarsigiente caracter
+                }
+            }
+            valor_old = mensaje[6];             // Guardamos valor recibido para comparar en siguiente iteraci n�
+                                                //   si el nuevo valor recibido es diferente al anterior. 
+        }
+        switch (potsel){
+            case 1:
+                CCPR1L = mensaje[3];
+                break;
+            case 2:
+                CCPR2L = mensaje[3];
+                break;
+            case 3:
+                //CCPR2L = mensaje[3];
+                break;
+            case 4:
+                //CCPR2L = mensaje[3];
+                break;
+        }
     }
     if (mode == 2) {
         
@@ -152,7 +205,7 @@ void main(void) {
     data = (uint8_t)((ADDRESS<<1)+READ);
         start_I2C();  
         write_I2C(data);                // Enviamos direcci n de esclavo a recibir datos�
-        write_I2C(amount);            // Enviamos dato al esclavo
+        write_I2C(potvalue3);            // Enviamos dato al esclavo
         stop_I2C();                 // Finalizamos la comunicaci n� 
         //PORTA = amount;
 //        PORTA = cont;               // Mostramos valor enviado en PORTA

@@ -2772,65 +2772,60 @@ extern void send_ACK(void);
 extern void send_NACK(void);
 extern __bit write_I2C(uint8_t);
 extern uint8_t read_I2C(void);
+
+
+
+extern uint8_t read_EEPROM(uint8_t );
+extern void write_EEPROM(uint8_t , uint8_t );
 # 26 "ProyectoOjosMASTER.c" 2
 
-
-
-
-
-unsigned char contLED = 0;
-unsigned char temppwm = 0;
-
-uint8_t potvalue1a = 0, potvalue2a = 0, potvalue3a = 0, potvalue4a = 0;
-uint8_t potvalue1b = 0, potvalue2b = 0, potvalue3b = 0, potvalue4b = 0;
-uint8_t index = 0;
-uint8_t mode = 1;
-uint8_t oldvalue = 0;
-uint8_t cont=0x00, data = 0, response = 0, amount = 0;
 
 
 void configint(void);
 void resettmr0(void);
 void setuptmr0(void);
-# 57 "ProyectoOjosMASTER.c"
+# 45 "ProyectoOjosMASTER.c"
+char mensaje[7] = {'P', 'o', 't', '1', ':', ' ', ' '};
+
+uint8_t indice = 0;
+uint8_t valor_old = 0, potsel = 0;
+
+uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
+uint8_t index = 0;
+uint8_t mode = 1;
+uint8_t oldvalue = 0;
+uint8_t data = 0, response = 0, amount = 0;
+uint8_t addeeprom, cont = 0;
+
+
 void __attribute__((picinterrupt(("")))) isr(void){
 
-    if (ADIF == 1) {
+    if (ADIF == 1 && mode == 1) {
         if(!ADCON0bits.CHS){
-            CCPR1L = (ADRESH>>1)+124;
-            potvalue1a = ADRESH & 0b01;
-            potvalue1b = (ADRESL>>7);
-            CCP1CONbits.DC1B1 = potvalue1a;
-            CCP1CONbits.DC1B0 = potvalue1b;
+            potvalue1 = (ADRESH>>1)+124;
+            CCPR1L = potvalue1;
             ADCON0bits.CHS = 1;
         }
 
-        else if(ADCON0bits.CHS == 1) {
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue2a = ADRESH & 0b01;
-            potvalue2b = (ADRESL>>7);
-            CCP2CONbits.DC2B1 = potvalue2a;
-            CCP2CONbits.DC2B0 = potvalue2b;
+        else if(ADCON0bits.CHS == 1 && mode == 1) {
+            potvalue2 = (ADRESH>>1)+124;
+            CCPR2L = potvalue2;
 
             ADCON0bits.CHS = 0b0010;
         }
-        else if(ADCON0bits.CHS == 2) {
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue3a = (ADRESH>>1)+124;
-            potvalue3b = (ADRESL>>7);
+        else if(ADCON0bits.CHS == 2 && mode == 1) {
+            potvalue3 = (ADRESH>>1)+124;
             ADCON0bits.CHS = 3;
 
         }
-        else if(ADCON0bits.CHS == 3) {
-            CCPR2L = (ADRESH>>1)+124;
-            potvalue4a = (ADRESH>>1)+124;
-            potvalue4b = (ADRESL>>7);
+        else if(ADCON0bits.CHS == 3 && mode == 1) {
+            potvalue4 = (ADRESH>>1)+124;
 
             ADCON0bits.CHS = 0;
 
 
         }
-        _delay((unsigned long)((40)*(8000000/4000000.0)));
+        _delay((unsigned long)((40)*(4000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
 
@@ -2851,20 +2846,57 @@ void __attribute__((picinterrupt(("")))) isr(void){
             if(!PORTBbits.RB1){
 
 
+                write_EEPROM(1, potvalue1);
+                write_EEPROM(2, potvalue2);
+                write_EEPROM(3, potvalue3);
+                write_EEPROM(4, potvalue4);
+                INTCONbits.RBIF = 0;
             }
             if(!PORTBbits.RB2){
 
 
+                INTCONbits.RBIF = 0;
             }
             if(!PORTBbits.RB3){
 
 
+                INTCONbits.RBIF = 0;
+            }
+        }
+       if (mode == 2){
+
+            if(!PORTBbits.RB1){
+
+
+                potvalue1 = read_EEPROM(1);
+                potvalue2 = read_EEPROM(2);
+                potvalue3 = read_EEPROM(3);
+                potvalue4 = read_EEPROM(4);
+
+
+                INTCONbits.RBIF = 0;
+            }
+            if(!PORTBbits.RB2){
+
+                CCPR1L = read_EEPROM(1);
+                INTCONbits.RBIF = 0;
+            }
+            if(!PORTBbits.RB3){
+
+
+                INTCONbits.RBIF = 0;
             }
         }
 
-        INTCONbits.RBIF = 0;
     }
+    if(PIR1bits.RCIF && mode == 3){
 
+        if (RCREG<=4 && RCREG>=1){
+            mensaje[3] = RCREG;
+            potsel = mensaje[3];
+        } else mensaje[6] = RCREG;
+
+    }
     }
 
 
@@ -2878,7 +2910,32 @@ void main(void) {
 
     PORTD = mode;
     if (mode == 3) {
+        indice = 0;
+        if (valor_old != mensaje[6]){
 
+            while(indice<7){
+                if (PIR1bits.TXIF){
+                    TXREG = mensaje[indice];
+                    indice++;
+                }
+            }
+            valor_old = mensaje[6];
+
+        }
+        switch (potsel){
+            case 1:
+                CCPR1L = mensaje[3];
+                break;
+            case 2:
+                CCPR2L = mensaje[3];
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+        }
     }
     if (mode == 2) {
 
@@ -2891,12 +2948,12 @@ void main(void) {
     data = (uint8_t)((0x08<<1)+0b0);
         start_I2C();
         write_I2C(data);
-        write_I2C(amount);
+        write_I2C(potvalue3);
         stop_I2C();
 
 
 
-        _delay((unsigned long)((100)*(8000000/4000.0)));
+        _delay((unsigned long)((100)*(4000000/4000.0)));
 
    }
     return;

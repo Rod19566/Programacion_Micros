@@ -5,10 +5,9 @@
  * Created on 21 de mayo de 2022, 06:10 AM
  */
 
-
 #include <xc.h>
 
-#define _XTAL_FREQ 8000000      //configuracion 8MHz
+#define _XTAL_FREQ 4000000      //configuracion 8MHz
 #define I2C_SPEED 100000
 #define ADDRESS 0x08
 #define READ 0b0
@@ -49,6 +48,22 @@ void configint(void){
     OPTION_REGbits.nRBPU = 0;   // Habilitamos resistencias de pull-up del PORTB
     WPUBbits.WPUB = 0b00001111;       //0011 RB0 and RB1 
     IOCBbits.IOCB = 0b00001111;       //RB0 y RB1 pull ups e interrupciones
+    
+    // Configuraciones de comunicacion serial
+    //SYNC = 0, BRGH = 1, BRG16 = 1, SPBRG=25 <- Valores de tabla 12-5
+    TXSTAbits.SYNC = 0;         // Comunicaci n ascincrona (full-duplex)�
+    TXSTAbits.BRGH = 1;         // Baud rate de alta velocidad 
+    BAUDCTLbits.BRG16 = 1;      // 16-bits para generar el baud rate
+    
+    SPBRG = 25;
+    SPBRGH = 0;                 // Baud rate ~9600, error -> 0.16%
+    
+    RCSTAbits.SPEN = 1;         // Habilitamos comunicaci n�
+    TXSTAbits.TX9 = 0;          // Utilizamos solo 8 bits
+    TXSTAbits.TXEN = 1;         // Habilitamos transmisor
+    RCSTAbits.CREN = 1;         // Habilitamos receptor
+    
+    
 
 }
 void setup(void){
@@ -68,7 +83,7 @@ void setup(void){
     ANSELbits.ANS2  = 1;
     ANSELbits.ANS3  = 1;
     TRISA  = 0b00001111; //AN0, AN1 y AN2 como inputs y los demas como outputs
-    TRISC  = 0;
+    TRISC  = 0b00011000;         // SCL and SDA as input
     PORTA  = 0;//se limpian los puertos
     PORTC  = 0;
     TRISD = 0; 
@@ -156,4 +171,29 @@ uint8_t read_I2C(void){
     wait_I2C();
     return SSPBUF;              // Regresar dato recibido
 }
+
+uint8_t read_EEPROM(uint8_t address){
+    EEADR = address;
+    EECON1bits.EEPGD = 0;       // Lectura a la EEPROM
+    EECON1bits.RD = 1;          // Obtenemos dato de la EEPROM
+    return EEDAT;               // Regresamos dato 
+}
+
+void write_EEPROM(uint8_t address, uint8_t data){
+    EEADR = address;
+    EEDAT = data;
+    EECON1bits.EEPGD = 0;       // Escritura a la EEPROM
+    EECON1bits.WREN = 1;        // Habilitamos escritura en la EEPROM
     
+    INTCONbits.GIE = 0;         // Deshabilitamos interrupciones
+    EECON2 = 0x55;      
+    EECON2 = 0xAA;
+    
+    EECON1bits.WR = 1;          // Iniciamos escritura
+    
+    EECON1bits.WREN = 0;        // Deshabilitamos escritura en la EEPROM
+    INTCONbits.RBIF = 0;
+    INTCONbits.GIE = 1;         // Habilitamos interrupciones
+}
+    
+

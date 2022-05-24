@@ -1,4 +1,4 @@
-# 1 "stup.c"
+# 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,11 +6,28 @@
 # 1 "<built-in>" 2
 # 1 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "stup.c" 2
+# 1 "main.c" 2
 
 
 
 
+
+
+
+
+#pragma config FOSC = INTRC_NOCLKOUT
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config MCLRE = OFF
+#pragma config CP = OFF
+#pragma config CPD = OFF
+#pragma config BOREN = OFF
+#pragma config IESO = OFF
+#pragma config FCMEN = OFF
+#pragma config LVP = OFF
+
+#pragma config BOR4V = BOR40V
+#pragma config WRT = OFF
 
 
 
@@ -2631,50 +2648,70 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 29 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\\pic\\include\\xc.h" 2 3
-# 8 "stup.c" 2
+# 24 "main.c" 2
+
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.36\\pic\\include\\c90\\stdint.h" 1 3
+# 25 "main.c" 2
+# 34 "main.c"
+char mensaje[7] = {'P', 'o', 't', '1', ':', ' ', ' '};
+
+uint8_t indice = 0;
+uint8_t valor_old = 0, potsel = 0;
+int num;
+char term;
 
 
 
+void setup(void);
 
 
 
+void __attribute__((picinterrupt(("")))) isr (void){
+    if(PIR1bits.RCIF){
 
-
-void resettmr0(void){
-
-    INTCONbits.T0IF=0;
+        if ((int)RCREG<=4 && (int)RCREG>=1){
+            mensaje[3] = (int)RCREG;
+            potsel = mensaje[3];
+        } else mensaje[6] = RCREG;
+# 78 "main.c"
+    }
+    return;
 }
 
-void setuptmr0(void){
-    OPTION_REGbits.T0CS=0;
-    OPTION_REGbits.PSA=0;
-    OPTION_REGbits.PS2=1;
-    OPTION_REGbits.PS1=1;
-    OPTION_REGbits.PS0=1;
-    resettmr0();
 
+
+void main(void) {
+    setup();
+    while(1){
+
+
+        indice = 0;
+        if (valor_old != mensaje[6]){
+
+            while(indice<7){
+                if (PIR1bits.TXIF){
+                    TXREG = mensaje[indice];
+                    indice++;
+                }
+            }
+            valor_old = mensaje[6];
+
+        }
+    }
+    return;
 }
 
-void configint(void){
-
-    INTCONbits.T0IE = 1;
-    INTCONbits.T0IF = 0;
-    PIR1bits.ADIF = 0;
-    PIE1bits.ADIE = 1;
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.RBIE = 1;
-    INTCONbits.RBIF = 0;
 
 
+void setup(void){
+    ANSEL = 0;
+    ANSELH = 0;
 
-    TRISBbits.TRISB0 = 1;
-    TRISBbits.TRISB1 = 1;
-    TRISBbits.TRISB2 = 1;
-    TRISBbits.TRISB3 = 1;
-    OPTION_REGbits.nRBPU = 0;
-    WPUBbits.WPUB = 0b00001111;
-    IOCBbits.IOCB = 0b00001111;
+    TRISD = 0;
+    PORTD = 0;
+
+    OSCCONbits.IRCF = 0b100;
+    OSCCONbits.SCS = 1;
 
 
 
@@ -2691,134 +2728,7 @@ void configint(void){
     RCSTAbits.CREN = 1;
 
 
-
-}
-void setup(void){
-
-
-
-
-
-
-    OSCCONbits.IRCF = 0b0111;
-    OSCCONbits.SCS = 1;
-    configint();
-
-    ANSELH = 0;
-    ANSELbits.ANS0 = 1;
-    ANSELbits.ANS1 = 1;
-    ANSELbits.ANS2 = 1;
-    ANSELbits.ANS3 = 1;
-    TRISA = 0b00001111;
-    TRISC = 0b00011000;
-    PORTA = 0;
-    PORTC = 0;
-    TRISD = 0;
-    PORTD = 0;
-    PORTB = 0;
-
-    ADCON0bits.ADCS = 2;
-    ADCON0bits.CHS0 = 0;
-    ADCON1bits.VCFG1 = 0;
-    ADCON1bits.VCFG0 = 0;
-    ADCON1bits.ADFM = 0;
-    ADCON0bits.ADON = 1;
-    _delay((unsigned long)((50)*(4000000/4000000.0)));
-
-
-    TRISCbits.TRISC2 = 1;
-    PR2 = 250;
-    CCP1CONbits.P1M = 0;
-    CCP1CONbits.CCP1M = 0b1100;
-    CCPR1L = 0x0f;
-    CCP1CONbits.DC1B = 0;
-
-
-    TRISCbits.TRISC1 = 1;
-    CCP2CONbits.CCP2M = 0b1100;
-    CCPR2L = 0x0f;
-    CCP2CONbits.DC2B1 = 0;
-
-
-    PIR1bits.TMR2IF = 0;
-    T2CONbits.T2CKPS = 0b11;
-    T2CONbits.TMR2ON = 1;
-    while(PIR1bits.TMR2IF == 0);
-    PIR1bits.TMR2IF = 0;
-
-    TRISCbits.TRISC2 = 0;
-    TRISCbits.TRISC1 = 0;
-
-
-    ADCON0bits.GO = 1;
-
-}
-
-void setupI2C(void){
-    SSPADD = ((4000000)/(4*100000)) - 1;
-    SSPSTATbits.SMP = 1;
-    SSPCONbits.SSPM = 0b1000;
-    SSPCONbits.SSPEN = 1;
-    PIR1bits.SSPIF = 0;
-}
-
-void wait_I2C(void){
-    while(!PIR1bits.SSPIF);
-    PIR1bits.SSPIF = 0;
-}
-void start_I2C(void){
-    SSPCON2bits.SEN = 1;
-    wait_I2C();
-}
-void restart_I2C(void){
-    SSPCON2bits.RSEN = 1;
-    wait_I2C();
-}
-void stop_I2C(void){
-    SSPCON2bits.PEN = 1;
-    wait_I2C();
-}
-void send_ACK(void){
-    SSPCON2bits.ACKDT = 0;
-    SSPCON2bits.ACKEN = 1;
-    wait_I2C();
-}
-void send_NACK(void){
-    SSPCON2bits.ACKDT = 1;
-    SSPCON2bits.ACKEN = 1;
-    wait_I2C();
-}
-__bit write_I2C(uint8_t data){
-    SSPBUF = data;
-    wait_I2C();
-    return ACKSTAT;
-}
-uint8_t read_I2C(void){
-    SSPCON2bits.RCEN = 1;
-    wait_I2C();
-    return SSPBUF;
-}
-
-uint8_t read_EEPROM(uint8_t address){
-    EEADR = address;
-    EECON1bits.EEPGD = 0;
-    EECON1bits.RD = 1;
-    return EEDAT;
-}
-
-void write_EEPROM(uint8_t address, uint8_t data){
-    EEADR = address;
-    EEDAT = data;
-    EECON1bits.EEPGD = 0;
-    EECON1bits.WREN = 1;
-
-    INTCONbits.GIE = 0;
-    EECON2 = 0x55;
-    EECON2 = 0xAA;
-
-    EECON1bits.WR = 1;
-
-    EECON1bits.WREN = 0;
-    INTCONbits.RBIF = 0;
     INTCONbits.GIE = 1;
+    INTCONbits.PEIE = 1;
+    PIE1bits.RCIE = 1;
 }
