@@ -7,7 +7,7 @@
 
 #include <xc.h>
 
-#define _XTAL_FREQ 4000000      //configuracion 8MHz
+#define _XTAL_FREQ 8000000      //configuracion 4MHz
 #define I2C_SPEED 100000
 #define ADDRESS 0x08
 #define READ 0b0
@@ -38,8 +38,7 @@ void configint(void){
     INTCONbits.PEIE = 1;      // ENABLE peripherial INTERRUPT
     INTCONbits.RBIE = 1;        //interrupciones en PORTB y TMR0
     INTCONbits.RBIF = 0;        //Apagamos banderas
-    
-       
+
     //Configuracion push button
     TRISBbits.TRISB0 = 1;       //RB0 
     TRISBbits.TRISB1 = 1;       //RB1
@@ -55,7 +54,7 @@ void configint(void){
     TXSTAbits.BRGH = 1;         // Baud rate de alta velocidad 
     BAUDCTLbits.BRG16 = 1;      // 16-bits para generar el baud rate
     
-    SPBRG = 25;
+    SPBRG = 207;                 //8mhz ((8Mhz/9600) / 64
     SPBRGH = 0;                 // Baud rate ~9600, error -> 0.16%
     
     RCSTAbits.SPEN = 1;         // Habilitamos comunicaci n�
@@ -63,7 +62,7 @@ void configint(void){
     TXSTAbits.TXEN = 1;         // Habilitamos transmisor
     RCSTAbits.CREN = 1;         // Habilitamos receptor
     
-    
+    PIE1bits.RCIE = 1;          // Habilitamos Interrupciones de recepci n�
 
 }
 void setup(void){
@@ -83,8 +82,8 @@ void setup(void){
     ANSELbits.ANS2  = 1;
     ANSELbits.ANS3  = 1;
     TRISA  = 0b00001111; //AN0, AN1 y AN2 como inputs y los demas como outputs
-    TRISC  = 0b00011000;         // SCL and SDA as input
     PORTA  = 0;//se limpian los puertos
+    TRISC  = 0b00011000;         // SCL and SDA as input
     PORTC  = 0;
     TRISD = 0; 
     PORTD = 0;

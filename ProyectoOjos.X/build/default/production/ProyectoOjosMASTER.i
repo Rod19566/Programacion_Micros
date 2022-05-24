@@ -2778,125 +2778,87 @@ extern uint8_t read_I2C(void);
 extern uint8_t read_EEPROM(uint8_t );
 extern void write_EEPROM(uint8_t , uint8_t );
 # 26 "ProyectoOjosMASTER.c" 2
-
-
-
-void configint(void);
-void resettmr0(void);
-void setuptmr0(void);
-# 45 "ProyectoOjosMASTER.c"
+# 41 "ProyectoOjosMASTER.c"
 char mensaje[7] = {'P', 'o', 't', '1', ':', ' ', ' '};
 
 uint8_t indice = 0;
 uint8_t valor_old = 0, potsel = 0;
-
 uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
 uint8_t index = 0;
-uint8_t mode = 1;
+uint8_t mode = 1, data = 0, response = 0, amount = 0;
 uint8_t oldvalue = 0;
-uint8_t data = 0, response = 0, amount = 0;
-uint8_t addeeprom, cont = 0;
+
+void senddata(uint8_t, uint8_t);
 
 
 void __attribute__((picinterrupt(("")))) isr(void){
 
-    if (ADIF == 1 && mode == 1) {
-        if(!ADCON0bits.CHS){
+    if (ADIF == 1) {
+        if(!ADCON0bits.CHS && mode == 1){
             potvalue1 = (ADRESH>>1)+124;
-            CCPR1L = potvalue1;
+
             ADCON0bits.CHS = 1;
         }
 
-        else if(ADCON0bits.CHS == 1 && mode == 1) {
+        else if(ADCON0bits.CHS == 1 && mode == 1 ) {
             potvalue2 = (ADRESH>>1)+124;
-            CCPR2L = potvalue2;
+
 
             ADCON0bits.CHS = 0b0010;
         }
         else if(ADCON0bits.CHS == 2 && mode == 1) {
             potvalue3 = (ADRESH>>1)+124;
-            ADCON0bits.CHS = 3;
 
+            ADCON0bits.CHS = 3;
         }
-        else if(ADCON0bits.CHS == 3 && mode == 1) {
+        else if(ADCON0bits.CHS == 3 && mode == 1 ) {
             potvalue4 = (ADRESH>>1)+124;
 
             ADCON0bits.CHS = 0;
-
-
         }
-        _delay((unsigned long)((40)*(4000000/4000000.0)));
+
+        _delay((unsigned long)((40)*(8000000/4000000.0)));
         PIR1bits.ADIF = 0;
         ADCON0bits.GO = 1;
 
     }
     if(INTCONbits.T0IF){
-
         resettmr0();
+    }
 
+    if(PIR1bits.RCIF ){
 
+        if (mode == 3){
+
+        if ( RCREG>=1 && RCREG<=4 ){
+            mensaje[3] = RCREG;
+            potsel = mensaje[3];
+        } else mensaje[6] = RCREG;
+    return;
+
+        }
     }
 
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
             mode++;
         }
-        if (mode == 1){
-
-            if(!PORTBbits.RB1){
+        if(!PORTBbits.RB1 && mode == 1){
 
 
-                write_EEPROM(1, potvalue1);
-                write_EEPROM(2, potvalue2);
-                write_EEPROM(3, potvalue3);
-                write_EEPROM(4, potvalue4);
-                INTCONbits.RBIF = 0;
-            }
-            if(!PORTBbits.RB2){
-
-
-                INTCONbits.RBIF = 0;
-            }
-            if(!PORTBbits.RB3){
-
-
-                INTCONbits.RBIF = 0;
-            }
         }
-       if (mode == 2){
-
-            if(!PORTBbits.RB1){
+        if(!PORTBbits.RB2 && mode == 1){
 
 
-                potvalue1 = read_EEPROM(1);
-                potvalue2 = read_EEPROM(2);
-                potvalue3 = read_EEPROM(3);
-                potvalue4 = read_EEPROM(4);
-
-
-                INTCONbits.RBIF = 0;
-            }
-            if(!PORTBbits.RB2){
-
-                CCPR1L = read_EEPROM(1);
-                INTCONbits.RBIF = 0;
-            }
-            if(!PORTBbits.RB3){
-
-
-                INTCONbits.RBIF = 0;
-            }
         }
+        if(!PORTBbits.RB3 && mode == 1){
 
+
+        }
+        INTCONbits.RBIF = 0;
     }
-    if(PIR1bits.RCIF && mode == 3){
 
-        if (RCREG<=4 && RCREG>=1){
-            mensaje[3] = RCREG;
-            potsel = mensaje[3];
-        } else mensaje[6] = RCREG;
-
-    }
+    return;
     }
 
 
@@ -2905,11 +2867,6 @@ void main(void) {
     setupI2C();
 
     while (1){
-
-    if (mode == 4) mode = 1;
-
-    PORTD = mode;
-    if (mode == 3) {
         indice = 0;
         if (valor_old != mensaje[6]){
 
@@ -2922,12 +2879,17 @@ void main(void) {
             valor_old = mensaje[6];
 
         }
+    if (mode == 4) mode = 1;
+
+    else if (mode == 3) {
+
+
         switch (potsel){
             case 1:
-                CCPR1L = mensaje[3];
+                CCPR1L = mensaje[6];
                 break;
             case 2:
-                CCPR2L = mensaje[3];
+                CCPR2L = mensaje[6];
                 break;
             case 3:
 
@@ -2936,25 +2898,33 @@ void main(void) {
 
                 break;
         }
-    }
-    if (mode == 2) {
+        return;
 
     }
-    if (mode == 1) {
+    else if (mode == 2) {
+
+    }
+    else if (mode == 1) {
+        CCPR1L = potvalue1;
+        CCPR2L = potvalue2;
+        senddata(potvalue3, 250);
+        senddata(250, potvalue3);
+        senddata(potvalue4, 251);
+        senddata(251, potvalue4);
 
     }
     PORTD = mode;
 
-    data = (uint8_t)((0x08<<1)+0b0);
-        start_I2C();
-        write_I2C(data);
-        write_I2C(potvalue3);
-        stop_I2C();
-
-
-
-        _delay((unsigned long)((100)*(4000000/4000.0)));
-
    }
     return;
+}
+
+void senddata(uint8_t pot, uint8_t value){
+    data = (uint8_t)((0x08<<1)+0b0);
+    start_I2C();
+    write_I2C(data);
+    write_I2C(value);
+    stop_I2C();
+    _delay((unsigned long)((100)*(8000000/4000.0)));
+
 }

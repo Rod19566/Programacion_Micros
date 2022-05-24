@@ -1,4 +1,4 @@
-# 1 "stup.c"
+# 1 "ProyectoSlave.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,11 +6,28 @@
 # 1 "<built-in>" 2
 # 1 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "stup.c" 2
+# 1 "ProyectoSlave.c" 2
 
 
 
 
+
+
+
+
+#pragma config FOSC = INTRC_NOCLKOUT
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config MCLRE = OFF
+#pragma config CP = OFF
+#pragma config CPD = OFF
+#pragma config BOREN = OFF
+#pragma config IESO = OFF
+#pragma config FCMEN = OFF
+#pragma config LVP = OFF
+
+#pragma config BOR4V = BOR40V
+#pragma config WRT = OFF
 
 
 
@@ -2631,7 +2648,15 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 29 "C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\\pic\\include\\xc.h" 2 3
-# 8 "stup.c" 2
+# 24 "ProyectoSlave.c" 2
+
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.36\\pic\\include\\c90\\stdint.h" 1 3
+# 25 "ProyectoSlave.c" 2
+
+# 1 "./setup.h" 1
+# 25 "./setup.h"
+extern void setup(void);
+# 26 "ProyectoSlave.c" 2
 
 
 
@@ -2640,184 +2665,51 @@ extern __bank0 __bit __timeout;
 
 
 
-void resettmr0(void){
+uint8_t cont = 0xFF, potselect = 1;
 
-    INTCONbits.T0IF=0;
+
+
+
+
+
+
+void __attribute__((picinterrupt(("")))) isr (void){
+
+    if (PIR1bits.SSPIF){
+        SSPCONbits.CKP = 0;
+
+        if ((SSPCONbits.SSPOV) || (SSPCONbits.WCOL)){
+            uint8_t var = SSPBUF;
+            SSPCONbits.SSPOV = 0;
+            SSPCONbits.WCOL = 0;
+            SSPCONbits.CKP = 1;
+        }
+
+
+
+        if(!SSPSTATbits.D_nA && !SSPSTATbits.R_nW){
+            SSPSTATbits.BF = 0;
+            while(!SSPSTATbits.BF);
+            if (SSPBUF == 250) potselect = 1;
+            if (SSPBUF == 251) potselect = 2;
+
+            if (SSPBUF != 250 && SSPBUF != 251 ){
+                if (potselect == 1) CCPR1L = SSPBUF;
+                else CCPR2L = SSPBUF;
+            }
+
+            SSPCONbits.CKP = 1;
+        }
+# 79 "ProyectoSlave.c"
+        PIR1bits.SSPIF = 0;
+    }
+    return;
 }
 
-void setuptmr0(void){
-    OPTION_REGbits.T0CS=0;
-    OPTION_REGbits.PSA=0;
-    OPTION_REGbits.PS2=1;
-    OPTION_REGbits.PS1=1;
-    OPTION_REGbits.PS0=1;
-    resettmr0();
-
-}
-
-void configint(void){
-
-    INTCONbits.T0IE = 1;
-    INTCONbits.T0IF = 0;
-    PIR1bits.ADIF = 0;
-    PIE1bits.ADIE = 1;
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.RBIE = 1;
-    INTCONbits.RBIF = 0;
 
 
-    TRISBbits.TRISB0 = 1;
-    TRISBbits.TRISB1 = 1;
-    TRISBbits.TRISB2 = 1;
-    TRISBbits.TRISB3 = 1;
-    OPTION_REGbits.nRBPU = 0;
-    WPUBbits.WPUB = 0b00001111;
-    IOCBbits.IOCB = 0b00001111;
-
-
-
-    TXSTAbits.SYNC = 0;
-    TXSTAbits.BRGH = 1;
-    BAUDCTLbits.BRG16 = 1;
-
-    SPBRG = 207;
-    SPBRGH = 0;
-
-    RCSTAbits.SPEN = 1;
-    TXSTAbits.TX9 = 0;
-    TXSTAbits.TXEN = 1;
-    RCSTAbits.CREN = 1;
-
-    PIE1bits.RCIE = 1;
-
-}
-void setup(void){
-
-
-
-
-
-
-    OSCCONbits.IRCF = 0b0111;
-    OSCCONbits.SCS = 1;
-    configint();
-
-    ANSELH = 0;
-    ANSELbits.ANS0 = 1;
-    ANSELbits.ANS1 = 1;
-    ANSELbits.ANS2 = 1;
-    ANSELbits.ANS3 = 1;
-    TRISA = 0b00001111;
-    PORTA = 0;
-    TRISC = 0b00011000;
-    PORTC = 0;
-    TRISD = 0;
-    PORTD = 0;
-    PORTB = 0;
-
-    ADCON0bits.ADCS = 2;
-    ADCON0bits.CHS0 = 0;
-    ADCON1bits.VCFG1 = 0;
-    ADCON1bits.VCFG0 = 0;
-    ADCON1bits.ADFM = 0;
-    ADCON0bits.ADON = 1;
-    _delay((unsigned long)((50)*(8000000/4000000.0)));
-
-
-    TRISCbits.TRISC2 = 1;
-    PR2 = 250;
-    CCP1CONbits.P1M = 0;
-    CCP1CONbits.CCP1M = 0b1100;
-    CCPR1L = 0x0f;
-    CCP1CONbits.DC1B = 0;
-
-
-    TRISCbits.TRISC1 = 1;
-    CCP2CONbits.CCP2M = 0b1100;
-    CCPR2L = 0x0f;
-    CCP2CONbits.DC2B1 = 0;
-
-
-    PIR1bits.TMR2IF = 0;
-    T2CONbits.T2CKPS = 0b11;
-    T2CONbits.TMR2ON = 1;
-    while(PIR1bits.TMR2IF == 0);
-    PIR1bits.TMR2IF = 0;
-
-    TRISCbits.TRISC2 = 0;
-    TRISCbits.TRISC1 = 0;
-
-
-    ADCON0bits.GO = 1;
-
-}
-
-void setupI2C(void){
-    SSPADD = ((8000000)/(4*100000)) - 1;
-    SSPSTATbits.SMP = 1;
-    SSPCONbits.SSPM = 0b1000;
-    SSPCONbits.SSPEN = 1;
-    PIR1bits.SSPIF = 0;
-}
-
-void wait_I2C(void){
-    while(!PIR1bits.SSPIF);
-    PIR1bits.SSPIF = 0;
-}
-void start_I2C(void){
-    SSPCON2bits.SEN = 1;
-    wait_I2C();
-}
-void restart_I2C(void){
-    SSPCON2bits.RSEN = 1;
-    wait_I2C();
-}
-void stop_I2C(void){
-    SSPCON2bits.PEN = 1;
-    wait_I2C();
-}
-void send_ACK(void){
-    SSPCON2bits.ACKDT = 0;
-    SSPCON2bits.ACKEN = 1;
-    wait_I2C();
-}
-void send_NACK(void){
-    SSPCON2bits.ACKDT = 1;
-    SSPCON2bits.ACKEN = 1;
-    wait_I2C();
-}
-__bit write_I2C(uint8_t data){
-    SSPBUF = data;
-    wait_I2C();
-    return ACKSTAT;
-}
-uint8_t read_I2C(void){
-    SSPCON2bits.RCEN = 1;
-    wait_I2C();
-    return SSPBUF;
-}
-
-uint8_t read_EEPROM(uint8_t address){
-    EEADR = address;
-    EECON1bits.EEPGD = 0;
-    EECON1bits.RD = 1;
-    return EEDAT;
-}
-
-void write_EEPROM(uint8_t address, uint8_t data){
-    EEADR = address;
-    EEDAT = data;
-    EECON1bits.EEPGD = 0;
-    EECON1bits.WREN = 1;
-
-    INTCONbits.GIE = 0;
-    EECON2 = 0x55;
-    EECON2 = 0xAA;
-
-    EECON1bits.WR = 1;
-
-    EECON1bits.WREN = 0;
-    INTCONbits.RBIF = 0;
-    INTCONbits.GIE = 1;
+void main(void) {
+    setup();
+    while(1){}
+    return;
 }
