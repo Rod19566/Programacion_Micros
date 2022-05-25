@@ -2825,20 +2825,7 @@ void __attribute__((picinterrupt(("")))) isr(void){
     if(INTCONbits.T0IF){
         resettmr0();
     }
-
-    if(PIR1bits.RCIF ){
-
-        if (mode == 3){
-
-        if ( RCREG>=1 && RCREG<=4 ){
-            mensaje[3] = RCREG;
-            potsel = mensaje[3];
-        } else mensaje[6] = RCREG;
-    return;
-
-        }
-    }
-
+# 101 "ProyectoOjosMASTER.c"
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
             mode++;
@@ -2867,18 +2854,7 @@ void main(void) {
     setupI2C();
 
     while (1){
-        indice = 0;
-        if (valor_old != mensaje[6]){
-
-            while(indice<7){
-                if (PIR1bits.TXIF){
-                    TXREG = mensaje[indice];
-                    indice++;
-                }
-            }
-            valor_old = mensaje[6];
-
-        }
+# 141 "ProyectoOjosMASTER.c"
     if (mode == 4) mode = 1;
 
     else if (mode == 3) {
@@ -2898,7 +2874,7 @@ void main(void) {
 
                 break;
         }
-        return;
+
 
     }
     else if (mode == 2) {
@@ -2907,9 +2883,7 @@ void main(void) {
     else if (mode == 1) {
         CCPR1L = potvalue1;
         CCPR2L = potvalue2;
-        senddata(potvalue3, 250);
         senddata(250, potvalue3);
-        senddata(potvalue4, 251);
         senddata(251, potvalue4);
 
     }
@@ -2920,6 +2894,13 @@ void main(void) {
 }
 
 void senddata(uint8_t pot, uint8_t value){
+    data = (uint8_t)((0x08<<1)+0b0);
+    start_I2C();
+    write_I2C(data);
+    write_I2C(pot);
+    stop_I2C();
+    _delay((unsigned long)((100)*(8000000/4000.0)));
+
     data = (uint8_t)((0x08<<1)+0b0);
     start_I2C();
     write_I2C(data);

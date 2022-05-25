@@ -85,18 +85,18 @@ void __interrupt() isr(void){
         resettmr0();      
     }//tmr0
     
-    if(PIR1bits.RCIF ){          // Hay datos recibidos?
-        //__delay_ms(50);
-        if (mode == 3){
-                    //__delay_ms(50);
-        if ( RCREG>=1 && RCREG<=4 ){
-            mensaje[3] = RCREG; // ELECCION de potenciometro
-            potsel = mensaje[3];
-        } else mensaje[6] = RCREG; 
-    return;
-        
-        }// if mode 3
-    }
+//    if(PIR1bits.RCIF ){          // Hay datos recibidos?
+//        //__delay_ms(50);
+//        if (mode == 3){
+//                    //__delay_ms(50);
+//        if ( RCREG>=1 && RCREG<=4 ){
+//            mensaje[3] = RCREG; // ELECCION de potenciometro
+//            potsel = mensaje[3];
+//        } else mensaje[6] = RCREG; 
+//    //return;
+//        
+//        }// if mode 3
+//    }
     
     if(INTCONbits.RBIF){            // Fue interrupci n del PORTB�
         if(!MODEbut){                 // Verificamos si fue RB0 quien gener  la �interrupci n�
@@ -126,18 +126,18 @@ void main(void) {
     setupI2C();
     //LOOP
     while (1){ 
-        indice = 0;                             // Reiniciamos indice para enviar todo el mensaje
-        if (valor_old != mensaje[6]){           // Verificamos que el nuevo valor recibido en el serial 
-                                                //   sea diferente al anterior, para imprimir solo 
-            while(indice<LEN_MSG){              // Loop para imprimir el mensaje completo
-                if (PIR1bits.TXIF){             // Esperamos a que est  libre el �TXREG para poder enviar por el serial
-                    TXREG = mensaje[indice];    // Cargamos caracter a enviar
-                    indice++;                   // Incrementamos indice para enviarsigiente caracter
-                }
-            }
-            valor_old = mensaje[6];             // Guardamos valor recibido para comparar en siguiente iteraci n�
-                                                //   si el nuevo valor recibido es diferente al anterior. 
-        }
+//        indice = 0;                             // Reiniciamos indice para enviar todo el mensaje
+//        if (valor_old != mensaje[6]){           // Verificamos que el nuevo valor recibido en el serial 
+//                                                //   sea diferente al anterior, para imprimir solo 
+//            while(indice<LEN_MSG){              // Loop para imprimir el mensaje completo
+//                if (PIR1bits.TXIF){             // Esperamos a que est  libre el �TXREG para poder enviar por el serial
+//                    TXREG = mensaje[indice];    // Cargamos caracter a enviar
+//                    indice++;                   // Incrementamos indice para enviarsigiente caracter
+//                }
+//            }
+//            valor_old = mensaje[6];             // Guardamos valor recibido para comparar en siguiente iteraci n�
+//                                                //   si el nuevo valor recibido es diferente al anterior. 
+//        }
     if (mode == 4) mode = 1; //mode reseter
     
     else if (mode == 3) {    //console
@@ -157,7 +157,7 @@ void main(void) {
                 //CCPR1L = mensaje[6]; 
                 break;
         } //switch
-        return;
+        //return;
          
     } //mode 3
     else if (mode == 2) {  //reproduce
@@ -166,9 +166,7 @@ void main(void) {
     else if (mode == 1) {    //manual pot
         CCPR1L = potvalue1; 
         CCPR2L = potvalue2; 
-        senddata(potvalue3, 250);
         senddata(250, potvalue3);
-        senddata(potvalue4, 251);
         senddata(251, potvalue4);
         
     }
@@ -179,6 +177,13 @@ void main(void) {
 }
 
 void senddata(uint8_t pot, uint8_t value){
+    data = (uint8_t)((ADDRESS<<1)+READ);
+    start_I2C(); 
+    write_I2C(data);                // Enviamos direcci n de esclavo a recibir datos�
+    write_I2C(pot);            // Enviamos dato al esclavo
+    stop_I2C();                 // Finalizamos la comunicaci n� 
+    __delay_ms(100);
+    
     data = (uint8_t)((ADDRESS<<1)+READ);
     start_I2C(); 
     write_I2C(data);                // Enviamos direcci n de esclavo a recibir datos�
