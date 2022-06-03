@@ -2639,6 +2639,7 @@ extern __bank0 __bit __timeout;
 
 
 
+uint8_t data = 0;
 
 void resettmr0(void){
 
@@ -2667,6 +2668,7 @@ void configint(void){
     INTCONbits.RBIF = 0;
 
 
+
     TRISBbits.TRISB0 = 1;
     TRISBbits.TRISB1 = 1;
     TRISBbits.TRISB2 = 1;
@@ -2676,20 +2678,6 @@ void configint(void){
     IOCBbits.IOCB = 0b00001111;
 
 
-
-    TXSTAbits.SYNC = 0;
-    TXSTAbits.BRGH = 1;
-    BAUDCTLbits.BRG16 = 1;
-
-    SPBRG = 207;
-    SPBRGH = 0;
-
-    RCSTAbits.SPEN = 1;
-    TXSTAbits.TX9 = 0;
-    TXSTAbits.TXEN = 1;
-    RCSTAbits.CREN = 1;
-
-    PIE1bits.RCIE = 1;
 
 }
 void setup(void){
@@ -2701,7 +2689,6 @@ void setup(void){
 
     OSCCONbits.IRCF = 0b0111;
     OSCCONbits.SCS = 1;
-    configint();
 
     ANSELH = 0;
     ANSELbits.ANS0 = 1;
@@ -2710,11 +2697,15 @@ void setup(void){
     ANSELbits.ANS3 = 1;
     TRISA = 0b00001111;
     PORTA = 0;
-    TRISC = 0b00011000;
+
+    SSPCONbits.SSPEN = 1;
     PORTC = 0;
     TRISD = 0;
     PORTD = 0;
     PORTB = 0;
+    configint();
+
+
 
     ADCON0bits.ADCS = 2;
     ADCON0bits.CHS0 = 0;
@@ -2749,8 +2740,22 @@ void setup(void){
     TRISCbits.TRISC1 = 0;
 
 
-    ADCON0bits.GO = 1;
 
+    TXSTAbits.SYNC = 0;
+    TXSTAbits.BRGH = 1;
+    BAUDCTLbits.BRG16 = 1;
+
+    SPBRG = 207;
+    SPBRGH = 0;
+
+    RCSTAbits.SPEN = 1;
+    TXSTAbits.TX9 = 0;
+    TXSTAbits.TXEN = 1;
+    RCSTAbits.CREN = 1;
+    PIE1bits.RCIE = 1;
+
+
+    ADCON0bits.GO = 1;
 }
 
 void setupI2C(void){
@@ -2802,10 +2807,12 @@ uint8_t read_EEPROM(uint8_t address){
     EEADR = address;
     EECON1bits.EEPGD = 0;
     EECON1bits.RD = 1;
+    _delay((unsigned long)((6)*(8000000/4000.0)));
     return EEDAT;
 }
 
 void write_EEPROM(uint8_t address, uint8_t data){
+    _delay((unsigned long)((6)*(8000000/4000.0)));
     EEADR = address;
     EEDAT = data;
     EECON1bits.EEPGD = 0;
@@ -2820,4 +2827,22 @@ void write_EEPROM(uint8_t address, uint8_t data){
     EECON1bits.WREN = 0;
     INTCONbits.RBIF = 0;
     INTCONbits.GIE = 1;
+}
+
+
+void senddata(uint8_t pot, uint8_t value){
+    data = (uint8_t)((0x08<<1)+0b0);
+    start_I2C();
+    write_I2C(data);
+    write_I2C(pot);
+    stop_I2C();
+    _delay((unsigned long)((100)*(8000000/4000.0)));
+
+    data = (uint8_t)((0x08<<1)+0b0);
+    start_I2C();
+    write_I2C(data);
+    write_I2C(value);
+    stop_I2C();
+    _delay((unsigned long)((100)*(8000000/4000.0)));
+
 }

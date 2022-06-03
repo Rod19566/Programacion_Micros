@@ -2772,6 +2772,7 @@ extern void send_ACK(void);
 extern void send_NACK(void);
 extern __bit write_I2C(uint8_t);
 extern uint8_t read_I2C(void);
+extern void senddata(uint8_t , uint8_t);
 
 
 
@@ -2779,11 +2780,11 @@ extern uint8_t read_EEPROM(uint8_t );
 extern void write_EEPROM(uint8_t , uint8_t );
 # 26 "ProyectoOjosMASTER.c" 2
 # 41 "ProyectoOjosMASTER.c"
-char mensaje[7] = {'P', 'o', 't', '1', ':', ' ', ' '};
+char mensaje[15] = {'P', 'o', 't', '1', ':', ' ', ' ', ' ',' ', ' ', ' ', ' ', ' ', ' ', ' '};
 
 uint8_t indice = 0;
 uint8_t valor_old = 0, potsel = 0;
-uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
+uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0, pots = 0, change = 1 ;
 uint8_t index = 0;
 uint8_t mode = 1, data = 0, response = 0, amount = 0;
 uint8_t oldvalue = 0;
@@ -2793,55 +2794,123 @@ void senddata(uint8_t, uint8_t);
 
 void __attribute__((picinterrupt(("")))) isr(void){
 
-    if (ADIF == 1) {
-        if(!ADCON0bits.CHS && mode == 1){
-            potvalue1 = (ADRESH>>1)+124;
+    if(RCIF){
 
-            ADCON0bits.CHS = 1;
-        }
+       if (mode == 3){
+            if ( RCREG >= 121 ){
+            potsel = RCREG-120;
+            mensaje[3] = potsel;
+        } else {
+            pots = RCREG;
+            mensaje[6] = pots;
+# 79 "ProyectoOjosMASTER.c"
+            }
 
-        else if(ADCON0bits.CHS == 1 && mode == 1 ) {
-            potvalue2 = (ADRESH>>1)+124;
+
+            PIR1bits.ADIF = 0;
+
+            }
 
 
-            ADCON0bits.CHS = 0b0010;
-        }
-        else if(ADCON0bits.CHS == 2 && mode == 1) {
-            potvalue3 = (ADRESH>>1)+124;
-
-            ADCON0bits.CHS = 3;
-        }
-        else if(ADCON0bits.CHS == 3 && mode == 1 ) {
-            potvalue4 = (ADRESH>>1)+124;
-
-            ADCON0bits.CHS = 0;
-        }
-
-        _delay((unsigned long)((40)*(8000000/4000000.0)));
-        PIR1bits.ADIF = 0;
-        ADCON0bits.GO = 1;
 
     }
-    if(INTCONbits.T0IF){
-        resettmr0();
+
+
+
+    if (ADIF == 1 ) {
+        if (mode == 1){
+
+
+        switch (ADCON0bits.CHS){
+            case 0:
+                potvalue1 = (ADRESH>>1)+124;
+
+                ADCON0bits.CHS = 1;
+                _delay((unsigned long)((40)*(8000000/4000000.0)));
+                PIR1bits.ADIF = 0;
+                ADCON0bits.GO = 1;
+
+                break;
+            case 1:
+                potvalue2 = (ADRESH>>1)+124;
+
+                ADCON0bits.CHS = 2;
+                _delay((unsigned long)((40)*(8000000/4000000.0)));
+                PIR1bits.ADIF = 0;
+                ADCON0bits.GO = 1;
+                break;
+            case 2:
+                potvalue3 = (ADRESH>>1)+124;
+
+                ADCON0bits.CHS = 3;
+                _delay((unsigned long)((40)*(8000000/4000000.0)));
+                PIR1bits.ADIF = 0;
+                ADCON0bits.GO = 1;
+                break;
+            case 3:
+                potvalue4 = (ADRESH>>1)+124;
+
+                ADCON0bits.CHS = 0;
+                _delay((unsigned long)((40)*(8000000/4000000.0)));
+                PIR1bits.ADIF = 0;
+                ADCON0bits.GO = 1;
+                break;
+        }
+
+        CCPR1L = potvalue1;
+        CCPR2L = potvalue2;
+        }
+
     }
-# 101 "ProyectoOjosMASTER.c"
+
+
     if(INTCONbits.RBIF){
         if(!PORTBbits.RB0){
-            mode++;
+            if (mode != 3) mode++;
+            else {
+                mode = 1;
+                ADCON0bits.GO = 1;
+            }
+        PORTD = mode;
         }
-        if(!PORTBbits.RB1 && mode == 1){
-
-
+        if (mode == 1){
+            if(!PORTBbits.RB1){
+                write_EEPROM(1, potvalue1);
+                write_EEPROM(2, potvalue2);
+                write_EEPROM(3, potvalue3);
+                write_EEPROM(4, potvalue4);
+            }
+            if(!PORTBbits.RB2){
+                write_EEPROM(5, potvalue1);
+                write_EEPROM(6, potvalue2);
+                write_EEPROM(7, potvalue3);
+                write_EEPROM(8, potvalue4);
+            }
         }
-        if(!PORTBbits.RB2 && mode == 1){
+        if (mode == 2){
+            if(!PORTBbits.RB1){
+                potvalue1 = read_EEPROM(1);
+                potvalue2 = read_EEPROM(2);
 
 
+
+
+
+            }
+            if(!PORTBbits.RB2){
+                potvalue1 = read_EEPROM(5);
+                potvalue2 = read_EEPROM(6);
+
+
+
+
+
+            }
+
+            CCPR1L = potvalue1;
+            CCPR2L = potvalue2;
         }
-        if(!PORTBbits.RB3 && mode == 1){
 
-
-        }
         INTCONbits.RBIF = 0;
     }
 
@@ -2851,61 +2920,32 @@ void __attribute__((picinterrupt(("")))) isr(void){
 
 void main(void) {
     setup();
-    setupI2C();
+
+
+
 
     while (1){
-# 141 "ProyectoOjosMASTER.c"
-    if (mode == 4) mode = 1;
-
-    else if (mode == 3) {
 
 
-        switch (potsel){
-            case 1:
-                CCPR1L = mensaje[6];
-                break;
-            case 2:
-                CCPR2L = mensaje[6];
-                break;
-            case 3:
 
-                break;
-            case 4:
 
-                break;
+        PORTD = mode;
+        if (mode == 3){
+        indice = 0;
+            if (valor_old != mensaje[6]){
+                while(indice<15){
+                    if (PIR1bits.TXIF){
+                        TXREG = mensaje[indice];
+                        indice++;
+                }
+            }
+                valor_old = mensaje[6];
+
+            }
+
         }
 
-
-    }
-    else if (mode == 2) {
-
-    }
-    else if (mode == 1) {
-        CCPR1L = potvalue1;
-        CCPR2L = potvalue2;
-        senddata(250, potvalue3);
-        senddata(251, potvalue4);
-
-    }
-    PORTD = mode;
-
    }
+
     return;
-}
-
-void senddata(uint8_t pot, uint8_t value){
-    data = (uint8_t)((0x08<<1)+0b0);
-    start_I2C();
-    write_I2C(data);
-    write_I2C(pot);
-    stop_I2C();
-    _delay((unsigned long)((100)*(8000000/4000.0)));
-
-    data = (uint8_t)((0x08<<1)+0b0);
-    start_I2C();
-    write_I2C(data);
-    write_I2C(value);
-    stop_I2C();
-    _delay((unsigned long)((100)*(8000000/4000.0)));
-
 }

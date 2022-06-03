@@ -1,9 +1,29 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [t ~ __interrupt . k ]
 [t T1 __interrupt ]
-"3592 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+"4180 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 4180: extern volatile __bit RCIF __attribute__((address(0x65)));
+[v _RCIF `Vb ~T0 @X0 0 e@101 ]
+"1141
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1141: extern volatile unsigned char RCREG __attribute__((address(0x01A)));
+[v _RCREG `Vuc ~T0 @X0 0 e@26 ]
+"544
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 544:     struct {
+[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S19 . TMR1IF TMR2IF CCP1IF SSPIF TXIF RCIF ADIF ]
+"543
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 543: typedef union {
+[u S18 `S19 1 ]
+[n S18 . . ]
+"554
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 554: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x00C)));
+[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
+"3592
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 3592: extern volatile __bit ADIF __attribute__((address(0x66)));
 [v _ADIF `Vb ~T0 @X0 0 e@102 ]
+"1239
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1239: extern volatile unsigned char ADRESH __attribute__((address(0x01E)));
+[v _ADRESH `Vuc ~T0 @X0 0 e@30 ]
 "1252
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1252:     struct {
 [s S45 :1 `uc 1 :1 `uc 1 :4 `uc 1 :2 `uc 1 ]
@@ -27,24 +47,16 @@ Version 4.0 HI-TECH Software Intermediate Code
 "1277
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1277: extern volatile ADCON0bits_t ADCON0bits __attribute__((address(0x01F)));
 [v _ADCON0bits `VS44 ~T0 @X0 0 e@31 ]
-"1239
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1239: extern volatile unsigned char ADRESH __attribute__((address(0x01E)));
-[v _ADRESH `Vuc ~T0 @X0 0 e@30 ]
 [v F36 `(v ~T0 @X0 1 tf1`ul ]
 "12 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\builtins.h
 [v __delay `JF36 ~T0 @X0 0 e ]
 [p i __delay ]
-"544 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 544:     struct {
-[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S19 . TMR1IF TMR2IF CCP1IF SSPIF TXIF RCIF ADIF ]
-"543
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 543: typedef union {
-[u S18 `S19 1 ]
-[n S18 . . ]
-"554
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 554: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x00C)));
-[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
+"928 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 928: extern volatile unsigned char CCPR1L __attribute__((address(0x015)));
+[v _CCPR1L `Vuc ~T0 @X0 0 e@21 ]
+"1155
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1155: extern volatile unsigned char CCPR2L __attribute__((address(0x01B)));
+[v _CCPR2L `Vuc ~T0 @X0 0 e@27 ]
 "466
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 466:     struct {
 [s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -60,10 +72,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 "483
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 483: extern volatile INTCONbits_t INTCONbits __attribute__((address(0x00B)));
 [v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"10 ./stup.h
-[; ;./stup.h: 10: extern void resettmr0(void);
-[v _resettmr0 `(v ~T0 @X0 0 ef ]
-"235 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+"235
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 235:     struct {
 [s S8 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S8 . RB0 RB1 RB2 RB3 RB4 RB5 RB6 RB7 ]
@@ -74,34 +83,22 @@ Version 4.0 HI-TECH Software Intermediate Code
 "246
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 246: extern volatile PORTBbits_t PORTBbits __attribute__((address(0x006)));
 [v _PORTBbits `VS7 ~T0 @X0 0 e@6 ]
-[p mainexit ]
-"8 ./stup.h
-[; ;./stup.h: 8: extern void setup(void);
-[v _setup `(v ~T0 @X0 0 ef ]
-"14
-[; ;./stup.h: 14: extern void setupI2C(void);
-[v _setupI2C `(v ~T0 @X0 0 ef ]
-"928 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 928: extern volatile unsigned char CCPR1L __attribute__((address(0x015)));
-[v _CCPR1L `Vuc ~T0 @X0 0 e@21 ]
-"1155
-[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1155: extern volatile unsigned char CCPR2L __attribute__((address(0x01B)));
-[v _CCPR2L `Vuc ~T0 @X0 0 e@27 ]
-"50 ProyectoOjosMASTER.c
-[; ;ProyectoOjosMASTER.c: 50: void senddata(uint8_t, uint8_t);
-[v _senddata `(v ~T0 @X0 0 ef2`uc`uc ]
-"353 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+"353
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 353: extern volatile unsigned char PORTD __attribute__((address(0x008)));
 [v _PORTD `Vuc ~T0 @X0 0 e@8 ]
-"16 ./stup.h
-[; ;./stup.h: 16: extern void start_I2C(void);
-[v _start_I2C `(v ~T0 @X0 0 ef ]
-"21
-[; ;./stup.h: 21: extern __bit write_I2C(uint8_t);
-[v _write_I2C `(b ~T0 @X0 0 ef1`uc ]
-"18
-[; ;./stup.h: 18: extern void stop_I2C(void);
-[v _stop_I2C `(v ~T0 @X0 0 ef ]
+"28 ./stup.h
+[; ;./stup.h: 28: extern void write_EEPROM(uint8_t , uint8_t );
+[v _write_EEPROM `(v ~T0 @X0 0 ef2`uc`uc ]
+"27
+[; ;./stup.h: 27: extern uint8_t read_EEPROM(uint8_t );
+[v _read_EEPROM `(uc ~T0 @X0 0 ef1`uc ]
+[p mainexit ]
+"8
+[; ;./stup.h: 8: extern void setup(void);
+[v _setup `(v ~T0 @X0 0 ef ]
+"1134 C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h
+[; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 1134: extern volatile unsigned char TXREG __attribute__((address(0x019)));
+[v _TXREG `Vuc ~T0 @X0 0 e@25 ]
 "8 ProyectoOjosMASTER.c
 [p x FOSC  =  INTRC_NOCLKOUT ]
 "9
@@ -361,8 +358,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;C:/Program Files/Microchip/MPLABX/v6.00/packs/Microchip/PIC16Fxxx_DFP/1.3.42/xc8\pic\include\proc\pic16f887.h: 3547: __asm("EECON2 equ 018Dh");
 [; <" EECON2 equ 018Dh ;# ">
 "41 ProyectoOjosMASTER.c
-[; ;ProyectoOjosMASTER.c: 41: char mensaje[7] = {'P', 'o', 't', '1', ':', ' ', ' '};
-[v _mensaje `uc ~T0 @X0 -> 7 `i e ]
+[; ;ProyectoOjosMASTER.c: 41: char mensaje[15] = {'P', 'o', 't', '1', ':', ' ', ' ', ' ',' ', ' ', ' ', ' ', ' ', ' ', ' '};
+[v _mensaje `uc ~T0 @X0 -> 15 `i e ]
 [i _mensaje
 :U ..
 -> -> 80 `ui `uc
@@ -370,6 +367,14 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 116 `ui `uc
 -> -> 49 `ui `uc
 -> -> 58 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
+-> -> 32 `ui `uc
 -> -> 32 `ui `uc
 -> -> 32 `ui `uc
 ..
@@ -391,7 +396,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> -> 0 `i `uc
 ]
 "45
-[; ;ProyectoOjosMASTER.c: 45: uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0;
+[; ;ProyectoOjosMASTER.c: 45: uint8_t potvalue1 = 0, potvalue2 = 0, potvalue3 = 0, potvalue4 = 0, pots = 0, change = 1 ;
 [v _potvalue1 `uc ~T0 @X0 1 e ]
 [i _potvalue1
 -> -> 0 `i `uc
@@ -407,6 +412,14 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _potvalue4 `uc ~T0 @X0 1 e ]
 [i _potvalue4
 -> -> 0 `i `uc
+]
+[v _pots `uc ~T0 @X0 1 e ]
+[i _pots
+-> -> 0 `i `uc
+]
+[v _change `uc ~T0 @X0 1 e ]
+[i _change
+-> -> 1 `i `uc
 ]
 "46
 [; ;ProyectoOjosMASTER.c: 46: uint8_t index = 0;
@@ -446,318 +459,385 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _isr ]
 [f ]
 "55
-[; ;ProyectoOjosMASTER.c: 55:     if (ADIF == 1) {
-[e $ ! == -> _ADIF `i -> 1 `i 140  ]
-{
-"56
-[; ;ProyectoOjosMASTER.c: 56:         if(!ADCON0bits.CHS && mode == 1){
-[e $ ! && ! != -> . . _ADCON0bits 0 2 `i -> 0 `i == -> _mode `i -> 1 `i 141  ]
+[; ;ProyectoOjosMASTER.c: 55:     if(RCIF){
+[e $ ! _RCIF 140  ]
 {
 "57
-[; ;ProyectoOjosMASTER.c: 57:             potvalue1 = (ADRESH>>1)+124;
-[e = _potvalue1 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
+[; ;ProyectoOjosMASTER.c: 57:        if (mode == 3){
+[e $ ! == -> _mode `i -> 3 `i 141  ]
+{
+"58
+[; ;ProyectoOjosMASTER.c: 58:             if ( RCREG >= 121 ){
+[e $ ! >= -> _RCREG `i -> 121 `i 142  ]
+{
 "59
-[; ;ProyectoOjosMASTER.c: 59:             ADCON0bits.CHS = 1;
-[e = . . _ADCON0bits 0 2 -> -> 1 `i `uc ]
+[; ;ProyectoOjosMASTER.c: 59:             potsel = RCREG-120;
+[e = _potsel -> - -> _RCREG `i -> 120 `i `uc ]
 "60
-[; ;ProyectoOjosMASTER.c: 60:         }
+[; ;ProyectoOjosMASTER.c: 60:             mensaje[3] = potsel;
+[e = *U + &U _mensaje * -> -> -> 3 `i `ui `ux -> -> # *U &U _mensaje `ui `ux -> _potsel `uc ]
+"61
+[; ;ProyectoOjosMASTER.c: 61:         } else {
 }
-[e $U 142  ]
-"62
-[; ;ProyectoOjosMASTER.c: 62:         else if(ADCON0bits.CHS == 1 && mode == 1 ) {
-[e :U 141 ]
-[e $ ! && == -> . . _ADCON0bits 0 2 `i -> 1 `i == -> _mode `i -> 1 `i 143  ]
-{
-"63
-[; ;ProyectoOjosMASTER.c: 63:             potvalue2 = (ADRESH>>1)+124;
-[e = _potvalue2 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
-"66
-[; ;ProyectoOjosMASTER.c: 66:             ADCON0bits.CHS = 0b0010;
-[e = . . _ADCON0bits 0 2 -> -> 2 `i `uc ]
-"67
-[; ;ProyectoOjosMASTER.c: 67:         }
-}
-[e $U 144  ]
-"68
-[; ;ProyectoOjosMASTER.c: 68:         else if(ADCON0bits.CHS == 2 && mode == 1) {
-[e :U 143 ]
-[e $ ! && == -> . . _ADCON0bits 0 2 `i -> 2 `i == -> _mode `i -> 1 `i 145  ]
-{
-"69
-[; ;ProyectoOjosMASTER.c: 69:             potvalue3 = (ADRESH>>1)+124;
-[e = _potvalue3 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
-"71
-[; ;ProyectoOjosMASTER.c: 71:             ADCON0bits.CHS = 3;
-[e = . . _ADCON0bits 0 2 -> -> 3 `i `uc ]
-"72
-[; ;ProyectoOjosMASTER.c: 72:         }
-}
-[e $U 146  ]
-"73
-[; ;ProyectoOjosMASTER.c: 73:         else if(ADCON0bits.CHS == 3 && mode == 1 ) {
-[e :U 145 ]
-[e $ ! && == -> . . _ADCON0bits 0 2 `i -> 3 `i == -> _mode `i -> 1 `i 147  ]
-{
-"74
-[; ;ProyectoOjosMASTER.c: 74:             potvalue4 = (ADRESH>>1)+124;
-[e = _potvalue4 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
-"76
-[; ;ProyectoOjosMASTER.c: 76:             ADCON0bits.CHS = 0;
-[e = . . _ADCON0bits 0 2 -> -> 0 `i `uc ]
-"77
-[; ;ProyectoOjosMASTER.c: 77:         }
-}
-[e :U 147 ]
-[e :U 146 ]
-[e :U 144 ]
+[e $U 143  ]
 [e :U 142 ]
+{
+"62
+[; ;ProyectoOjosMASTER.c: 62:             pots = RCREG;
+[e = _pots _RCREG ]
+"63
+[; ;ProyectoOjosMASTER.c: 63:             mensaje[6] = pots;
+[e = *U + &U _mensaje * -> -> -> 6 `i `ui `ux -> -> # *U &U _mensaje `ui `ux -> _pots `uc ]
 "79
-[; ;ProyectoOjosMASTER.c: 79:         _delay((unsigned long)((40)*(8000000/4000000.0)));
-[e ( __delay (1 -> * -> -> 40 `i `d / -> -> 8000000 `l `d .4000000.0 `ul ]
-"80
-[; ;ProyectoOjosMASTER.c: 80:         PIR1bits.ADIF = 0;
+[; ;ProyectoOjosMASTER.c: 79:             }
+}
+[e :U 143 ]
+"82
+[; ;ProyectoOjosMASTER.c: 82:             PIR1bits.ADIF = 0;
 [e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
-"81
-[; ;ProyectoOjosMASTER.c: 81:         ADCON0bits.GO = 1;
-[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
-"83
-[; ;ProyectoOjosMASTER.c: 83:     }
+"84
+[; ;ProyectoOjosMASTER.c: 84:             }
+}
+[e :U 141 ]
+"88
+[; ;ProyectoOjosMASTER.c: 88:     }
 }
 [e :U 140 ]
-"84
-[; ;ProyectoOjosMASTER.c: 84:     if(INTCONbits.T0IF){
-[e $ ! != -> . . _INTCONbits 0 2 `i -> 0 `i 148  ]
+"92
+[; ;ProyectoOjosMASTER.c: 92:     if (ADIF == 1 ) {
+[e $ ! == -> _ADIF `i -> 1 `i 144  ]
 {
-"85
-[; ;ProyectoOjosMASTER.c: 85:         resettmr0();
-[e ( _resettmr0 ..  ]
-"86
-[; ;ProyectoOjosMASTER.c: 86:     }
-}
+"93
+[; ;ProyectoOjosMASTER.c: 93:         if (mode == 1){
+[e $ ! == -> _mode `i -> 1 `i 145  ]
+{
+"96
+[; ;ProyectoOjosMASTER.c: 96:         switch (ADCON0bits.CHS){
+[e $U 147  ]
+{
+"97
+[; ;ProyectoOjosMASTER.c: 97:             case 0:
 [e :U 148 ]
+"98
+[; ;ProyectoOjosMASTER.c: 98:                 potvalue1 = (ADRESH>>1)+124;
+[e = _potvalue1 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
+"100
+[; ;ProyectoOjosMASTER.c: 100:                 ADCON0bits.CHS = 1;
+[e = . . _ADCON0bits 0 2 -> -> 1 `i `uc ]
 "101
-[; ;ProyectoOjosMASTER.c: 101:     if(INTCONbits.RBIF){
-[e $ ! != -> . . _INTCONbits 0 0 `i -> 0 `i 149  ]
-{
+[; ;ProyectoOjosMASTER.c: 101:                 _delay((unsigned long)((40)*(8000000/4000000.0)));
+[e ( __delay (1 -> * -> -> 40 `i `d / -> -> 8000000 `l `d .4000000.0 `ul ]
 "102
-[; ;ProyectoOjosMASTER.c: 102:         if(!PORTBbits.RB0){
-[e $ ! ! != -> . . _PORTBbits 0 0 `i -> 0 `i 150  ]
-{
+[; ;ProyectoOjosMASTER.c: 102:                 PIR1bits.ADIF = 0;
+[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
 "103
-[; ;ProyectoOjosMASTER.c: 103:             mode++;
-[e ++ _mode -> -> 1 `i `uc ]
-"104
-[; ;ProyectoOjosMASTER.c: 104:         }
-}
-[e :U 150 ]
+[; ;ProyectoOjosMASTER.c: 103:                 ADCON0bits.GO = 1;
+[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
 "105
-[; ;ProyectoOjosMASTER.c: 105:         if(!PORTBbits.RB1 && mode == 1){
-[e $ ! && ! != -> . . _PORTBbits 0 1 `i -> 0 `i == -> _mode `i -> 1 `i 151  ]
-{
-"108
-[; ;ProyectoOjosMASTER.c: 108:         }
-}
-[e :U 151 ]
+[; ;ProyectoOjosMASTER.c: 105:                 break;
+[e $U 146  ]
+"106
+[; ;ProyectoOjosMASTER.c: 106:             case 1:
+[e :U 149 ]
+"107
+[; ;ProyectoOjosMASTER.c: 107:                 potvalue2 = (ADRESH>>1)+124;
+[e = _potvalue2 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
 "109
-[; ;ProyectoOjosMASTER.c: 109:         if(!PORTBbits.RB2 && mode == 1){
-[e $ ! && ! != -> . . _PORTBbits 0 2 `i -> 0 `i == -> _mode `i -> 1 `i 152  ]
-{
+[; ;ProyectoOjosMASTER.c: 109:                 ADCON0bits.CHS = 2;
+[e = . . _ADCON0bits 0 2 -> -> 2 `i `uc ]
+"110
+[; ;ProyectoOjosMASTER.c: 110:                 _delay((unsigned long)((40)*(8000000/4000000.0)));
+[e ( __delay (1 -> * -> -> 40 `i `d / -> -> 8000000 `l `d .4000000.0 `ul ]
+"111
+[; ;ProyectoOjosMASTER.c: 111:                 PIR1bits.ADIF = 0;
+[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
 "112
-[; ;ProyectoOjosMASTER.c: 112:         }
-}
-[e :U 152 ]
+[; ;ProyectoOjosMASTER.c: 112:                 ADCON0bits.GO = 1;
+[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
 "113
-[; ;ProyectoOjosMASTER.c: 113:         if(!PORTBbits.RB3 && mode == 1){
-[e $ ! && ! != -> . . _PORTBbits 0 3 `i -> 0 `i == -> _mode `i -> 1 `i 153  ]
+[; ;ProyectoOjosMASTER.c: 113:                 break;
+[e $U 146  ]
+"114
+[; ;ProyectoOjosMASTER.c: 114:             case 2:
+[e :U 150 ]
+"115
+[; ;ProyectoOjosMASTER.c: 115:                 potvalue3 = (ADRESH>>1)+124;
+[e = _potvalue3 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
+"117
+[; ;ProyectoOjosMASTER.c: 117:                 ADCON0bits.CHS = 3;
+[e = . . _ADCON0bits 0 2 -> -> 3 `i `uc ]
+"118
+[; ;ProyectoOjosMASTER.c: 118:                 _delay((unsigned long)((40)*(8000000/4000000.0)));
+[e ( __delay (1 -> * -> -> 40 `i `d / -> -> 8000000 `l `d .4000000.0 `ul ]
+"119
+[; ;ProyectoOjosMASTER.c: 119:                 PIR1bits.ADIF = 0;
+[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
+"120
+[; ;ProyectoOjosMASTER.c: 120:                 ADCON0bits.GO = 1;
+[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
+"121
+[; ;ProyectoOjosMASTER.c: 121:                 break;
+[e $U 146  ]
+"122
+[; ;ProyectoOjosMASTER.c: 122:             case 3:
+[e :U 151 ]
+"123
+[; ;ProyectoOjosMASTER.c: 123:                 potvalue4 = (ADRESH>>1)+124;
+[e = _potvalue4 -> + >> -> _ADRESH `i -> 1 `i -> 124 `i `uc ]
+"125
+[; ;ProyectoOjosMASTER.c: 125:                 ADCON0bits.CHS = 0;
+[e = . . _ADCON0bits 0 2 -> -> 0 `i `uc ]
+"126
+[; ;ProyectoOjosMASTER.c: 126:                 _delay((unsigned long)((40)*(8000000/4000000.0)));
+[e ( __delay (1 -> * -> -> 40 `i `d / -> -> 8000000 `l `d .4000000.0 `ul ]
+"127
+[; ;ProyectoOjosMASTER.c: 127:                 PIR1bits.ADIF = 0;
+[e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
+"128
+[; ;ProyectoOjosMASTER.c: 128:                 ADCON0bits.GO = 1;
+[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
+"129
+[; ;ProyectoOjosMASTER.c: 129:                 break;
+[e $U 146  ]
+"130
+[; ;ProyectoOjosMASTER.c: 130:         }
+}
+[e $U 146  ]
+[e :U 147 ]
+[e [\ -> . . _ADCON0bits 0 2 `i , $ -> 0 `i 148
+ , $ -> 1 `i 149
+ , $ -> 2 `i 150
+ , $ -> 3 `i 151
+ 146 ]
+[e :U 146 ]
+"132
+[; ;ProyectoOjosMASTER.c: 132:         CCPR1L = potvalue1;
+[e = _CCPR1L _potvalue1 ]
+"133
+[; ;ProyectoOjosMASTER.c: 133:         CCPR2L = potvalue2;
+[e = _CCPR2L _potvalue2 ]
+"134
+[; ;ProyectoOjosMASTER.c: 134:         }
+}
+[e :U 145 ]
+"136
+[; ;ProyectoOjosMASTER.c: 136:     }
+}
+[e :U 144 ]
+"139
+[; ;ProyectoOjosMASTER.c: 139:     if(INTCONbits.RBIF){
+[e $ ! != -> . . _INTCONbits 0 0 `i -> 0 `i 152  ]
 {
-"116
-[; ;ProyectoOjosMASTER.c: 116:         }
+"140
+[; ;ProyectoOjosMASTER.c: 140:         if(!PORTBbits.RB0){
+[e $ ! ! != -> . . _PORTBbits 0 0 `i -> 0 `i 153  ]
+{
+"141
+[; ;ProyectoOjosMASTER.c: 141:             if (mode != 3) mode++;
+[e $ ! != -> _mode `i -> 3 `i 154  ]
+[e ++ _mode -> -> 1 `i `uc ]
+[e $U 155  ]
+"142
+[; ;ProyectoOjosMASTER.c: 142:             else {
+[e :U 154 ]
+{
+"143
+[; ;ProyectoOjosMASTER.c: 143:                 mode = 1;
+[e = _mode -> -> 1 `i `uc ]
+"144
+[; ;ProyectoOjosMASTER.c: 144:                 ADCON0bits.GO = 1;
+[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
+"145
+[; ;ProyectoOjosMASTER.c: 145:             }
+}
+[e :U 155 ]
+"146
+[; ;ProyectoOjosMASTER.c: 146:         PORTD = mode;
+[e = _PORTD _mode ]
+"147
+[; ;ProyectoOjosMASTER.c: 147:         }
 }
 [e :U 153 ]
-"117
-[; ;ProyectoOjosMASTER.c: 117:         INTCONbits.RBIF = 0;
-[e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
-"118
-[; ;ProyectoOjosMASTER.c: 118:     }
+"148
+[; ;ProyectoOjosMASTER.c: 148:         if (mode == 1){
+[e $ ! == -> _mode `i -> 1 `i 156  ]
+{
+"149
+[; ;ProyectoOjosMASTER.c: 149:             if(!PORTBbits.RB1){
+[e $ ! ! != -> . . _PORTBbits 0 1 `i -> 0 `i 157  ]
+{
+"150
+[; ;ProyectoOjosMASTER.c: 150:                 write_EEPROM(1, potvalue1);
+[e ( _write_EEPROM (2 , -> -> 1 `i `uc _potvalue1 ]
+"151
+[; ;ProyectoOjosMASTER.c: 151:                 write_EEPROM(2, potvalue2);
+[e ( _write_EEPROM (2 , -> -> 2 `i `uc _potvalue2 ]
+"152
+[; ;ProyectoOjosMASTER.c: 152:                 write_EEPROM(3, potvalue3);
+[e ( _write_EEPROM (2 , -> -> 3 `i `uc _potvalue3 ]
+"153
+[; ;ProyectoOjosMASTER.c: 153:                 write_EEPROM(4, potvalue4);
+[e ( _write_EEPROM (2 , -> -> 4 `i `uc _potvalue4 ]
+"154
+[; ;ProyectoOjosMASTER.c: 154:             }
 }
-[e :U 149 ]
-"120
-[; ;ProyectoOjosMASTER.c: 120:     return;
+[e :U 157 ]
+"155
+[; ;ProyectoOjosMASTER.c: 155:             if(!PORTBbits.RB2){
+[e $ ! ! != -> . . _PORTBbits 0 2 `i -> 0 `i 158  ]
+{
+"156
+[; ;ProyectoOjosMASTER.c: 156:                 write_EEPROM(5, potvalue1);
+[e ( _write_EEPROM (2 , -> -> 5 `i `uc _potvalue1 ]
+"157
+[; ;ProyectoOjosMASTER.c: 157:                 write_EEPROM(6, potvalue2);
+[e ( _write_EEPROM (2 , -> -> 6 `i `uc _potvalue2 ]
+"158
+[; ;ProyectoOjosMASTER.c: 158:                 write_EEPROM(7, potvalue3);
+[e ( _write_EEPROM (2 , -> -> 7 `i `uc _potvalue3 ]
+"159
+[; ;ProyectoOjosMASTER.c: 159:                 write_EEPROM(8, potvalue4);
+[e ( _write_EEPROM (2 , -> -> 8 `i `uc _potvalue4 ]
+"160
+[; ;ProyectoOjosMASTER.c: 160:             }
+}
+[e :U 158 ]
+"161
+[; ;ProyectoOjosMASTER.c: 161:         }
+}
+[e :U 156 ]
+"162
+[; ;ProyectoOjosMASTER.c: 162:         if (mode == 2){
+[e $ ! == -> _mode `i -> 2 `i 159  ]
+{
+"163
+[; ;ProyectoOjosMASTER.c: 163:             if(!PORTBbits.RB1){
+[e $ ! ! != -> . . _PORTBbits 0 1 `i -> 0 `i 160  ]
+{
+"164
+[; ;ProyectoOjosMASTER.c: 164:                 potvalue1 = read_EEPROM(1);
+[e = _potvalue1 ( _read_EEPROM (1 -> -> 1 `i `uc ]
+"165
+[; ;ProyectoOjosMASTER.c: 165:                 potvalue2 = read_EEPROM(2);
+[e = _potvalue2 ( _read_EEPROM (1 -> -> 2 `i `uc ]
+"171
+[; ;ProyectoOjosMASTER.c: 171:             }
+}
+[e :U 160 ]
+"172
+[; ;ProyectoOjosMASTER.c: 172:             if(!PORTBbits.RB2){
+[e $ ! ! != -> . . _PORTBbits 0 2 `i -> 0 `i 161  ]
+{
+"173
+[; ;ProyectoOjosMASTER.c: 173:                 potvalue1 = read_EEPROM(5);
+[e = _potvalue1 ( _read_EEPROM (1 -> -> 5 `i `uc ]
+"174
+[; ;ProyectoOjosMASTER.c: 174:                 potvalue2 = read_EEPROM(6);
+[e = _potvalue2 ( _read_EEPROM (1 -> -> 6 `i `uc ]
+"180
+[; ;ProyectoOjosMASTER.c: 180:             }
+}
+[e :U 161 ]
+"182
+[; ;ProyectoOjosMASTER.c: 182:             CCPR1L = potvalue1;
+[e = _CCPR1L _potvalue1 ]
+"183
+[; ;ProyectoOjosMASTER.c: 183:             CCPR2L = potvalue2;
+[e = _CCPR2L _potvalue2 ]
+"184
+[; ;ProyectoOjosMASTER.c: 184:         }
+}
+[e :U 159 ]
+"186
+[; ;ProyectoOjosMASTER.c: 186:         INTCONbits.RBIF = 0;
+[e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
+"187
+[; ;ProyectoOjosMASTER.c: 187:     }
+}
+[e :U 152 ]
+"189
+[; ;ProyectoOjosMASTER.c: 189:     return;
 [e $UE 139  ]
-"121
-[; ;ProyectoOjosMASTER.c: 121:     }
+"190
+[; ;ProyectoOjosMASTER.c: 190:     }
 [e :UE 139 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"124
-[; ;ProyectoOjosMASTER.c: 124: void main(void) {
+"193
+[; ;ProyectoOjosMASTER.c: 193: void main(void) {
 [v _main `(v ~T0 @X0 1 ef ]
 {
 [e :U _main ]
 [f ]
-"125
-[; ;ProyectoOjosMASTER.c: 125:     setup();
-[e ( _setup ..  ]
-"126
-[; ;ProyectoOjosMASTER.c: 126:     setupI2C();
-[e ( _setupI2C ..  ]
-"128
-[; ;ProyectoOjosMASTER.c: 128:     while (1){
-[e :U 156 ]
-{
-"141
-[; ;ProyectoOjosMASTER.c: 141:     if (mode == 4) mode = 1;
-[e $ ! == -> _mode `i -> 4 `i 158  ]
-[e = _mode -> -> 1 `i `uc ]
-[e $U 159  ]
-"143
-[; ;ProyectoOjosMASTER.c: 143:     else if (mode == 3) {
-[e :U 158 ]
-[e $ ! == -> _mode `i -> 3 `i 160  ]
-{
-"146
-[; ;ProyectoOjosMASTER.c: 146:         switch (potsel){
-[e $U 162  ]
-{
-"147
-[; ;ProyectoOjosMASTER.c: 147:             case 1:
-[e :U 163 ]
-"148
-[; ;ProyectoOjosMASTER.c: 148:                 CCPR1L = mensaje[6];
-[e = _CCPR1L -> *U + &U _mensaje * -> -> -> 6 `i `ui `ux -> -> # *U &U _mensaje `ui `ux `uc ]
-"149
-[; ;ProyectoOjosMASTER.c: 149:                 break;
-[e $U 161  ]
-"150
-[; ;ProyectoOjosMASTER.c: 150:             case 2:
-[e :U 164 ]
-"151
-[; ;ProyectoOjosMASTER.c: 151:                 CCPR2L = mensaje[6];
-[e = _CCPR2L -> *U + &U _mensaje * -> -> -> 6 `i `ui `ux -> -> # *U &U _mensaje `ui `ux `uc ]
-"152
-[; ;ProyectoOjosMASTER.c: 152:                 break;
-[e $U 161  ]
-"153
-[; ;ProyectoOjosMASTER.c: 153:             case 3:
-[e :U 165 ]
-"155
-[; ;ProyectoOjosMASTER.c: 155:                 break;
-[e $U 161  ]
-"156
-[; ;ProyectoOjosMASTER.c: 156:             case 4:
-[e :U 166 ]
-"158
-[; ;ProyectoOjosMASTER.c: 158:                 break;
-[e $U 161  ]
-"159
-[; ;ProyectoOjosMASTER.c: 159:         }
-}
-[e $U 161  ]
-[e :U 162 ]
-[e [\ -> _potsel `i , $ -> 1 `i 163
- , $ -> 2 `i 164
- , $ -> 3 `i 165
- , $ -> 4 `i 166
- 161 ]
-[e :U 161 ]
-"162
-[; ;ProyectoOjosMASTER.c: 162:     }
-}
-[e $U 167  ]
-"163
-[; ;ProyectoOjosMASTER.c: 163:     else if (mode == 2) {
-[e :U 160 ]
-[e $ ! == -> _mode `i -> 2 `i 168  ]
-{
-"165
-[; ;ProyectoOjosMASTER.c: 165:     }
-}
-[e $U 169  ]
-"166
-[; ;ProyectoOjosMASTER.c: 166:     else if (mode == 1) {
-[e :U 168 ]
-[e $ ! == -> _mode `i -> 1 `i 170  ]
-{
-"167
-[; ;ProyectoOjosMASTER.c: 167:         CCPR1L = potvalue1;
-[e = _CCPR1L _potvalue1 ]
-"168
-[; ;ProyectoOjosMASTER.c: 168:         CCPR2L = potvalue2;
-[e = _CCPR2L _potvalue2 ]
-"169
-[; ;ProyectoOjosMASTER.c: 169:         senddata(250, potvalue3);
-[e ( _senddata (2 , -> -> 250 `i `uc _potvalue3 ]
-"170
-[; ;ProyectoOjosMASTER.c: 170:         senddata(251, potvalue4);
-[e ( _senddata (2 , -> -> 251 `i `uc _potvalue4 ]
-"172
-[; ;ProyectoOjosMASTER.c: 172:     }
-}
-[e :U 170 ]
-[e :U 169 ]
-[e :U 167 ]
-[e :U 159 ]
-"173
-[; ;ProyectoOjosMASTER.c: 173:     PORTD = mode;
-[e = _PORTD _mode ]
-"175
-[; ;ProyectoOjosMASTER.c: 175:    }
-}
-[e :U 155 ]
-[e $U 156  ]
-[e :U 157 ]
-"176
-[; ;ProyectoOjosMASTER.c: 176:     return;
-[e $UE 154  ]
-"177
-[; ;ProyectoOjosMASTER.c: 177: }
-[e :UE 154 ]
-}
-"179
-[; ;ProyectoOjosMASTER.c: 179: void senddata(uint8_t pot, uint8_t value){
-[v _senddata `(v ~T0 @X0 1 ef2`uc`uc ]
-{
-[e :U _senddata ]
-[v _pot `uc ~T0 @X0 1 r1 ]
-[v _value `uc ~T0 @X0 1 r2 ]
-[f ]
-"180
-[; ;ProyectoOjosMASTER.c: 180:     data = (uint8_t)((0x08<<1)+0b0);
-[e = _data -> + << -> 8 `i -> 1 `i -> 0 `i `uc ]
-"181
-[; ;ProyectoOjosMASTER.c: 181:     start_I2C();
-[e ( _start_I2C ..  ]
-"182
-[; ;ProyectoOjosMASTER.c: 182:     write_I2C(data);
-[e ( _write_I2C (1 _data ]
-"183
-[; ;ProyectoOjosMASTER.c: 183:     write_I2C(pot);
-[e ( _write_I2C (1 _pot ]
-"184
-[; ;ProyectoOjosMASTER.c: 184:     stop_I2C();
-[e ( _stop_I2C ..  ]
-"185
-[; ;ProyectoOjosMASTER.c: 185:     _delay((unsigned long)((100)*(8000000/4000.0)));
-[e ( __delay (1 -> * -> -> 100 `i `d / -> -> 8000000 `l `d .4000.0 `ul ]
-"187
-[; ;ProyectoOjosMASTER.c: 187:     data = (uint8_t)((0x08<<1)+0b0);
-[e = _data -> + << -> 8 `i -> 1 `i -> 0 `i `uc ]
-"188
-[; ;ProyectoOjosMASTER.c: 188:     start_I2C();
-[e ( _start_I2C ..  ]
-"189
-[; ;ProyectoOjosMASTER.c: 189:     write_I2C(data);
-[e ( _write_I2C (1 _data ]
-"190
-[; ;ProyectoOjosMASTER.c: 190:     write_I2C(value);
-[e ( _write_I2C (1 _value ]
-"191
-[; ;ProyectoOjosMASTER.c: 191:     stop_I2C();
-[e ( _stop_I2C ..  ]
-"192
-[; ;ProyectoOjosMASTER.c: 192:     _delay((unsigned long)((100)*(8000000/4000.0)));
-[e ( __delay (1 -> * -> -> 100 `i `d / -> -> 8000000 `l `d .4000.0 `ul ]
 "194
-[; ;ProyectoOjosMASTER.c: 194: }
-[e :UE 171 ]
+[; ;ProyectoOjosMASTER.c: 194:     setup();
+[e ( _setup ..  ]
+"199
+[; ;ProyectoOjosMASTER.c: 199:     while (1){
+[e :U 164 ]
+{
+"204
+[; ;ProyectoOjosMASTER.c: 204:         PORTD = mode;
+[e = _PORTD _mode ]
+"205
+[; ;ProyectoOjosMASTER.c: 205:         if (mode == 3){
+[e $ ! == -> _mode `i -> 3 `i 166  ]
+{
+"206
+[; ;ProyectoOjosMASTER.c: 206:         indice = 0;
+[e = _indice -> -> 0 `i `uc ]
+"207
+[; ;ProyectoOjosMASTER.c: 207:             if (valor_old != mensaje[6]){
+[e $ ! != -> _valor_old `i -> *U + &U _mensaje * -> -> -> 6 `i `ui `ux -> -> # *U &U _mensaje `ui `ux `i 167  ]
+{
+"208
+[; ;ProyectoOjosMASTER.c: 208:                 while(indice<15){
+[e $U 168  ]
+[e :U 169 ]
+{
+"209
+[; ;ProyectoOjosMASTER.c: 209:                     if (PIR1bits.TXIF){
+[e $ ! != -> . . _PIR1bits 0 4 `i -> 0 `i 171  ]
+{
+"210
+[; ;ProyectoOjosMASTER.c: 210:                         TXREG = mensaje[indice];
+[e = _TXREG -> *U + &U _mensaje * -> _indice `ux -> -> # *U &U _mensaje `ui `ux `uc ]
+"211
+[; ;ProyectoOjosMASTER.c: 211:                         indice++;
+[e ++ _indice -> -> 1 `i `uc ]
+"212
+[; ;ProyectoOjosMASTER.c: 212:                 }
+}
+[e :U 171 ]
+"213
+[; ;ProyectoOjosMASTER.c: 213:             }
+}
+[e :U 168 ]
+"208
+[; ;ProyectoOjosMASTER.c: 208:                 while(indice<15){
+[e $ < -> _indice `i -> 15 `i 169  ]
+[e :U 170 ]
+"214
+[; ;ProyectoOjosMASTER.c: 214:                 valor_old = mensaje[6];
+[e = _valor_old -> *U + &U _mensaje * -> -> -> 6 `i `ui `ux -> -> # *U &U _mensaje `ui `ux `uc ]
+"216
+[; ;ProyectoOjosMASTER.c: 216:             }
+}
+[e :U 167 ]
+"218
+[; ;ProyectoOjosMASTER.c: 218:         }
+}
+[e :U 166 ]
+"220
+[; ;ProyectoOjosMASTER.c: 220:    }
+}
+[e :U 163 ]
+[e $U 164  ]
+[e :U 165 ]
+"222
+[; ;ProyectoOjosMASTER.c: 222:     return;
+[e $UE 162  ]
+"223
+[; ;ProyectoOjosMASTER.c: 223: }
+[e :UE 162 ]
 }

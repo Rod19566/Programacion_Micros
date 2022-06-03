@@ -12,6 +12,7 @@
 #define ADDRESS 0x08
 #define READ 0b0
 #define WRITE 0b1
+uint8_t data = 0;
 
 void resettmr0(void){
    // TMR0 = 5;              //para 15.1 ms
@@ -39,6 +40,7 @@ void configint(void){
     INTCONbits.RBIE = 1;        //interrupciones en PORTB y TMR0
     INTCONbits.RBIF = 0;        //Apagamos banderas
 
+
     //Configuracion push button
     TRISBbits.TRISB0 = 1;       //RB0 
     TRISBbits.TRISB1 = 1;       //RB1
@@ -48,21 +50,7 @@ void configint(void){
     WPUBbits.WPUB = 0b00001111;       //0011 RB0 and RB1 
     IOCBbits.IOCB = 0b00001111;       //RB0 y RB1 pull ups e interrupciones
     
-    // Configuraciones de comunicacion serial
-    //SYNC = 0, BRGH = 1, BRG16 = 1, SPBRG=25 <- Valores de tabla 12-5
-    TXSTAbits.SYNC = 0;         // Comunicaci n ascincrona (full-duplex)�
-    TXSTAbits.BRGH = 1;         // Baud rate de alta velocidad 
-    BAUDCTLbits.BRG16 = 1;      // 16-bits para generar el baud rate
     
-    SPBRG = 207;                 //8mhz ((8Mhz/9600) / 64
-    SPBRGH = 0;                 // Baud rate ~9600, error -> 0.16%
-    
-    RCSTAbits.SPEN = 1;         // Habilitamos comunicaci n�
-    TXSTAbits.TX9 = 0;          // Utilizamos solo 8 bits
-    TXSTAbits.TXEN = 1;         // Habilitamos transmisor
-    RCSTAbits.CREN = 1;         // Habilitamos receptor
-    
-    PIE1bits.RCIE = 1;          // Habilitamos Interrupciones de recepci n�
 
 }
 void setup(void){
@@ -74,7 +62,6 @@ void setup(void){
         
     OSCCONbits.IRCF = 0b0111;//0111, Frecuencia de reloj 8 MHz
     OSCCONbits.SCS   = 1;//reloj interno
-    configint();
     //configuracion in out
     ANSELH = 0; //Pines digitales
     ANSELbits.ANS0  = 1;//AN0, AN1 y AN2 como pines analogicos
@@ -83,11 +70,15 @@ void setup(void){
     ANSELbits.ANS3  = 1;
     TRISA  = 0b00001111; //AN0, AN1 y AN2 como inputs y los demas como outputs
     PORTA  = 0;//se limpian los puertos
-    TRISC  = 0b00011000;         // SCL and SDA as input
+    //TRISC  = 0b00011000;         // SCL and SDA as input
+    SSPCONbits.SSPEN = 1;
     PORTC  = 0;
     TRISD = 0; 
     PORTD = 0;
     PORTB  = 0;
+    configint();
+    
+    
     //configuracion adc
     ADCON0bits.ADCS = 2;    //10 se selecciona Fosc/32 para conversion 4us full TAD
     ADCON0bits.CHS0 = 0;    //se selecciona el canal AN0
@@ -121,9 +112,23 @@ void setup(void){
     TRISCbits.TRISC2 = 0;       //out pwm2
     TRISCbits.TRISC1 = 0;       //out pwm1
     
+    // Configuraciones de comunicacion serial
+    //SYNC = 0, BRGH = 1, BRG16 = 1, SPBRG=25 <- Valores de tabla 12-5
+    TXSTAbits.SYNC = 0;         // Comunicaci n ascincrona (full-duplex)�
+    TXSTAbits.BRGH = 1;         // Baud rate de alta velocidad 
+    BAUDCTLbits.BRG16 = 1;      // 16-bits para generar el baud rate
+    
+    SPBRG = 207;                 //8mhz ((8Mhz/9600) / 64
+    SPBRGH = 0;                 // Baud rate ~9600, error -> 0.16%
+    
+    RCSTAbits.SPEN = 1;         // Habilitamos comunicaci n�
+    TXSTAbits.TX9 = 0;          // Utilizamos solo 8 bits
+    TXSTAbits.TXEN = 1;         // Habilitamos transmisor
+    RCSTAbits.CREN = 1;         // Habilitamos receptor
+    PIE1bits.RCIE = 1;          // Habilitamos Interrupciones de recepci n�
+    
     
     ADCON0bits.GO = 1;      //ADC conversion
-    
 }
 
 void setupI2C(void){
@@ -175,10 +180,12 @@ uint8_t read_EEPROM(uint8_t address){
     EEADR = address;
     EECON1bits.EEPGD = 0;       // Lectura a la EEPROM
     EECON1bits.RD = 1;          // Obtenemos dato de la EEPROM
+    __delay_ms(6);
     return EEDAT;               // Regresamos dato 
 }
 
 void write_EEPROM(uint8_t address, uint8_t data){
+    __delay_ms(6);
     EEADR = address;
     EEDAT = data;
     EECON1bits.EEPGD = 0;       // Escritura a la EEPROM
@@ -196,3 +203,19 @@ void write_EEPROM(uint8_t address, uint8_t data){
 }
     
 
+void senddata(uint8_t pot, uint8_t value){
+    data = (uint8_t)((ADDRESS<<1)+READ);
+    start_I2C(); 
+    write_I2C(data);                // Enviamos direcci n de esclavo a recibir datos�
+    write_I2C(pot);            // Enviamos dato al esclavo
+    stop_I2C();                 // Finalizamos la comunicaci n� 
+    __delay_ms(100);
+    
+    data = (uint8_t)((ADDRESS<<1)+READ);
+    start_I2C(); 
+    write_I2C(data);                // Enviamos direcci n de esclavo a recibir datos�
+    write_I2C(value);            // Enviamos dato al esclavo
+    stop_I2C();                 // Finalizamos la comunicaci n� 
+    __delay_ms(100);
+           
+}

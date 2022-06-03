@@ -20,6 +20,7 @@ extern void send_ACK(void);
 extern void send_NACK(void);
 extern __bit write_I2C(uint8_t);
 extern uint8_t read_I2C(void);
+extern void senddata(uint8_t , uint8_t);
 
 
 //EEPROM functions
